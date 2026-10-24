@@ -326,7 +326,7 @@ void AProjectile::Stick() {
           items: [
             '**Other references** to a destroyed actor do not become `nullptr` straight away — `IsValid()` returns `false` immediately, and `UPROPERTY` references are cleared at the next collection.',
             '**`Destroy()` returns `bool`**: `false` if the actor could not be destroyed. In multiplayer, clients generally cannot destroy actors the server controls — the Networking unit explains authority.',
-            '**Never `delete` an actor**, and never call `Destroy()` on the CDO or on something you do not own conceptually (another system\'s actor) without coordinating.',
+            '**Never `delete` an actor.** `Destroy()` (directly or through a lifespan) is the only correct way to remove one from the game.',
           ],
         },
         {
@@ -478,6 +478,9 @@ private:
           type: 'code',
           title: 'PickupRegistry.cpp and Pickup.cpp',
           code: `// PickupRegistry.cpp
+#include "PickupRegistry.h"
+#include "Pickup.h"
+
 void UPickupRegistry::Register(APickup* Pickup) {
     Pickups.AddUnique(Pickup);
 }
@@ -486,24 +489,25 @@ void UPickupRegistry::Unregister(APickup* Pickup) {
     Pickups.Remove(Pickup);
 }
 
-// Pickup.cpp
+// Pickup.cpp (BeginPlay/EndPlay overrides added to APickup)
 void APickup::BeginPlay() {
     Super::BeginPlay();
-    if (auto* Registry = GetWorld()->GetSubsystem<UPickupRegistry>()) {
-        Registry->Register(this);
+    if (auto* Reg = GetWorld()->GetSubsystem<UPickupRegistry>()) {
+        Reg->Register(this);
     }
 }
 
 void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason) {
-    if (auto* Registry = GetWorld()->GetSubsystem<UPickupRegistry>()) {
-        Registry->Unregister(this);
+    if (auto* Reg = GetWorld()->GetSubsystem<UPickupRegistry>()) {
+        Reg->Unregister(this);
     }
     Super::EndPlay(EndPlayReason);
 }`,
           annotations: [
-            { lines: 3, text: '`AddUnique` guards against registering twice.' },
-            { lines: 13, text: '`GetSubsystem<T>()` finds this world\'s instance in constant time. Checking for `nullptr` keeps teardown paths safe.' },
-            { lines: '18-21', text: 'The `BeginPlay`/`EndPlay` pair from the lifecycle lesson: every way out of play — destroyed, level unloaded, PIE stopped — unregisters.' },
+            { lines: 3, text: 'The header only forward-declared `APickup`; the `.cpp` includes the full definition before storing pointers to it.' },
+            { lines: 6, text: '`AddUnique` guards against registering twice.' },
+            { lines: 16, text: '`GetSubsystem<T>()` finds this world\'s instance in constant time. Checking for `nullptr` keeps teardown paths safe.' },
+            { lines: '21-25', text: 'The `BeginPlay`/`EndPlay` pair from the lifecycle lesson: every way out of play — destroyed, level unloaded, PIE stopped — unregisters.' },
           ],
         },
         {
