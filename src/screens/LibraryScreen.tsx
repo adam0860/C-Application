@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { cheatSheets, findLesson, getGlossaryEntry, glossary } from '../content';
 import type { CourseId, GlossaryEntry } from '../content/types';
 import { CodeBlock } from '../components/CodeBlock';
@@ -11,6 +11,9 @@ import { toggleBookmark, useProgress } from '../lib/store';
 import { NotFound } from './NotFound';
 
 type Tab = 'glossary' | 'sheets' | 'saved';
+
+// One shared collator: localeCompare with options builds a new one per call.
+const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
 
 export function LibraryScreen({ tab }: { tab: Tab }) {
   const [query, setQuery] = useState('');
@@ -98,9 +101,16 @@ function GlossaryList() {
   const [category, setCategory] = useState<string | null>(null);
   const filtered = glossary.filter((g) => course === 'all' || g.course === course || g.course === 'both');
   const categories = [...new Set(filtered.map((g) => g.category))].sort();
-  const list = filtered.filter((g) => !category || g.category === category).sort((a, b) => a.term.localeCompare(b.term, undefined, { sensitivity: 'base' }));
+  const list = filtered.filter((g) => !category || g.category === category).sort((a, b) => collator.compare(a.term, b.term));
+  // Paint the first screenful immediately, then the rest of the (long) list a moment later.
+  const [limit, setLimit] = useState(80);
+  useEffect(() => {
+    if (limit >= list.length) return;
+    const t = setTimeout(() => setLimit(list.length), 60);
+    return () => clearTimeout(t);
+  }, [limit, list.length]);
   const groups = new Map<string, GlossaryEntry[]>();
-  for (const g of list) {
+  for (const g of list.slice(0, limit)) {
     const letter = /[a-z]/i.test(g.term.replace(/^[^a-z0-9]+/i, '')[0] ?? '') ? g.term.replace(/^[^a-z0-9]+/i, '')[0].toUpperCase() : '#';
     groups.set(letter, [...(groups.get(letter) ?? []), g]);
   }

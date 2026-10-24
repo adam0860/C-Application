@@ -1678,3 +1678,9 @@
 .onboarding .btn.full {
   margin-top: 22px;
 }
+
+/* Let the browser skip layout/paint for off-screen glossary groups (hundreds of terms). */
+.gloss-group {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}

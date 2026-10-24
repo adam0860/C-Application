@@ -84,9 +84,9 @@ function build() {
 }
 
 export function search(query: string, limit = 40): SearchHit[] {
-  if (!docs) build();
   const q = query.trim().toLowerCase();
   if (!q) return [];
+  if (!docs) build();
   const terms = q.split(/\s+/);
   const hits: SearchHit[] = [];
   for (const d of docs!) {
