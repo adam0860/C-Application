@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0e17" />
+    <meta name="description" content="Learn C++ and Unreal Engine C++ with deep, interactive lessons." />
+    <link rel="icon" type="image/png" href="./icon.png" />
+    <title>C++ Forge</title>
+    <style>
+      /* Boot splash shown while the app bundle loads (matches the dark theme). */
+      html, body { margin: 0; background: #0b0e17; }
+      @media (prefers-color-scheme: light) { html, body { background: #f5f6fb; } #splash { background: #f5f6fb; color: #141826; } }
+      #splash { position: fixed; inset: 0; display: grid; place-items: center; background: #0b0e17; color: #e8ebf5;
+        font-family: system-ui, sans-serif; z-index: 9999; transition: opacity .35s ease; }
+      #splash.hide { opacity: 0; pointer-events: none; }
+      #splash .mark { width: 72px; height: 72px; animation: pulse 1.4s ease-in-out infinite; }
+      #splash p { margin: 16px 0 0; font-weight: 700; letter-spacing: -0.01em; text-align: center; }
+      @keyframes pulse { 50% { transform: scale(1.06); opacity: .85; } }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <div>
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8cff"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs>
+          <path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="url(#sg)"/>
+          <text x="32" y="39.5" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="19" fill="#fff">C++</text>
+        </svg>
+        <p>C++ Forge</p>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

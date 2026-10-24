@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">C++ Forge</string>
+    <string name="title_activity_main">C++ Forge</string>
+    <string name="package_name">com.cppforge.app</string>
+    <string name="custom_url_scheme">com.cppforge.app</string>
+</resources>

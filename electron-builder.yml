@@ -1,0 +1,31 @@
+# Windows desktop packaging for C++ Forge (run: npm run dist:win)
+appId: com.cppforge.app
+productName: C++ Forge
+copyright: Copyright © 2026 C++ Forge
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - electron/**/*
+  - build/icon.png
+  - package.json
+asar: true
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+    - target: portable
+      arch: [x64]
+  artifactName: CppForge-${version}-${arch}-${os}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: C++ Forge
+  artifactName: CppForge-Setup-${version}-${arch}.${ext}
+portable:
+  artifactName: CppForge-Portable-${version}.${ext}

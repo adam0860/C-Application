@@ -1,0 +1,124 @@
+name: Build apps
+
+on:
+  push:
+    branches: [main, 'claude/**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check content & code
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - name: Type-check
+        run: npm run typecheck
+      - name: Validate lesson content
+        run: npm run validate
+      - name: Compile and run every C++ example
+        run: npm run compile-examples
+      - name: Build web bundle
+        run: npx vite build
+
+  windows:
+    name: Windows installer
+    needs: check
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build web bundle
+        run: npx vite build
+      - name: Package with electron-builder
+        run: npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            release/*.exe
+          if-no-files-found: error
+
+  android:
+    name: Android APK
+    needs: check
+    runs-on: ubuntu-24.04
+    env:
+      # Secrets can't be used in `if:` directly, so expose whether signing is configured.
+      HAS_SIGNING: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - name: Build web bundle and copy it into the Android project
+        run: |
+          npx vite build
+          npx cap sync android
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Build signed release APK and bundle (only when signing secrets exist)
+        if: env.HAS_SIGNING == 'true'
+        working-directory: android
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/release.keystore"
+          export ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/release.keystore"
+          ./gradlew assembleRelease bundleRelease --no-daemon
+      - name: Collect outputs
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/debug/app-debug.apk out/CppForge-debug.apk
+          cp android/app/build/outputs/apk/release/app-release.apk out/CppForge-release.apk 2>/dev/null || true
+          cp android/app/build/outputs/bundle/release/app-release.aab out/CppForge-release.aab 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: out/*
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, android]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

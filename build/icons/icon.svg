@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="0.5" stop-color="#4338ca"/>
+      <stop offset="1" stop-color="#7e22ce"/>
+    </linearGradient>
+    <linearGradient id="hex" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7aa5ff"/>
+      <stop offset="1" stop-color="#2f6bff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fde68a"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+  <g id="background">
+    <rect width="1024" height="1024" fill="url(#bg)"/>
+    <circle cx="512" cy="470" r="430" fill="url(#glow)"/>
+    <path d="M0 760 L1024 560 L1024 1024 L0 1024 Z" fill="#000" opacity="0.12"/>
+  </g>
+  <g id="foreground">
+    <path d="M512 232 L754 372 L754 652 L512 792 L270 652 L270 372 Z" fill="url(#hex)" stroke="#ffffff" stroke-opacity="0.35" stroke-width="10"/>
+    <path d="M512 232 L754 372 L512 512 Z" fill="#fff" opacity="0.14"/>
+    <text x="512" y="578" text-anchor="middle" font-family="Inter, 'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="190" fill="#ffffff" letter-spacing="-8">C++</text>
+    <path d="M700 268 l20 48 48 20 -48 20 -20 48 -20 -48 -48 -20 48 -20 z" fill="url(#spark)"/>
+  </g>
+</svg>
