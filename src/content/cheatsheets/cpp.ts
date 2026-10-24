@@ -212,6 +212,10 @@ auto [ptr, ec] = std::from_chars(s.data(), s.data() + s.size(), value);
 if (ec == std::errc{}) { /* ok */ }` },
           { label: 'char <-> digit', code: `int d = '7' - '0';           // 7
 char c = static_cast<char>('0' + 3);  // '3'` },
+          { label: 'Fast number to text', code: `char buf[16];
+auto [end, ec] = std::to_chars(buf, buf + sizeof buf, 1234);
+std::string_view text{buf, end};` },
+          { label: 'Format anything (C++20)', code: `std::string s = std::format("{}", 3.5);   // "3.5"` },
           { label: 'Upper / lower case', code: `#include <cctype>
 char up = static_cast<char>(
     std::toupper(static_cast<unsigned char>(c)));` },
@@ -415,6 +419,12 @@ std::size(scores);        // 5 (C++17)`, text: 'Decays to a pointer when passed 
           { label: 'std::span parameter (C++20)', code: `#include <span>
 void Sum(std::span<const int> values);
 Sum(v);  Sum(rgb);  Sum(scores);`, text: 'Accepts any contiguous sequence without copying.' },
+          { label: 'Copy and compare', code: `auto copy = rgb;          // copies all elements
+bool same = (copy == rgb); // element-wise` },
+          { label: '2D board', code: `std::array<std::array<char, 3>, 3> board{};
+board[1][1] = 'X';` },
+          { label: 'Checked access', code: `rgb.at(5);   // throws std::out_of_range
+rgb[5];      // UB` },
         ],
       },
       {
@@ -527,6 +537,10 @@ e = nullptr;` },
 delete[] buf;`, text: 'Never mix `new[]` with `delete` or `new` with `delete[]`.' },
           { label: 'Deleting nullptr', code: `int* p = nullptr;
 delete p;          // safe no-op` },
+          { label: 'Allocation failure', code: `try { auto* big = new int[hugeCount]; }
+catch (const std::bad_alloc&) { /* out of memory */ }`, text: '`new` throws instead of returning null.' },
+          { label: 'Only delete what you new\'d', code: `Enemy local;
+// delete &local;   // UB: not heap memory` },
           { label: 'Prefer instead', code: `auto e = std::make_unique<Enemy>("Orc", 50);
 std::vector<int> buf(256);` },
         ],
@@ -849,6 +863,448 @@ std::unique_ptr<T> Make(Args&&... args) {
 }` },
           { label: 'Fold over operator', code: `template <typename... Ts>
 auto Sum(Ts... xs) { return (xs + ... + 0); }` },
+          { label: 'Expand into a call', code: `template <typename... Args>
+void Spawn(Args&&... args) { world.Add(std::forward<Args>(args)...); }` },
+          { label: 'Comma fold with separator', code: `template <typename... Ts>
+void PrintAll(const Ts&... xs) {
+    ((std::cout << xs << ' '), ...);
+}` },
+        ],
+      },
+    ],
+  },
+  // -------------------------------------------------------------- algorithms
+  {
+    id: 'cpp-algorithms',
+    title: 'STL Algorithms & Ranges',
+    course: 'cpp',
+    icon: '⚙️',
+    description: 'Searching, sorting, transforming and removing with <algorithm> and <numeric>, plus C++20 ranges and views.',
+    sections: [
+      {
+        title: 'Searching & counting',
+        items: [
+          { label: 'Find a value', code: `auto it = std::find(v.begin(), v.end(), 42);
+if (it != v.end()) { /* found at it */ }` },
+          { label: 'Find by condition', code: `auto it = std::find_if(enemies.begin(), enemies.end(),
+                       [](const Enemy& e) { return e.hp <= 0; });` },
+          { label: 'Any / all / none', code: `std::any_of(v.begin(), v.end(), isDead)
+std::all_of(v.begin(), v.end(), isDead)
+std::none_of(v.begin(), v.end(), isDead)` },
+          { label: 'Count', code: `std::count(v.begin(), v.end(), 0)
+std::count_if(v.begin(), v.end(), isDead)` },
+          { label: 'Binary search (sorted input)', code: `bool has = std::binary_search(v.begin(), v.end(), 42);
+auto lo = std::lower_bound(v.begin(), v.end(), 42); // first >= 42
+auto hi = std::upper_bound(v.begin(), v.end(), 42); // first > 42` },
+          { label: 'Min / max element', code: `auto it = std::max_element(v.begin(), v.end());
+auto [mn, mx] = std::minmax_element(v.begin(), v.end());` },
+          { label: 'Compare ranges', code: `std::equal(a.begin(), a.end(), b.begin(), b.end())` },
+          { label: 'Position from iterator', code: `auto index = std::distance(v.begin(), it);` },
+        ],
+      },
+      {
+        title: 'Sorting & ordering',
+        items: [
+          { label: 'Sort ascending', code: `std::sort(v.begin(), v.end());` },
+          { label: 'Sort descending', code: `std::sort(v.begin(), v.end(), std::greater<>{});` },
+          { label: 'Sort by member', code: `std::sort(e.begin(), e.end(),
+          [](const Enemy& a, const Enemy& b) { return a.hp < b.hp; });`, text: 'Comparator must be a strict weak ordering: use `<`, never `<=`.' },
+          { label: 'Keep equal elements in order', code: `std::stable_sort(v.begin(), v.end(), cmp);` },
+          { label: 'Top N only', code: `std::partial_sort(v.begin(), v.begin() + 3, v.end(),
+                  std::greater<>{});   // best 3 first` },
+          { label: 'Median / k-th element', code: `std::nth_element(v.begin(), v.begin() + v.size() / 2, v.end());` },
+          { label: 'Min, max, clamp', code: `std::min(a, b)   std::max(a, b)
+std::clamp(hp, 0, maxHp)` },
+          { label: 'Reverse / rotate', code: `std::reverse(v.begin(), v.end());
+std::rotate(v.begin(), v.begin() + 1, v.end());` },
+          { label: 'Shuffle', code: `#include <random>
+std::mt19937 rng{std::random_device{}()};
+std::shuffle(deck.begin(), deck.end(), rng);` },
+          { label: 'Is it sorted?', code: `std::is_sorted(v.begin(), v.end())` },
+        ],
+      },
+      {
+        title: 'Transforming & modifying',
+        items: [
+          { label: 'Transform in place', code: `std::transform(v.begin(), v.end(), v.begin(),
+               [](int x) { return x * 2; });` },
+          { label: 'Transform into another container', code: `std::vector<std::string> names;
+std::transform(e.begin(), e.end(), std::back_inserter(names),
+               [](const Enemy& x) { return x.name; });` },
+          { label: 'Copy matching', code: `std::copy_if(v.begin(), v.end(), std::back_inserter(out),
+             [](int x) { return x > 0; });` },
+          { label: 'Fill / iota', code: `std::fill(v.begin(), v.end(), 0);
+std::iota(v.begin(), v.end(), 1);   // 1, 2, 3, ... (<numeric>)` },
+          { label: 'Sum / fold', code: `#include <numeric>
+int total = std::accumulate(v.begin(), v.end(), 0);
+double sum = std::accumulate(d.begin(), d.end(), 0.0);`, text: 'The initial value sets the result type: `0` sums as `int`.' },
+          { label: 'Erase–remove idiom', code: `v.erase(std::remove_if(v.begin(), v.end(), isDead), v.end());`, text: '`remove_if` alone does not shrink the container.' },
+          { label: 'Erase matching (C++20)', code: `std::erase_if(v, isDead);` },
+          { label: 'Remove consecutive duplicates', code: `std::sort(v.begin(), v.end());
+v.erase(std::unique(v.begin(), v.end()), v.end());` },
+          { label: 'Replace', code: `std::replace(v.begin(), v.end(), -1, 0);` },
+          { label: 'for_each', code: `std::for_each(e.begin(), e.end(), [](Enemy& x) { x.Tick(); });` },
+        ],
+      },
+      {
+        title: 'Ranges & views (C++20)',
+        items: [
+          { label: 'Range algorithms', code: `#include <algorithm>
+std::ranges::sort(v);
+auto it = std::ranges::find(v, 42);` },
+          { label: 'Projections', code: `std::ranges::sort(enemies, {}, &Enemy::hp);   // sort by hp
+auto it = std::ranges::max_element(enemies, {}, &Enemy::hp);` },
+          { label: 'Filter', code: `#include <ranges>
+auto alive = enemies | std::views::filter([](const Enemy& e) {
+    return e.hp > 0;
+});` },
+          { label: 'Transform', code: `auto names = enemies | std::views::transform(&Enemy::name);` },
+          { label: 'Take / drop', code: `v | std::views::take(3)    // first 3
+v | std::views::drop(1)    // all but first` },
+          { label: 'Reverse', code: `for (int x : v | std::views::reverse) { }` },
+          { label: 'Number sequence', code: `for (int i : std::views::iota(0, 10)) { }   // 0..9` },
+          { label: 'Map keys / values', code: `for (const auto& k : scores | std::views::keys) { }
+for (int s : scores | std::views::values) { }` },
+          { label: 'Compose a pipeline', code: `auto top = enemies
+    | std::views::filter(isAlive)
+    | std::views::transform(&Enemy::name)
+    | std::views::take(5);`, text: 'Views are lazy: nothing runs until you iterate.' },
+          { label: 'Collect into a container (C++23)', code: `auto list = v | std::views::filter(isEven)
+                | std::ranges::to<std::vector>();` },
+          { label: 'Index + element (C++23)', code: `for (auto [i, e] : std::views::enumerate(enemies)) { }` },
+        ],
+      },
+    ],
+  },
+  // ------------------------------------------------------------------ modern
+  {
+    id: 'cpp-modern',
+    title: 'Modern C++ Toolbox',
+    course: 'cpp',
+    icon: '✨',
+    description: 'auto, structured bindings, enum class, optional/variant/expected, constexpr, attributes and other C++11–23 conveniences.',
+    sections: [
+      {
+        title: 'Type deduction & bindings',
+        items: [
+          { label: 'auto', code: `auto n = 42;                // int
+auto it = m.find(key);      // long iterator type
+const auto& big = GetBig(); // no copy`, text: 'Plain `auto` drops references and top-level const.' },
+          { label: 'decltype', code: `decltype(a * b) product = a * b;` },
+          { label: 'Structured bindings', code: `auto [name, score] = std::pair{"Aria", 90};
+for (const auto& [key, value] : map) { }
+auto [x, y] = Vec2{1, 2};` },
+          { label: 'Class template argument deduction', code: `std::vector v{1, 2, 3};     // std::vector<int>
+std::optional o{5};         // std::optional<int>` },
+          { label: 'Type alias', code: `using EntityId = std::uint32_t;
+using Inventory = std::unordered_map<std::string, int>;` },
+          { label: 'decltype(auto)', code: `decltype(auto) Get(std::vector<int>& v, std::size_t i) {
+    return v[i];   // returns int&, reference preserved
+}` },
+          { label: 'Constrained auto (C++20)', code: `std::integral auto count = items.size();` },
+        ],
+      },
+      {
+        title: 'Enums',
+        items: [
+          { label: 'Scoped enum', code: `enum class State { Idle, Running, Dead };
+State s = State::Idle;` },
+          { label: 'Underlying type', code: `enum class Rarity : std::uint8_t { Common, Rare, Epic };` },
+          { label: 'To integer', code: `int i = static_cast<int>(s);
+auto u = std::to_underlying(s);   // C++23` },
+          { label: 'using enum (C++20)', code: `switch (s) {
+    using enum State;
+    case Idle: break;
+    case Running: break;
+    case Dead: break;
+}` },
+          { label: 'Bit flags with enum class', code: `enum class Status : unsigned { None = 0, Poisoned = 1, Burning = 2 };
+constexpr Status operator|(Status a, Status b) {
+    return static_cast<Status>(
+        static_cast<unsigned>(a) | static_cast<unsigned>(b));
+}` },
+          { label: 'Enum to text', code: `constexpr std::string_view ToString(State s) {
+    switch (s) {
+    case State::Idle: return "Idle";
+    case State::Running: return "Running";
+    case State::Dead: return "Dead";
+    }
+    return "?";
+}` },
+          { label: 'Unreal form', code: `UENUM(BlueprintType)
+enum class EWeaponType : uint8 { Sword, Bow };`, text: 'Blueprint-exposed enums must use `uint8`.' },
+        ],
+      },
+      {
+        title: 'Vocabulary types',
+        items: [
+          { label: 'std::optional', code: `std::optional<int> FindSlot();
+if (auto s = FindSlot()) { Use(*s); }
+int slot = FindSlot().value_or(-1);
+return std::nullopt;   // "no value"` },
+          { label: 'std::variant', code: `std::variant<int, float, std::string> v = 3.5f;
+std::holds_alternative<float>(v);   // true
+if (auto* f = std::get_if<float>(&v)) { }` },
+          { label: 'std::visit', code: `std::visit([](const auto& x) { std::cout << x; }, v);` },
+          { label: 'Overloaded visitor', code: `template <typename... Fs> struct Overloaded : Fs... {
+    using Fs::operator()...;
+};
+std::visit(Overloaded{
+    [](int i) { /* int */ },
+    [](const std::string& s) { /* string */ },
+    [](auto) { /* everything else */ },
+}, v);`, text: 'C++20 deduces the template arguments; C++17 needs a deduction guide.' },
+          { label: 'std::expected (C++23)', code: `std::expected<int, std::string> Parse(std::string_view s);
+auto r = Parse("12");
+if (r) Use(*r); else Report(r.error());
+return std::unexpected("bad input");` },
+          { label: 'pair & tuple', code: `std::pair p{"gold", 50};
+std::tuple t{1, 2.5f, "x"};
+auto [a, b, c] = t;
+std::get<0>(t);` },
+          { label: 'std::span (C++20)', code: `void Draw(std::span<const Vertex> verts);` },
+        ],
+      },
+      {
+        title: 'Compile time',
+        items: [
+          { label: 'constexpr variable', code: `constexpr int MaxPlayers = 4;` },
+          { label: 'constexpr function', code: `constexpr int XpFor(int lvl) { return lvl * 100; }` },
+          { label: 'consteval (C++20)', code: `consteval int Kb(int n) { return n * 1024; }   // compile time only` },
+          { label: 'constinit (C++20)', code: `constinit int g_frame = 0;   // initialised at compile time, still mutable` },
+          { label: 'static_assert', code: `static_assert(sizeof(Header) == 16, "layout changed");` },
+          { label: 'if constexpr', code: `if constexpr (std::is_pointer_v<T>) { /* only compiled for pointers */ }` },
+          { label: 'inline constexpr in headers', code: `inline constexpr float Gravity = 9.81f;` },
+        ],
+      },
+      {
+        title: 'Everyday conveniences',
+        items: [
+          { label: 'nullptr', code: `Enemy* target = nullptr;   // never NULL or 0` },
+          { label: 'if / switch with initialiser', code: `if (auto it = m.find(k); it != m.end()) { }
+switch (auto s = GetState(); s) { /* ... */ }` },
+          { label: 'Attributes', code: `[[nodiscard]] bool TryBuy(int cost);
+[[maybe_unused]] int debugOnly = 0;
+[[deprecated("use Spawn2")]] void Spawn();
+if (hp <= 0) [[unlikely]] { Die(); }` },
+          { label: 'Three-way comparison', code: `auto operator<=>(const Version&) const = default;` },
+          { label: 'Designated initialisers', code: `Config c{.width = 1920, .height = 1080};` },
+          { label: 'Digit separators & binary', code: `int big = 1'000'000;
+unsigned mask = 0b1010'0101;` },
+          { label: 'std::format', code: `std::format("{} has {:.1f}% HP", name, pct)` },
+          { label: 'Range-for with initialiser (C++20)', code: `for (auto list = GetItems(); const auto& item : list) { }` },
+          { label: 'Error handling at a glance', text: 'Exceptions for rare failures; `std::optional` for "maybe no value"; `std::expected` for failures with a reason; assertions for programmer errors.' },
+        ],
+      },
+    ],
+  },
+  // ------------------------------------------------------------- concurrency
+  {
+    id: 'cpp-concurrency',
+    title: 'Threads & Synchronisation',
+    course: 'cpp',
+    icon: '🧵',
+    description: 'Starting threads, protecting shared data with mutexes and atomics, waiting on conditions, and async tasks.',
+    sections: [
+      {
+        title: 'Threads',
+        items: [
+          { label: 'std::jthread (C++20)', code: `#include <thread>
+std::jthread worker{LoadAssets};   // starts immediately
+// joins automatically when destroyed` },
+          { label: 'std::thread', code: `std::thread t{LoadAssets};
+t.join();          // wait for it (or t.detach())`, text: 'Destroying a joinable std::thread calls std::terminate.' },
+          { label: 'Arguments', code: `std::jthread t{Simulate, 60, std::ref(world)};`, text: 'Arguments are copied; wrap with `std::ref` to pass a reference.' },
+          { label: 'Lambda body', code: `std::jthread t{[&results, id] { results[id] = Compute(id); }};` },
+          { label: 'Cooperative cancellation', code: `std::jthread w{[](std::stop_token st) {
+    while (!st.stop_requested()) { Step(); }
+}};
+w.request_stop();` },
+          { label: 'Useful helpers', code: `std::thread::hardware_concurrency()   // number of cores (hint)
+std::this_thread::sleep_for(std::chrono::milliseconds{16});
+std::this_thread::get_id()` },
+        ],
+      },
+      {
+        title: 'Protecting shared data',
+        items: [
+          { label: 'Mutex + lock_guard', code: `#include <mutex>
+std::mutex m;
+void Add(int x) {
+    std::lock_guard lock{m};   // unlocks at end of scope
+    shared.push_back(x);
+}` },
+          { label: 'Several mutexes', code: `std::scoped_lock lock{m1, m2};   // deadlock-free` },
+          { label: 'Flexible lock', code: `std::unique_lock lock{m};
+lock.unlock();     // can unlock early, relock, move` },
+          { label: 'Atomic counter', code: `#include <atomic>
+std::atomic<int> kills{0};
+++kills;                       // thread-safe
+int n = kills.load();` },
+          { label: 'Atomic flag', code: `std::atomic<bool> quit{false};
+quit.store(true);                // from any thread
+while (!quit.load()) { }` },
+          { label: 'Compare-and-swap', code: `int expected = 0;
+bool won = owner.compare_exchange_strong(expected, myId);` },
+          { label: 'Run once', code: `std::once_flag flag;
+std::call_once(flag, [] { InitAudio(); });` },
+          { label: 'Forgotten name bug', code: `std::lock_guard<std::mutex>{m};   // temporary: unlocks immediately!
+std::lock_guard lock{m};          // correct` },
+        ],
+      },
+      {
+        title: 'Waiting & tasks',
+        items: [
+          { label: 'Condition variable', code: `std::mutex m;
+std::condition_variable cv;
+bool ready = false;
+// waiting thread:
+std::unique_lock lock{m};
+cv.wait(lock, [&] { return ready; });   // handles spurious wakeups` },
+          { label: 'Notify', code: `{
+    std::lock_guard lock{m};
+    ready = true;
+}
+cv.notify_one();   // or notify_all()` },
+          { label: 'std::async + future', code: `#include <future>
+auto f = std::async(std::launch::async, ComputePath, a, b);
+DoOtherWork();
+auto path = f.get();     // waits; rethrows task exceptions` },
+          { label: 'promise / future', code: `std::promise<int> p;
+std::future<int> f = p.get_future();
+std::jthread t{[&p] { p.set_value(42); }};
+int v = f.get();` },
+          { label: 'Parallel algorithms (C++17)', code: `#include <execution>
+std::sort(std::execution::par, v.begin(), v.end());`, text: 'With GCC/libstdc++ this needs Intel TBB to actually run in parallel.' },
+          { label: 'Poll without blocking', code: `using namespace std::chrono_literals;
+if (f.wait_for(0ms) == std::future_status::ready) {
+    Use(f.get());
+}` },
+          { label: 'Discarded async future', code: `std::async(std::launch::async, Work);   // blocks here!`, text: 'The temporary future waits in its destructor, so the call is effectively synchronous.' },
+        ],
+      },
+      {
+        title: 'Rules of thumb',
+        items: [
+          { label: 'Data race = UB', text: 'Shared data written by any thread must be protected by a mutex or be atomic.' },
+          { label: 'Short critical sections', text: 'Never do slow work (I/O, allocation-heavy code, callbacks) while holding a lock.' },
+          { label: 'One lock order', text: 'Always acquire multiple locks in the same order, or together with `std::scoped_lock`.' },
+          { label: 'Share less', text: 'Give each thread its own data and combine results at the end; data that is not shared needs no lock.' },
+          { label: 'Prefer tasks', text: 'Thread pools, `std::async` and engine task systems beat creating a raw thread per job.' },
+          { label: 'Find races', code: `g++ -g -fsanitize=thread -pthread main.cpp`, lang: 'shell', text: 'ThreadSanitizer cannot be combined with AddressSanitizer.' },
+          { label: 'Unreal equivalents', text: '`FCriticalSection` + `FScopeLock`, `std::atomic`, `UE::Tasks::Launch`, `AsyncTask`, `ParallelFor`. Touch UObjects only on the game thread.' },
+        ],
+      },
+    ],
+  },
+  // ------------------------------------------------------------------- build
+  {
+    id: 'cpp-build',
+    title: 'Compiler Flags, Sanitizers & CMake',
+    course: 'cpp',
+    icon: '🛠️',
+    description: 'Everyday g++/clang++/MSVC flags, warnings worth enabling, sanitizers and debuggers, and a minimal modern CMake project.',
+    sections: [
+      {
+        title: 'Compiling',
+        items: [
+          { label: 'One file', code: `g++ -std=c++20 -Wall -Wextra main.cpp -o game`, lang: 'shell' },
+          { label: 'Clang', code: `clang++ -std=c++20 -Wall -Wextra main.cpp -o game`, lang: 'shell' },
+          { label: 'MSVC (Developer Prompt)', code: `cl /std:c++20 /EHsc /W4 main.cpp`, lang: 'shell' },
+          { label: 'Several files', code: `g++ -std=c++20 main.cpp combat.cpp -o game`, lang: 'shell' },
+          { label: 'Compile, then link', code: `g++ -std=c++20 -c combat.cpp -o combat.o
+g++ -std=c++20 -c main.cpp -o main.o
+g++ main.o combat.o -o game`, lang: 'shell' },
+          { label: 'Debug build', code: `g++ -std=c++20 -O0 -g main.cpp -o game`, lang: 'shell' },
+          { label: 'Release build', code: `g++ -std=c++20 -O2 -DNDEBUG main.cpp -o game`, lang: 'shell', text: '`-DNDEBUG` turns `assert` off.' },
+          { label: 'Include and library paths', code: `g++ main.cpp -Iinclude -Llib -lphysics -o game`, lang: 'shell' },
+          { label: 'Define a macro', code: `g++ -DDEBUG_DRAW=1 main.cpp`, lang: 'shell' },
+          { label: 'Threads', code: `g++ -std=c++20 -pthread main.cpp`, lang: 'shell' },
+          { label: 'Inspect stages', code: `g++ -E main.cpp      # preprocessed output
+g++ -S -O2 main.cpp  # assembly (main.s)`, lang: 'shell' },
+        ],
+      },
+      {
+        title: 'Warnings worth enabling',
+        items: [
+          { label: 'Baseline', code: `-Wall -Wextra -Wpedantic`, lang: 'shell' },
+          { label: 'Stricter', code: `-Wshadow -Wconversion -Wsign-conversion
+-Wnon-virtual-dtor -Woverloaded-virtual -Wold-style-cast`, lang: 'shell' },
+          { label: 'Treat warnings as errors', code: `-Werror`, lang: 'shell' },
+          { label: 'MSVC', code: `/W4 /WX /permissive-`, lang: 'shell' },
+          { label: 'Checked standard library', code: `-D_GLIBCXX_ASSERTIONS`, lang: 'shell', text: 'libstdc++ bounds-checks `operator[]` and more; cheap enough for debug builds.' },
+          { label: 'Silence one deliberately', code: `[[maybe_unused]] int unused = 0;
+(void)result;   // explicitly discard` },
+        ],
+      },
+      {
+        title: 'Sanitizers & debuggers',
+        items: [
+          { label: 'Address + UB sanitizers', code: `g++ -std=c++20 -g -O1 -fsanitize=address,undefined \\
+    -fno-omit-frame-pointer main.cpp -o game`, lang: 'shell', text: 'Catches out-of-bounds, use-after-free, leaks (Linux), signed overflow and more.' },
+          { label: 'Thread sanitizer', code: `g++ -std=c++20 -g -fsanitize=thread -pthread main.cpp`, lang: 'shell' },
+          { label: 'Stop on first UB report', code: `-fno-sanitize-recover=all`, lang: 'shell' },
+          { label: 'MSVC AddressSanitizer', code: `cl /std:c++20 /EHsc /Zi /fsanitize=address main.cpp`, lang: 'shell' },
+          { label: 'GDB basics', code: `gdb ./game
+(gdb) break combat.cpp:42
+(gdb) run
+(gdb) bt            # call stack
+(gdb) print hp
+(gdb) next / step / finish / continue
+(gdb) watch hp      # stop when hp changes`, lang: 'shell' },
+          { label: 'LLDB basics', code: `lldb ./game
+(lldb) b combat.cpp:42
+(lldb) r
+(lldb) bt
+(lldb) p hp`, lang: 'shell' },
+          { label: 'Valgrind', code: `valgrind --leak-check=full ./game`, lang: 'shell', text: 'No recompilation needed, but much slower than ASan.' },
+        ],
+      },
+      {
+        title: 'Minimal CMake project',
+        items: [
+          { label: 'CMakeLists.txt', code: `cmake_minimum_required(VERSION 3.20)
+project(Arena VERSION 1.0 LANGUAGES CXX)
+
+add_executable(arena
+    src/main.cpp
+    src/combat.cpp
+)
+target_compile_features(arena PRIVATE cxx_std_20)
+target_include_directories(arena PRIVATE include)
+
+if(MSVC)
+    target_compile_options(arena PRIVATE /W4 /permissive-)
+else()
+    target_compile_options(arena PRIVATE -Wall -Wextra -Wpedantic)
+endif()`, lang: 'cmake' },
+          { label: 'Configure, build, run', code: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -j
+./build/arena`, lang: 'shell', text: 'Multi-config generators (Visual Studio) use `cmake --build build --config Release`.' },
+          { label: 'A library target', code: `add_library(combat STATIC src/combat.cpp)
+target_include_directories(combat PUBLIC include)
+target_link_libraries(arena PRIVATE combat)`, lang: 'cmake' },
+          { label: 'Threads', code: `find_package(Threads REQUIRED)
+target_link_libraries(arena PRIVATE Threads::Threads)`, lang: 'cmake' },
+          { label: 'Sanitizer option', code: `option(ARENA_SANITIZE "Build with ASan + UBSan" OFF)
+if(ARENA_SANITIZE AND NOT MSVC)
+    target_compile_options(arena PRIVATE
+        -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_link_options(arena PRIVATE -fsanitize=address,undefined)
+endif()`, lang: 'cmake' },
+          { label: 'Fetch a dependency', code: `include(FetchContent)
+FetchContent_Declare(fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1)
+FetchContent_MakeAvailable(fmt)
+target_link_libraries(arena PRIVATE fmt::fmt)`, lang: 'cmake' },
+          { label: 'Tests with CTest', code: `enable_testing()
+add_executable(arena_tests tests/combat_tests.cpp)
+target_link_libraries(arena_tests PRIVATE combat)
+add_test(NAME combat COMMAND arena_tests)
+# run: ctest --test-dir build`, lang: 'cmake' },
+          { label: 'IDE / clangd support', code: `set(CMAKE_EXPORT_COMPILE_COMMANDS ON)`, lang: 'cmake' },
+          { label: 'Unreal note', text: 'Unreal projects do not use CMake: UnrealBuildTool reads each module\'s `Build.cs` instead.' },
         ],
       },
     ],

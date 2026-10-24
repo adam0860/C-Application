@@ -1217,13 +1217,8 @@
 }
 .cs-items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 12px;
-}
-@media (max-width: 640px) {
-  .cs-items {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 .cs-item {
   display: flex;

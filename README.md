@@ -22,8 +22,8 @@ under the hood, and checks your understanding with questions whose feedback teac
   later in spaced-repetition review.
 - **Real code:** every runnable C++ example is compiled and run with GCC, and its output
   is checked, before each build. A **Run** button opens any example in Compiler Explorer.
-- **Library:** a searchable glossary of 400+ terms (tap any underlined term in a lesson
-  for an instant definition), 20+ cheat sheets, bookmarks, and a "read as notes" view of
+- **Library:** a searchable glossary of 640+ terms (tap any underlined term in a lesson
+  for an instant definition), 23 cheat sheets, bookmarks, and a "read as notes" view of
   every lesson.
 - **Motivation:** XP, levels, a daily goal, streaks, an activity heatmap, achievements,
   confetti, and synthesized sound effects with haptics. Sound and haptics can each be
