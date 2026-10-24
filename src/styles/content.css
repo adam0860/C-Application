@@ -690,10 +690,9 @@ figcaption {
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--k);
 }
 .mem-cells {
@@ -723,11 +722,13 @@ figcaption {
   background: color-mix(in srgb, var(--gold) 20%, transparent);
 }
 .mem-addr {
+  grid-column: 1;
   font-family: var(--font-code);
   font-size: 0.72rem;
   color: var(--text-3);
 }
 .mem-name {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   line-height: 1.2;
@@ -743,6 +744,8 @@ figcaption {
   color: var(--text-3);
 }
 .mem-value {
+  grid-column: 3;
+  justify-self: end;
   font-family: var(--font-code);
   font-size: 0.86rem;
   font-weight: 600;
@@ -918,4 +921,8 @@ figcaption {
   font-weight: 900;
   color: #fff;
   background: var(--success);
+}
+
+.block-table .ic {
+  white-space: nowrap;
 }

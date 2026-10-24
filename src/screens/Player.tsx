@@ -103,6 +103,12 @@ export function Player({
       } else {
         setPassed((p) => new Set(p).add(itemIndex));
       }
+      // Keep the right answer visible above the (taller) feedback panel.
+      setTimeout(() => {
+        bodyRef.current
+          ?.querySelector('.option.correct, .tf-btn.correct, .bug-answer, .bug-correct, .order-solution')
+          ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 120);
       if (isCorrect) {
         sfx.correct();
         void haptic('success');
