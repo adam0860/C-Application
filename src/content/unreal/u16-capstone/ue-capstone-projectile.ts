@@ -5,7 +5,7 @@ export const lesson: Lesson = {
   title: 'A Projectile Weapon with Damage',
   summary:
     'Fire real projectiles from a muzzle socket, deal point damage into the health component, control fire rate with timers, and make it work in multiplayer.',
-  minutes: 25,
+  minutes: 22,
   objectives: [
     'Build an `AProjectile` with a sphere collision root and a configured `UProjectileMovementComponent`',
     'Turn `OnComponentHit` into damage with `UGameplayStatics::ApplyPointDamage`, crediting the instigator',

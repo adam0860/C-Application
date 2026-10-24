@@ -47,7 +47,7 @@ function parseInline(text: string, keyPrefix = ''): ReactNode[] {
           }}
           title={entry?.short.replace(/[`*[\]]/g, '')}
         >
-          {label ?? (entry ? displayTerm(entry.term, entry.course, sentenceStart) : id)}
+          {label ? parseInline(label, key + 'l') : entry ? displayTerm(entry.term, entry.course, sentenceStart) : id}
         </button>,
       );
     } else if (m[3]) {

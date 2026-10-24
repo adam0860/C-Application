@@ -5,7 +5,7 @@ export const lesson: Lesson = {
   title: 'A Health Component from Scratch',
   summary:
     'Build a reusable, Blueprint-friendly, multiplayer-ready UHealthComponent step by step — and the reasoning behind every line.',
-  minutes: 25,
+  minutes: 22,
   objectives: [
     'Design a reusable `UActorComponent` and explain why composition beats a shared base class here',
     'Choose `UPROPERTY` specifiers that protect invariants while staying designer- and Blueprint-friendly',

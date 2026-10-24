@@ -5,7 +5,7 @@ export const lesson: Lesson = {
   title: 'An Interactive Pickup',
   summary:
     'Build a rotating, respawning health pickup with sound, Niagara effects and a Blueprint hook — C++ mechanics, designer-owned content.',
-  minutes: 22,
+  minutes: 20,
   objectives: [
     'Structure a pickup as an abstract C++ base class with a virtual effect hook and thin subclasses',
     'Set up a sphere collision root, a non-colliding mesh and a `URotatingMovementComponent`, and justify each choice',
