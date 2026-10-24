@@ -3598,5 +3598,463 @@ std::vector<Enemy> v{boss};  // stores a sliced copy`,
     see: ['polymorphism', 'copy-constructor', 'pass-by-reference', 'derived-class'],
   },
   // ------------------------------------------------------------ Copy & Move
+  {
+    id: 'copy-constructor',
+    term: 'Copy Constructor',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The constructor that creates a new object as a copy of an existing one, with the signature `T(const T& other)`. It runs for `T b = a;`, `T b{a};` and when passing or returning by value (unless elided).',
+    long:
+      'If you do not write one, the compiler generates a copy constructor that copies each member in turn (memberwise copy). That is perfect for members that copy themselves correctly — `int`, `std::string`, `std::vector` — and wrong for raw owning pointers, where it produces a [[shallow-copy]] and later a [[double-free]].\n\nThe parameter must be a reference: taking `T` by value would require a copy to call the copy constructor, recursing forever. To make a type non-copyable, write `T(const T&) = delete;` (or hold a non-copyable member such as `std::unique_ptr`).',
+    example: `class Inventory {
+public:
+    Inventory() = default;
+    Inventory(const Inventory& other)     // copy ctor
+        : items{other.items} {}
+private:
+    std::vector<std::string> items;
+};
+Inventory a;
+Inventory b = a;    // copy constructor runs`,
+    see: ['copy-assignment', 'deep-copy', 'rule-of-three', 'special-member-functions'],
+    reading: [cppref('Copy constructors', 'language/copy_constructor', 'When the copy constructor is implicitly declared, defaulted or deleted.')],
+  },
+  {
+    id: 'copy-assignment',
+    term: 'Copy Assignment Operator',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The `operator=` that replaces the contents of an *existing* object with a copy of another, with the signature `T& operator=(const T& other)`. It runs for `a = b;` when both objects already exist.',
+    long:
+      'Unlike the copy constructor, the target already holds resources, so a hand-written copy assignment must release the old ones, copy the new ones, handle self-assignment (`a = a;`) and return `*this`. Getting all of that exception-safe is fiddly.\n\nThe *copy-and-swap* idiom solves it neatly: take the parameter by value (making the copy) and swap it with `*this`; the old contents are destroyed with the parameter. Better still, design classes whose members handle copying themselves so the compiler-generated version is correct ([[rule-of-zero]]).',
+    example: `Inventory a, b;
+a = b;                    // copy assignment
+Inventory c = b;          // copy construction, not assignment
+
+// copy-and-swap:
+Buffer& Buffer::operator=(Buffer other) {
+    std::swap(data, other.data);
+    return *this;
+}`,
+    see: ['copy-constructor', 'rule-of-three', 'operator-overloading', 'exception-safety'],
+    reading: [cppref('Copy assignment operator', 'language/copy_assignment', 'Implicit generation rules and the canonical copy-and-swap form.')],
+  },
+  {
+    id: 'shallow-copy',
+    term: 'Shallow Copy',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'Copying an object by copying its member values only — including copying pointers, so both objects end up pointing to the *same* heap data instead of each having its own.',
+    long:
+      'The compiler-generated copy operations copy members one by one. For a raw owning pointer that is a shallow copy: two objects now believe they own one buffer. When the first is destroyed it frees the buffer; the second is left with a [[dangling-pointer]], and its destructor causes a [[double-free]].\n\nShallow copies are fine (and intended) for non-owning pointers, and `std::shared_ptr` makes shared ownership safe. For exclusive ownership, either implement a [[deep-copy]], forbid copying, or use `std::unique_ptr`, which refuses to be copied.',
+    example: `struct Bad {
+    int* data = new int[100];
+    ~Bad() { delete[] data; }
+};                    // default copy = shallow
+Bad a;
+Bad b = a;            // b.data == a.data
+// both destructors delete[] the same block: UB`,
+    see: ['deep-copy', 'copy-constructor', 'double-free', 'rule-of-three'],
+  },
+  {
+    id: 'deep-copy',
+    term: 'Deep Copy',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'Copying an object together with everything it owns, so the copy gets its own independent duplicate of any heap data rather than sharing it.',
+    long:
+      'Standard containers and `std::string` perform deep copies automatically: copying a `std::vector<int>` allocates a new buffer and copies every element. That is why using them as members gives correct copy behaviour for free.\n\nIf a class manages a resource manually, its copy constructor and copy assignment must allocate new storage and copy the contents — and then the [[rule-of-three]] applies. Deep copies cost time and memory proportional to the data, which is one motivation for [[move-semantics]].\n\nIn Unreal, copying a `TArray` or `FString` is deep as well, which is why large arrays are passed as `const TArray<T>&`.',
+    example: `class Buffer {
+public:
+    explicit Buffer(std::size_t n) : size{n}, data{new int[n]{}} {}
+    Buffer(const Buffer& o) : size{o.size}, data{new int[o.size]} {
+        std::copy(o.data, o.data + size, data);   // deep
+    }
+    ~Buffer() { delete[] data; }
+private:
+    std::size_t size;
+    int* data;
+};`,
+    see: ['shallow-copy', 'copy-constructor', 'rule-of-three', 'std-vector'],
+  },
+  {
+    id: 'rule-of-three',
+    term: 'Rule of Three',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'If a class needs a user-defined destructor, copy constructor or copy assignment operator, it almost certainly needs all three.',
+    long:
+      'Needing a custom destructor usually means the class manages a resource by hand (raw memory, a file handle). The compiler-generated copy operations would copy the handle shallowly, causing double frees. So whenever you write one of the three, write (or delete) the other two.\n\nSince C++11 the rule extends to the [[rule-of-five]] by adding the move operations. And the best modern advice is the [[rule-of-zero]]: wrap each resource in its own RAII class so that most classes need none of these functions.',
+    example: `class Texture {
+public:
+    explicit Texture(const char* file);
+    ~Texture();                               // 1
+    Texture(const Texture& other);            // 2
+    Texture& operator=(const Texture& other); // 3
+private:
+    unsigned char* pixels;
+};`,
+    see: ['rule-of-five', 'rule-of-zero', 'copy-constructor', 'destructor'],
+    reading: [cppref('The rule of three/five/zero', 'language/rule_of_three', 'All three rules on one page with short examples.')],
+  },
+  {
+    id: 'rule-of-five',
+    term: 'Rule of Five',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The C++11 extension of the rule of three: a class that defines any of the destructor, copy constructor, copy assignment, move constructor or move assignment should consider defining (or deleting or defaulting) all five.',
+    long:
+      'Declaring a destructor or copy operation suppresses the implicit move operations, so such a class silently falls back to (possibly expensive) copies when moved. Declaring a move operation deletes the implicit copy operations. Spelling out all five — even as `= default` or `= delete` — makes the intent explicit and avoids surprises.\n\nMove operations should leave the source in a valid (usually empty) state and be marked `noexcept`, so that containers like `std::vector` will use them when reallocating.',
+    example: `class Buffer {
+public:
+    ~Buffer();
+    Buffer(const Buffer&);
+    Buffer& operator=(const Buffer&);
+    Buffer(Buffer&&) noexcept;
+    Buffer& operator=(Buffer&&) noexcept;
+};`,
+    see: ['rule-of-three', 'rule-of-zero', 'move-constructor', 'special-member-functions'],
+    reading: [
+      cppref('The rule of three/five/zero', 'language/rule_of_three', 'Shows a complete rule-of-five class.'),
+      {
+        title: 'C++ Core Guidelines — C.21',
+        url: 'https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rc-five',
+        source: 'core-guidelines',
+        note: 'If you define or =delete any copy, move, or destructor function, define or =delete them all.',
+      },
+    ],
+  },
+  {
+    id: 'rule-of-zero',
+    term: 'Rule of Zero',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'Design classes so they need **none** of the five special member functions: let members such as `std::string`, `std::vector` and `std::unique_ptr` manage resources, and the compiler-generated versions will be correct.',
+    long:
+      'Each resource should be owned by a class whose only job is managing it (an RAII wrapper). Every other class just holds such wrappers as members and writes no destructor, copy or move operations at all. This removes whole categories of bugs and keeps classes short.\n\nThe resulting class is copyable if all members are copyable, move-only if a member is move-only (like `std::unique_ptr`), and moves efficiently either way. Note: a polymorphic base still needs a virtual destructor; declare it `= default` and default the other four if you want them.\n\nUnreal gameplay classes are typically rule-of-zero: members are `TArray`, `FString`, `TObjectPtr` and the GC handles `UObject` lifetimes.',
+    example: `class Player {            // no special members needed
+    std::string name;
+    std::vector<Item> inventory;
+    std::unique_ptr<Weapon> weapon;
+};  // move-only (because of unique_ptr), leak-free`,
+    see: ['rule-of-five', 'raii', 'special-member-functions', 'smart-pointer'],
+    reading: [
+      {
+        title: 'C++ Core Guidelines — C.20',
+        url: 'https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rc-zero',
+        source: 'core-guidelines',
+        note: 'If you can avoid defining default operations, do.',
+      },
+    ],
+  },
+  {
+    id: 'move-semantics',
+    term: 'Move Semantics',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The C++11 feature that lets an object *transfer* its resources (heap buffers, handles) to another object instead of copying them, when the source is a temporary or explicitly marked with `std::move`.',
+    long:
+      'Copying a `std::vector` of a million elements allocates and copies a million elements. Moving it just copies three pointers and sets the source\'s pointers to null — constant time, no allocation. The source is left valid but unspecified (in practice, empty).\n\nThe compiler picks a move automatically when the source is an [[rvalue]] (a temporary, or a returned local), and you request one explicitly with [[std-move]] when you know you no longer need an lvalue. Move-only types such as `std::unique_ptr`, `std::thread` and file streams are possible only because of move semantics.\n\nUnreal has equivalents: `MoveTemp(x)` instead of `std::move(x)` (it also refuses to compile on `const` objects), and `TArray`/`FString` have move constructors.',
+    example: `std::vector<int> MakeBig() {
+    return std::vector<int>(1'000'000);
+}
+std::vector<int> a = MakeBig();    // moved or elided
+std::vector<int> b = std::move(a); // move: O(1)
+// a is now valid but unspecified (empty in practice)`,
+    see: ['move-constructor', 'rvalue-reference', 'std-move', 'copy-elision'],
+    reading: [cppref('Move constructors', 'language/move_constructor', 'When move constructors are called, generated and used by the standard library.')],
+  },
+  {
+    id: 'move-constructor',
+    term: 'Move Constructor',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The constructor `T(T&& other) noexcept` that builds a new object by stealing `other`\'s resources and leaving `other` in a valid, typically empty state.',
+    long:
+      'A typical move constructor copies the source\'s pointer and size, then sets the source\'s pointer to `nullptr` so its destructor will not free the stolen buffer. Its companion is the move assignment operator `T& operator=(T&& other) noexcept`.\n\nMark move operations `noexcept`. `std::vector` only moves elements during reallocation if their move constructor cannot throw (otherwise it copies, to preserve its strong exception guarantee), so a missing `noexcept` can silently make your code slower.\n\nThe compiler generates a memberwise move constructor if you declare no copy operations, move assignment or destructor yourself — another reason to follow the [[rule-of-zero]].',
+    example: `class Buffer {
+public:
+    Buffer(Buffer&& other) noexcept
+        : size{other.size}, data{other.data} {
+        other.size = 0;
+        other.data = nullptr;    // source gives up ownership
+    }
+private:
+    std::size_t size = 0;
+    int* data = nullptr;
+};`,
+    see: ['move-semantics', 'rvalue-reference', 'noexcept', 'rule-of-five'],
+    reading: [cppref('Move constructors', 'language/move_constructor', 'Implicit declaration rules and why noexcept matters.')],
+  },
+  {
+    id: 'rvalue-reference',
+    term: 'rvalue Reference',
+    aliases: ['T&&'],
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'A reference declared with `&&`, such as `std::string&&`, that binds only to rvalues (temporaries and `std::move`d objects). It is how functions detect that an argument may be moved from.',
+    long:
+      'Overloading on `const T&` vs `T&&` lets a function copy from lvalues but move from rvalues — exactly what `push_back`, constructors and assignment operators do.\n\nA subtle point: a *named* rvalue reference is itself an lvalue. Inside `void Take(std::string&& s)`, using `s` does not move it; you must write `std::move(s)` to pass it on as an rvalue.\n\nIn a template, `T&&` where `T` is deduced is a *forwarding reference* (also called a universal reference): it binds to both lvalues and rvalues, and is used with `std::forward<T>` to pass arguments on unchanged.',
+    example: `void Store(const std::string& s);  // lvalues: copy
+void Store(std::string&& s);       // rvalues: move
+
+std::string name = "Aria";
+Store(name);              // calls const& overload
+Store(std::move(name));   // calls && overload
+Store(std::string{"B"});  // temporary: && overload`,
+    see: ['rvalue', 'move-semantics', 'std-move', 'reference'],
+    reading: [cppref('Reference declaration', 'language/reference', 'rvalue references, forwarding references and reference collapsing.')],
+  },
+  {
+    id: 'std-move',
+    term: 'std::move',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'A function in `<utility>` that casts its argument to an rvalue reference, signalling "you may move from this object". It does not move anything by itself; the move happens when a move constructor or assignment receives it.',
+    long:
+      '`std::move(x)` is just `static_cast<T&&>(x)`. The actual transfer happens in whatever receives the result — a move constructor, move assignment or `&&` overload. If the type has no move operations, it is simply copied.\n\nAfter moving from an object, only assign to it or destroy it (unless the type documents its moved-from state). Do not `std::move` a local in a `return` statement (`return std::move(local);`) — it prevents copy elision and can make code slower. Moving from a `const` object silently copies, because `const T&&` cannot bind to a move constructor.\n\nUnreal\'s `MoveTemp` is the engine equivalent and is a compile error on `const` objects or non-lvalues, catching both mistakes.',
+    example: `std::string a = "a long player name...";
+std::string b = std::move(a);   // a's buffer moves to b
+a = "reassigned";               // OK: give a new value
+
+const std::string c = "const";
+std::string d = std::move(c);   // copies! c is const`,
+    see: ['move-semantics', 'rvalue-reference', 'copy-elision', 'unique-ptr'],
+    reading: [cppref('std::move', 'utility/move', 'What std::move really does and notes on moved-from objects.')],
+  },
+  {
+    id: 'copy-elision',
+    term: 'Copy Elision',
+    aliases: ['RVO', 'NRVO', 'return value optimization'],
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The compiler constructing an object directly in its final destination, skipping a copy or move entirely. Since C++17 it is **guaranteed** when returning or initialising from a temporary of the same type (a prvalue).',
+    long:
+      '`Enemy MakeBoss() { return Enemy{"Dragon"}; }` constructs the result straight into the caller\'s variable — no copy, no move, guaranteed (C++17 "mandatory elision"). It even works for types that cannot be copied or moved at all.\n\nReturning a *named* local (`Enemy e; ...; return e;`) is *named return value optimisation* (NRVO). It is allowed and very common, but not guaranteed; if it does not happen, the local is moved automatically. That is why you should just write `return e;` — never `return std::move(e);`.\n\nThis is the reason returning large objects by value is the idiomatic way to produce results in modern C++.',
+    example: `std::vector<int> MakeLevels() {
+    std::vector<int> levels(100);
+    return levels;   // NRVO, or implicit move
+}
+Enemy MakeBoss() {
+    return Enemy{"Dragon"};   // guaranteed elision
+}`,
+    see: ['move-semantics', 'return-value', 'std-move', 'copy-constructor'],
+    reading: [cppref('Copy elision', 'language/copy_elision', 'Mandatory vs non-mandatory elision and the C++17 changes.')],
+  },
+  {
+    id: 'special-member-functions',
+    term: 'Special Member Functions',
+    course: 'cpp',
+    category: 'Copy & Move',
+    short:
+      'The six member functions the compiler can generate automatically: default constructor, destructor, copy constructor, copy assignment, move constructor and move assignment.',
+    long:
+      'The compiler declares each one implicitly when you do not, following rules that interact: declaring any constructor removes the implicit default constructor; declaring a copy operation or destructor suppresses the implicit move operations; declaring a move operation deletes the implicit copy operations.\n\nYou can be explicit with `= default` (use the compiler\'s version) and `= delete` (forbid it). Being explicit documents intent and avoids surprises from the rules above.\n\nThe [[rule-of-zero]], [[rule-of-three]] and [[rule-of-five]] are guidelines for handling these functions safely.',
+    example: `class Player {
+public:
+    Player() = default;                         // default ctor
+    ~Player() = default;                        // destructor
+    Player(const Player&) = delete;             // no copies
+    Player& operator=(const Player&) = delete;
+    Player(Player&&) noexcept = default;        // movable
+    Player& operator=(Player&&) noexcept = default;
+};`,
+    see: ['rule-of-five', 'rule-of-zero', 'default-constructor', 'copy-constructor'],
+    reading: [cppref('Classes', 'language/classes', 'The "Special member functions" section links to each one\'s generation rules.')],
+  },
+  // ------------------------------------------------------------ Templates
+  {
+    id: 'template',
+    term: 'Template',
+    course: 'both',
+    category: 'Templates',
+    short:
+      'A blueprint from which the compiler generates functions or classes for specific types: `template <typename T> T Max(T a, T b);` works for `int`, `double`, `std::string` and any type that supports `<`.',
+    long:
+      'Templates are C++\'s main tool for writing code once for many types without losing speed: each use is compiled into code specialised for that type ([[template-instantiation]]), so there is no run-time overhead — compile-time polymorphism.\n\nThe costs are longer compile times, potentially larger binaries, and historically horrible error messages; C++20 [[concept|concepts]] greatly improve the errors. Because the compiler needs the full definition to instantiate a template, templates normally live entirely in headers.\n\nThe standard library is mostly templates (`std::vector<T>`, `std::sort`), and so is much of Unreal: `TArray<T>`, `TMap<K, V>`, `TObjectPtr<T>`, `Cast<T>`, `NewObject<T>`.',
+    example: `template <typename T>
+T Max(T a, T b) {
+    return a < b ? b : a;
+}
+int i = Max(3, 7);                 // T = int
+double d = Max(2.5, 1.5);          // T = double
+std::string s = Max<std::string>("ab", "cd");`,
+    see: ['function-template', 'class-template', 'concept', 'generic-programming'],
+    reading: [cppref('Templates', 'language/templates', 'Overview of template kinds, parameters and instantiation.')],
+  },
+  {
+    id: 'function-template',
+    term: 'Function Template',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'A function defined with one or more template parameters, from which the compiler generates concrete functions as needed: `template <typename T> void Swap(T& a, T& b);`.',
+    long:
+      'You usually call a function template like a normal function and let [[template-argument-deduction]] work out `T` from the arguments; you can also specify it explicitly, as in `Max<double>(1, 2.5)`.\n\nThe body is only type-checked for a particular `T` when it is instantiated, so errors appear at the call site and can be long. Since C++20, a constrained `auto` parameter is a short way to write a function template: `void Print(const auto& x)` or `void Heal(std::integral auto amount)`.',
+    example: `template <typename T>
+void PrintAll(const std::vector<T>& items) {
+    for (const T& item : items) {
+        std::cout << item << '\\n';
+    }
+}
+PrintAll(std::vector<int>{1, 2, 3});   // T = int`,
+    see: ['template', 'template-argument-deduction', 'template-instantiation', 'concept'],
+    reading: [cppref('Function template', 'language/function_template', 'Declaration syntax, explicit arguments, deduction and abbreviated templates.')],
+  },
+  {
+    id: 'class-template',
+    term: 'Class Template',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'A class defined with template parameters, such as `template <typename T> class Pool { ... };`. Each set of arguments (`Pool<Enemy>`, `Pool<Bullet>`) produces a distinct class.',
+    long:
+      'All standard containers are class templates. Template parameters can be types (`typename T`), values (`std::size_t N`, as in `std::array<int, 5>`) or even other templates.\n\n`Pool<Enemy>` and `Pool<Bullet>` are completely unrelated types: they share no base class and you cannot store them in one container. Only the member functions you actually use are instantiated, so a `std::vector<T>` works even if `T` does not support everything vector could do with it.\n\nSince C++17, class template argument deduction (CTAD) often lets you omit the arguments: `std::pair p{1, 2.0};`.',
+    example: `template <typename T, std::size_t Capacity>
+class RingBuffer {
+public:
+    void Push(const T& value) {
+        data[head] = value;
+        head = (head + 1) % Capacity;
+    }
+private:
+    std::array<T, Capacity> data{};
+    std::size_t head = 0;
+};
+RingBuffer<float, 60> frameTimes;`,
+    see: ['template', 'template-instantiation', 'template-specialization', 'container'],
+    reading: [cppref('Class template', 'language/class_template', 'Defining, instantiating and specialising class templates.')],
+  },
+  {
+    id: 'template-argument-deduction',
+    term: 'Template Argument Deduction',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'The compiler working out template arguments from the types of the function call arguments, so `Max(3, 7)` deduces `T = int` without writing `Max<int>`.',
+    long:
+      'Each function argument is matched against its parameter type. If two arguments deduce different types for the same `T` — as in `Max(3, 2.5)` (`int` vs `double`) — deduction fails and the call does not compile. Fix it with an explicit argument (`Max<double>(3, 2.5)`) or a cast.\n\nWhen a parameter is taken by value, references and top-level `const` are dropped and arrays decay to pointers; `T&` parameters keep them. `auto` variables use the same rules. Implicit conversions are not considered during deduction itself.',
+    example: `template <typename T>
+T Max(T a, T b) { return a < b ? b : a; }
+
+Max(3, 7);            // T = int
+Max(3, 2.5);          // error: int vs double
+Max<double>(3, 2.5);  // OK: T given explicitly`,
+    see: ['template', 'function-template', 'type-deduction', 'auto'],
+    reading: [cppref('Template argument deduction', 'language/template_argument_deduction', 'The full deduction rules, including forwarding references.')],
+  },
+  {
+    id: 'template-instantiation',
+    term: 'Template Instantiation',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'The compiler generating a concrete function or class from a template for specific arguments, for example creating `Max<int>` the first time you call `Max(3, 7)`.',
+    long:
+      'Instantiation happens at compile time, in each translation unit that uses the template with those arguments. The linker then merges duplicate instantiations (they are implicitly inline), so you end up with one copy per distinct set of arguments.\n\nBecause instantiating requires the full template definition, templates live in headers. Heavy template use multiplies compile times and can bloat binaries ("code bloat"), one reason large codebases like Unreal care about include hygiene. Explicit instantiation (`template class Pool<Enemy>;`) and `extern template` declarations can control where instantiations happen.',
+    example: `template <typename T>
+T Twice(T x) { return x + x; }
+
+Twice(4);       // instantiates Twice<int>
+Twice(1.5);     // instantiates Twice<double>
+Twice(4);       // reuses Twice<int>`,
+    see: ['template', 'compile-time', 'one-definition-rule', 'header-file'],
+  },
+  {
+    id: 'template-specialization',
+    term: 'Template Specialization',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'Providing a custom implementation of a template for particular arguments. A *full* specialization handles one exact set (`template <> struct Hash<GridPos>`); a *partial* specialization (classes only) handles a pattern such as all pointers `T*`.',
+    long:
+      'Specialisation lets a generic template behave differently when a better or necessary implementation exists for a specific type. The classic example is specialising `std::hash` for your own key type so it works in `std::unordered_map` — one of the few things you are allowed to add to namespace `std`.\n\n`std::vector<bool>` is a famous (and controversial) specialisation that packs bits, making it behave unlike every other vector. Function templates can be fully specialised but not partially; prefer overloading for functions.\n\nUnreal uses specialisation-like traits extensively, for example `TStructOpsTypeTraits` to tell the engine how a `USTRUCT` can be copied, compared or serialised.',
+    example: `template <typename T>
+struct TypeName { static constexpr const char* value = "unknown"; };
+
+template <>
+struct TypeName<int> { static constexpr const char* value = "int"; };
+
+template <typename T>           // partial: any pointer
+struct TypeName<T*> { static constexpr const char* value = "pointer"; };`,
+    see: ['template', 'class-template', 'hash-table', 'std-unordered-map'],
+    reading: [
+      cppref('Explicit (full) template specialization', 'language/template_specialization', 'Syntax and rules for full specialisations.'),
+      cppref('Partial template specialization', 'language/partial_specialization', 'How partial specialisations are matched and ordered.'),
+    ],
+  },
+  {
+    id: 'concept',
+    term: 'Concept',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'A C++20 named set of requirements on template arguments, such as `std::integral` or `std::sortable`. Concepts constrain templates so wrong types are rejected with a clear error at the call site.',
+    long:
+      'Before C++20, passing the wrong type to a template produced pages of errors from deep inside its implementation. With a concept, the compiler checks the requirement first and reports "constraints not satisfied" with the reason.\n\nThe standard library provides many in `<concepts>` and `<iterator>` (`std::integral`, `std::floating_point`, `std::same_as`, `std::copyable`, `std::random_access_iterator`). You define your own with `concept Name = requirement;`, often using a requires expression.\n\nConcepts also participate in overload resolution: a more constrained overload is preferred, replacing old tricks like `std::enable_if`.',
+    example: `#include <concepts>
+
+template <typename T>
+concept Damageable = requires(T t, int amount) {
+    t.TakeDamage(amount);
+};
+
+template <Damageable T>
+void Explode(T& target) { target.TakeDamage(100); }`,
+    see: ['requires-clause', 'template', 'generic-programming', 'interface'],
+    reading: [cppref('Constraints and concepts', 'language/constraints', 'Defining concepts, requires clauses and how constraints are checked.')],
+  },
+  {
+    id: 'requires-clause',
+    term: 'requires Clause',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'A C++20 `requires` followed by a compile-time boolean condition that a template\'s arguments must satisfy: `template <typename T> requires std::integral<T>`.',
+    long:
+      'A requires clause can appear after the template parameter list or after a function\'s declarator, and can combine concepts with `&&` and `||`. It is the long form of writing `template <std::integral T>`.\n\nDo not confuse it with a *requires expression*, `requires (T t) { t.Update(); }`, which tests whether certain expressions are valid and yields `true` or `false`. The two often appear together: `requires requires (T t) { ... }` — legal, though usually better expressed with a named concept.',
+    example: `template <typename T>
+    requires std::integral<T> || std::floating_point<T>
+T Clamp01(T v) {
+    return v < T{0} ? T{0} : (v > T{1} ? T{1} : v);
+}
+
+Clamp01(0.5);          // OK
+// Clamp01("text");    // error: constraints not satisfied`,
+    see: ['concept', 'template', 'function-template'],
+    reading: [cppref('Requires expression', 'language/requires', 'The syntax of requires expressions and their simple, type, compound and nested requirements.')],
+  },
+  {
+    id: 'generic-programming',
+    term: 'Generic Programming',
+    course: 'cpp',
+    category: 'Templates',
+    short:
+      'Writing algorithms and data structures in terms of the requirements they place on types, rather than specific types, so one implementation works for every type that meets those requirements.',
+    long:
+      'Alexander Stepanov\'s STL is the classic example: `std::sort` works on any random-access range whose elements can be compared, whether they are `int`s in a `std::vector` or structs in a `std::array`. Algorithms are written once, and containers just provide iterators.\n\nIn C++ generic programming is done with templates and, since C++20, concepts to state the requirements explicitly. The result is code that is both reusable and as fast as hand-specialised code.\n\nUnreal\'s containers and algorithms (`Algo::Sort`, `TArray::Sort`) follow the same philosophy.',
+    example: `template <typename Container, typename Pred>
+int CountIf(const Container& c, Pred pred) {
+    int n = 0;
+    for (const auto& x : c) {
+        if (pred(x)) ++n;
+    }
+    return n;
+}   // works with vector, array, set, list...`,
+    see: ['template', 'concept', 'algorithm', 'iterator'],
+  },
+  // ------------------------------------------------------------ STL
   // @@MORE@@
 ];
