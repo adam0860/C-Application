@@ -5,12 +5,19 @@ copyright: Copyright © 2026 C++ Forge
 directories:
   output: release
   buildResources: build
+# The web app is fully bundled by Vite into dist/, so no node_modules are needed
+# at runtime (Electron itself is provided by the runtime).
 files:
   - dist/**/*
   - electron/**/*
   - build/icon.png
   - package.json
+  - '!node_modules/**/*'
 asar: true
+compression: maximum
+# Ship only the English Chromium locale pack (the UI is English).
+electronLanguages:
+  - en-US
 win:
   icon: build/icon.png
   target:

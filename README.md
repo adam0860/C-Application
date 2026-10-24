@@ -38,14 +38,18 @@ under the hood, and checks your understanding with questions whose feedback teac
 
 The GitHub Actions workflow in `.github/workflows/build.yml` builds both apps on every push:
 
-| Platform | Artifact | Notes |
+| Artifact | Contains | Use it for |
 |---|---|---|
-| Windows 10/11 | `CppForge-Setup-<version>-x64.exe` (installer), `CppForge-Portable-<version>.exe` | Also built for ARM64 |
-| Android 7.0+ | `CppForge-debug.apk` | Sideload it with "Install unknown apps" turned on |
+| `windows-installer-x64` | `CppForge-Setup-<version>-x64.exe` | Most Windows 10/11 PCs |
+| `windows-installer-arm64` | `CppForge-Setup-<version>-arm64.exe` | Windows on ARM (e.g. Snapdragon laptops) |
+| `windows-portable-x64` | `CppForge-Portable-<version>.exe` | Running without installing |
+| `android` | `CppForge-debug.apk` | Android 7.0+; sideload with "Install unknown apps" turned on |
 
 To download them, open the repository's **Actions** tab, pick the latest **Build apps**
-run, and download the `windows` or `android` artifact. Pushing a tag such as `v1.0.0`
-also attaches the files to a GitHub **Release**.
+run, and download the artifact you need (GitHub delivers it as a .zip containing the file).
+Windows SmartScreen may warn about an unsigned app the first time; choose
+**More info → Run anyway**. Pushing a tag such as `v1.0.0` also attaches every file to a
+GitHub **Release**.
 
 ### Signed Android release builds (optional)
 

@@ -48,11 +48,24 @@ jobs:
         run: npx vite build
       - name: Package with electron-builder
         run: npx electron-builder --win --publish never
+      - name: List packaged files
+        shell: bash
+        run: ls -la release/*.exe
+      # Separate artifacts so you only download the one you need.
       - uses: actions/upload-artifact@v4
         with:
-          name: windows
-          path: |
-            release/*.exe
+          name: windows-installer-x64
+          path: release/CppForge-Setup-*-x64.exe
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer-arm64
+          path: release/CppForge-Setup-*-arm64.exe
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-portable-x64
+          path: release/CppForge-Portable-*.exe
           if-no-files-found: error
 
   android:
