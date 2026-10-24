@@ -73,6 +73,9 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: android-actions/setup-android@v3
+        with:
+          # The default ('tools platform-tools') fails: the legacy 'tools' package no longer exists.
+          packages: 'platform-tools platforms;android-36'
       - run: npm ci
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
