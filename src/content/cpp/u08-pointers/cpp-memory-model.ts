@@ -429,18 +429,6 @@ grade is at  0x7ffe81e2f0ab`,
     },
     // ------------------------------------------------------------------ 10
     {
-      kind: 'fill',
-      prompt: 'Complete the code so it prints where `ammo` lives and how many bytes it occupies.',
-      template: `int ammo = 30;
-std::cout << "ammo is at " << ___ammo << '\\n';
-std::cout << "it uses " << ___(ammo) << " bytes\\n";`,
-      blanks: [{ answers: ['&'] }, { answers: ['sizeof'] }],
-      wordBank: ['&', '*', 'sizeof', 'size', 'length', '->'],
-      explanation:
-        'Unary `&` yields the address of an object, and `sizeof` yields its size in bytes (computed at compile time, so it costs nothing at run time). `*` does the opposite of `&` — it follows an address to the object, as the next lesson shows. `size` and `length` are member functions of containers like `std::string`, not operators that work on any object.',
-    },
-    // ------------------------------------------------------------------ 11
-    {
       kind: 'concept',
       title: 'sizeof, alignment and padding',
       blocks: [
@@ -523,6 +511,18 @@ int main() {
           text: 'Unreal classes often pack many flags as **bitfields** — `uint8 bIsActive : 1;` — so that eight booleans share a single byte instead of taking eight. You will see this pattern throughout engine headers such as `AActor`.',
         },
       ],
+    },
+    // ------------------------------------------------------------------ 11
+    {
+      kind: 'fill',
+      prompt: 'Complete the code so it prints where `ammo` lives and how many bytes it occupies.',
+      template: `int ammo = 30;
+std::cout << "ammo is at " << ___ammo << '\\n';
+std::cout << "it uses " << ___(ammo) << " bytes\\n";`,
+      blanks: [{ answers: ['&'] }, { answers: ['sizeof'] }],
+      wordBank: ['&', '*', 'sizeof', 'size', 'length', '->'],
+      explanation:
+        'Unary `&` yields the address of an object, and `sizeof` yields its size in bytes (computed at compile time, so it costs nothing at run time). `*` does the opposite of `&` — it follows an address to the object, as the next lesson shows. `size` and `length` are member functions of containers like `std::string`, not operators that work on any object.',
     },
     // ------------------------------------------------------------------ 12
     {
