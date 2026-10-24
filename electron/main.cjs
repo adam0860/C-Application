@@ -1,5 +1,6 @@
 // Electron entry point for the Windows desktop build of C++ Forge.
-const { app, BrowserWindow, ipcMain, nativeTheme, protocol, net, shell, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeTheme, protocol, net, shell, Menu, screen } = require('electron');
+const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
@@ -14,10 +15,36 @@ protocol.registerSchemesAsPrivileged([
 const DIST = path.join(__dirname, '..', 'dist');
 let win = null;
 
+// Remember the window size/position between launches.
+const stateFile = () => path.join(app.getPath('userData'), 'window-state.json');
+function loadWindowState() {
+  try {
+    const s = JSON.parse(fs.readFileSync(stateFile(), 'utf8'));
+    // Forget the position if that monitor is no longer connected.
+    const visible = screen.getAllDisplays().some(({ workArea: a }) =>
+      s.x < a.x + a.width && s.x + s.width > a.x && s.y < a.y + a.height && s.y + s.height > a.y);
+    return visible ? s : { width: s.width, height: s.height, maximized: s.maximized };
+  } catch {
+    return { width: 1280, height: 860 };
+  }
+}
+function saveWindowState() {
+  if (!win) return;
+  const state = { ...win.getNormalBounds(), maximized: win.isMaximized() };
+  try {
+    fs.writeFileSync(stateFile(), JSON.stringify(state));
+  } catch {
+    // Not fatal: the next launch just uses the default size.
+  }
+}
+
 function createWindow() {
+  const saved = loadWindowState();
   win = new BrowserWindow({
-    width: 1280,
-    height: 860,
+    x: saved.x,
+    y: saved.y,
+    width: saved.width ?? 1280,
+    height: saved.height ?? 860,
     minWidth: 380,
     minHeight: 560,
     backgroundColor: '#0b0e17',
@@ -36,7 +63,11 @@ function createWindow() {
     },
   });
 
-  win.once('ready-to-show', () => win.show());
+  win.once('ready-to-show', () => {
+    if (saved.maximized) win.maximize();
+    win.show();
+  });
+  win.on('close', saveWindowState);
 
   // Every external link opens in the user's default browser, never in-app.
   win.webContents.setWindowOpenHandler(({ url }) => {
