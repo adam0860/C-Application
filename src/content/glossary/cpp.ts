@@ -4056,5 +4056,681 @@ int CountIf(const Container& c, Pred pred) {
     see: ['template', 'concept', 'algorithm', 'iterator'],
   },
   // ------------------------------------------------------------ STL
-  // @@MORE@@
+  {
+    id: 'iterator',
+    term: 'Iterator',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'An object that points to an element in a container (or other sequence) and can move to the next one. Containers provide `begin()` (first element) and `end()` (one *past* the last element).',
+    long:
+      'Iterators generalise pointers: `*it` reads the element, `++it` advances, and `it != end` tests for the end. Because every container offers them, algorithms like `std::find` and `std::sort` work on any container without knowing its internals.\n\nIterators come in categories by capability: forward (only `++`), bidirectional (`++` and `--`, e.g. `std::map`), random access (jump with `it + n`, e.g. `std::vector`) and contiguous. `std::sort` needs random access, which is why it does not work on `std::list`.\n\n`end()` must never be dereferenced, and iterators can be invalidated when the container changes ([[iterator-invalidation]]). Unreal\'s containers also provide iterators (`CreateIterator()`, and `begin`/`end` for range-based for).',
+    example: `std::vector<int> v{3, 1, 4};
+for (auto it = v.begin(); it != v.end(); ++it) {
+    *it *= 2;               // modify through iterator
+}
+auto pos = std::find(v.begin(), v.end(), 8);
+if (pos != v.end()) { /* found */ }`,
+    see: ['container', 'algorithm', 'iterator-invalidation', 'range'],
+    reading: [cppref('Iterator library', 'iterator', 'Iterator categories, concepts and adaptors.')],
+  },
+  {
+    id: 'algorithm',
+    term: 'Algorithm (STL)',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'The ready-made, well-tested functions in `<algorithm>` and `<numeric>` — `std::sort`, `std::find`, `std::count_if`, `std::transform`, `std::accumulate` and dozens more — that operate on ranges of elements.',
+    long:
+      'Prefer a named algorithm over a hand-written loop: `std::any_of(...)` states intent better than a loop with a flag, is less error-prone, and often runs as fast or faster. Most algorithms take a pair of iterators plus optional [[predicate|predicates]] or [[lambda|lambdas]] to customise them.\n\nC++20 added `std::ranges::` versions that accept a whole container (`std::ranges::sort(v)`) and support *projections* (`std::ranges::sort(enemies, {}, &Enemy::hp)`).\n\nGotcha: `std::remove` and `std::remove_if` do not shrink the container; they move kept elements forward and return the new logical end, which you must then `erase`. C++20\'s `std::erase_if(container, pred)` does both. Unreal provides similar helpers in the `Algo::` namespace and as `TArray` members.',
+    example: `std::vector<int> hp{40, 0, 75, 0, 90};
+std::sort(hp.begin(), hp.end());
+bool anyDead = std::any_of(hp.begin(), hp.end(),
+                           [](int h) { return h == 0; });
+int total = std::accumulate(hp.begin(), hp.end(), 0);
+std::erase_if(hp, [](int h) { return h == 0; });`,
+    see: ['iterator', 'lambda', 'predicate', 'range'],
+    reading: [cppref('Algorithms library', 'algorithm', 'The full catalogue of standard algorithms grouped by purpose.')],
+  },
+  {
+    id: 'lambda',
+    term: 'Lambda Expression',
+    aliases: ['lambda', 'anonymous function'],
+    course: 'both',
+    category: 'STL',
+    short:
+      'An inline, unnamed function object you can define right where you need it: `[](int h) { return h > 0; }`. It can capture variables from the surrounding scope.',
+    long:
+      'The parts are: the [[capture]] list `[...]`, parameters `(...)`, an optional `-> ReturnType`, and the body. The return type is usually deduced. Each lambda expression creates a unique, unnamed class type; storing one in `auto` keeps it zero-overhead, while `std::function` lets you store any callable at some cost.\n\nLambdas are perfect for algorithm predicates, callbacks and small local helpers. Generic lambdas (`[](const auto& x) { ... }`) work with any type.\n\nUnreal uses lambdas widely: timer callbacks (`FTimerDelegate::CreateLambda`), async tasks, and `TArray::FindByPredicate`. Be careful capturing `this` or raw `UObject*` in a lambda that runs later — the object may have been destroyed; capture a `TWeakObjectPtr` instead.',
+    example: `int threshold = 50;
+auto isWeak = [threshold](const Enemy& e) {
+    return e.hp < threshold;
+};
+auto it = std::find_if(enemies.begin(), enemies.end(), isWeak);
+std::sort(v.begin(), v.end(),
+          [](int a, int b) { return a > b; });  // descending`,
+    see: ['capture', 'closure', 'std-function', 'algorithm'],
+    reading: [cppref('Lambda expressions', 'language/lambda', 'Syntax, captures, generic lambdas and what the compiler generates.')],
+  },
+  {
+    id: 'capture',
+    term: 'Lambda Capture',
+    aliases: ['capture list'],
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'The `[...]` part of a lambda that lists which variables from the enclosing scope it can use, and whether it copies them (`[x]`, `[=]`) or refers to them (`[&x]`, `[&]`).',
+    long:
+      'Capture by value copies the variable into the lambda when the lambda is created; later changes to the original are not seen, and the copy is `const` unless the lambda is `mutable`. Capture by reference sees the live variable, but dangles if the lambda outlives it — the classic bug when a lambda is stored or run on another thread later.\n\nPrefer explicit captures (`[hp, &log]`) over defaults (`[=]`, `[&]`) so the dependencies are obvious. Init-captures (C++14) create new variables: `[ptr = std::move(p)]` moves a `unique_ptr` into the lambda.\n\n`[this]` captures the object pointer, not a copy of the object; in C++20, implicit capture of `this` via `[=]` is deprecated, and `[*this]` captures a copy of the object.',
+    example: `int bonus = 10;
+auto byValue = [bonus](int d) { return d + bonus; };
+auto byRef   = [&bonus](int d) { return d + bonus; };
+bonus = 99;
+byValue(1);   // 11: copied when created
+byRef(1);     // 100: sees the change
+auto owner = [p = std::make_unique<int>(5)] { return *p; };`,
+    see: ['lambda', 'closure', 'dangling-reference', 'this-pointer'],
+    reading: [cppref('Lambda expressions', 'language/lambda', 'The "Lambda capture" section details every capture form.')],
+  },
+  {
+    id: 'closure',
+    term: 'Closure',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'The object created when a lambda expression is evaluated: an instance of a compiler-generated class that stores the captured variables and has an `operator()` containing the lambda body.',
+    long:
+      'A lambda expression is the source code; a closure is the run-time object. `[bonus](int d) { return d + bonus; }` becomes roughly a struct with a member `int bonus` and a `const` call operator, and the closure is an instance of it.\n\nSeeing lambdas this way explains their behaviour: captured-by-value variables are copies stored in the closure (so copying the closure copies them), `mutable` makes the call operator non-const, and a capture-less lambda can convert to a plain function pointer because it stores no state.',
+    example: `// What the compiler roughly generates for:
+//   auto add = [bonus](int d) { return d + bonus; };
+struct Closure {
+    int bonus;
+    int operator()(int d) const { return d + bonus; }
+};
+Closure add{10};
+add(5);   // 15`,
+    see: ['lambda', 'capture', 'functor'],
+  },
+  {
+    id: 'std-function',
+    term: 'std::function',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'A type-erased wrapper (`<functional>`) that can hold any callable with a given signature — function, lambda, functor, bound member function: `std::function<void(int)> onDamage;`.',
+    long:
+      '`std::function` is ideal for storing callbacks whose concrete type you do not know or that vary at run time, such as event handlers kept in a container. Calling an empty one throws `std::bad_function_call`.\n\nThe flexibility costs something: each call is an indirect call that cannot be inlined, and large captures may require a heap allocation. When the callable type can be a template parameter (as in algorithms), prefer that or `auto`. C++23 adds `std::move_only_function` for callables that cannot be copied.\n\nUnreal\'s equivalents are `TFunction` (and `TFunctionRef` for non-owning use) and, for engine events, [[delegate|delegates]], which add `UObject` safety and Blueprint support.',
+    example: `#include <functional>
+
+std::vector<std::function<void(int)>> onDamage;
+onDamage.push_back([](int d) { PlayHitSound(); });
+onDamage.push_back([&ui](int d) { ui.Shake(d); });
+for (auto& handler : onDamage) {
+    handler(25);
+}`,
+    see: ['lambda', 'functor', 'closure', 'delegate'],
+    reading: [cppref('std::function', 'utility/functional/function', 'Construction, invocation and the target/target_type interface.')],
+  },
+  {
+    id: 'functor',
+    term: 'Function Object (Functor)',
+    aliases: ['function object'],
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'An object of a class that overloads `operator()`, so it can be called like a function: `comparer(a, b)`. Unlike a plain function, it can carry state.',
+    long:
+      'Before lambdas, functors were the way to pass custom behaviour to algorithms. They are still useful when the callable needs a name, several members, or reuse in many places — and as custom hashers and comparators for containers (`std::unordered_set<GridPos, GridHash>`).\n\nThe standard library provides ready-made ones in `<functional>`: `std::less<>`, `std::greater<>`, `std::plus<>`. Because the call operator is known at compile time, functors (and lambdas) are easy for the compiler to inline, unlike calls through a function pointer.',
+    example: `struct DistanceFrom {
+    float x, y;
+    bool operator()(const Enemy& a, const Enemy& b) const {
+        return Dist(a, x, y) < Dist(b, x, y);
+    }
+};
+std::sort(enemies.begin(), enemies.end(), DistanceFrom{px, py});
+std::sort(v.begin(), v.end(), std::greater<>{});`,
+    see: ['closure', 'lambda', 'predicate', 'operator-overloading'],
+    reading: [cppref('Function objects', 'utility/functional', 'The standard function objects and invocation utilities.')],
+  },
+  {
+    id: 'predicate',
+    term: 'Predicate',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'A callable that takes one or more arguments and returns `bool`, used by algorithms to make decisions: "is this enemy dead?" for `std::find_if`, "should a come before b?" for `std::sort`.',
+    long:
+      'Unary predicates (one argument) drive algorithms such as `std::count_if`, `std::remove_if` and `std::any_of`. Binary predicates (two arguments) compare elements, as in `std::sort` and `std::unique`.\n\nPredicates should be *pure*: no side effects, same answer for the same input. A comparator for sorting must be a *strict weak ordering* — use `<`, never `<=`; a comparator that returns `true` for equal elements is undefined behaviour in `std::sort` and can even crash.',
+    example: `auto isDead = [](const Enemy& e) { return e.hp <= 0; };
+auto n = std::count_if(enemies.begin(), enemies.end(), isDead);
+
+std::sort(v.begin(), v.end(),
+          [](int a, int b) { return a < b; });   // OK
+// [](int a, int b) { return a <= b; }         // UB in sort!`,
+    see: ['algorithm', 'lambda', 'functor'],
+  },
+  {
+    id: 'range',
+    term: 'Range',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'Anything you can iterate from a beginning to an end — formally (C++20) a type with `begin()` and `end()`, such as a container, a C array or a view. The `<ranges>` library works directly on ranges instead of iterator pairs.',
+    long:
+      'Classic algorithms take two iterators: `std::sort(v.begin(), v.end())`. Passing mismatched iterators is a silent bug. C++20 range algorithms take the range itself: `std::ranges::sort(v)`, and are constrained by concepts so mistakes produce clear errors.\n\nRanges compose with [[view|views]]: `v | std::views::filter(pred) | std::views::transform(f)` describes a lazy pipeline without creating temporary containers.',
+    example: `#include <ranges>
+
+std::vector<int> hp{50, 0, 80, 0, 20};
+std::ranges::sort(hp);
+auto alive = hp | std::views::filter([](int h) { return h > 0; });
+for (int h : alive) {
+    std::cout << h << ' ';   // 20 50 80
+}`,
+    see: ['view', 'iterator', 'algorithm', 'range-based-for'],
+    reading: [cppref('Ranges library', 'ranges', 'Range concepts, range algorithms and the standard views.')],
+  },
+  {
+    id: 'view',
+    term: 'View',
+    course: 'cpp',
+    category: 'STL',
+    short:
+      'A lightweight, usually non-owning range (C++20) that presents elements of another range — filtered, transformed, reversed, sliced — lazily, without copying them: `std::views::filter`, `std::views::transform`, `std::views::take`.',
+    long:
+      'Views are cheap to create and copy, and do no work until you iterate them; each element is computed on demand. Chaining them with `|` reads like a pipeline: take the alive enemies, map them to their names, take the first five.\n\nBecause most views refer to the underlying range rather than owning it, they must not outlive it — the same lifetime caution as `std::string_view` and `std::span`. Some views (like `filter`) cache state on first iteration, so prefer iterating a given view object only from one place.',
+    example: `auto names = enemies
+    | std::views::filter([](const Enemy& e) { return e.hp > 0; })
+    | std::views::transform(&Enemy::name)
+    | std::views::take(5);
+for (const auto& n : names) {
+    std::cout << n << '\\n';
+}`,
+    see: ['range', 'string-view', 'lambda', 'algorithm'],
+    reading: [cppref('Ranges library', 'ranges', 'The "Range adaptors" section lists every standard view.')],
+  },
+  // ------------------------------------------------------------ Errors
+  {
+    id: 'exception',
+    term: 'Exception',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'An object thrown with `throw` to signal an error that the current code cannot handle. It travels up the call stack until a matching `catch` handles it, destroying local objects on the way.',
+    long:
+      'Exceptions separate error *detection* from error *handling*: a deep `LoadTexture` function can throw, and a top-level menu can catch and show a message, without every function in between checking return codes. Standard exceptions derive from `std::exception` (`std::runtime_error`, `std::out_of_range`, `std::bad_alloc`), and you can derive your own.\n\nUse exceptions for exceptional, unexpected failures, not for normal control flow. Throw by value and catch by `const` reference. If nothing catches an exception, `std::terminate` ends the program.\n\nUnreal Engine compiles with exceptions **disabled** by default on most platforms, so gameplay code reports errors with return values, `bool` results, `TOptional`, logging and `check`/`ensure` instead.',
+    example: `#include <stdexcept>
+
+int ParseLevel(const std::string& s) {
+    if (s.empty()) {
+        throw std::invalid_argument{"empty level"};
+    }
+    return std::stoi(s);  // may throw too
+}`,
+    see: ['try-catch', 'stack-unwinding', 'exception-safety', 'noexcept'],
+    reading: [cppref('Exceptions', 'language/exceptions', 'How exceptions are thrown and caught, plus the exception safety guarantees.')],
+  },
+  {
+    id: 'try-catch',
+    term: 'try / catch',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'The construct for handling exceptions: code that might throw goes in a `try` block, and one or more `catch` blocks after it handle specific exception types.',
+    long:
+      'Catch clauses are tried in order and the first match wins, so list more specific types (derived classes) before general ones (`std::exception`). `catch (...)` catches everything, typically to log and rethrow with `throw;`.\n\nCatch by reference — `catch (const std::exception& e)` — to avoid copying and to avoid slicing a derived exception into its base. Only catch where you can actually do something useful (recover, retry, report); otherwise let the exception propagate.\n\nBecause exceptions are disabled in typical Unreal builds, `try`/`catch` is rarely seen in gameplay code, except around third-party libraries compiled with exception support.',
+    example: `try {
+    int level = ParseLevel(input);
+    LoadLevel(level);
+} catch (const std::invalid_argument& e) {
+    std::cerr << "Bad input: " << e.what() << '\\n';
+} catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what() << '\\n';
+}`,
+    see: ['exception', 'stack-unwinding', 'object-slicing'],
+    reading: [cppref('Exceptions', 'language/exceptions', 'Handler matching and the order in which catch clauses are tried.')],
+  },
+  {
+    id: 'stack-unwinding',
+    term: 'Stack Unwinding',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'What happens after an exception is thrown: the runtime leaves each function on the call stack in turn, running the destructors of all their fully constructed local objects, until it reaches a matching `catch`.',
+    long:
+      'Unwinding is what makes [[raii]] and exceptions work together: a `std::lock_guard` unlocks, a `std::unique_ptr` deletes, a file closes — automatically, on the error path just as on the normal path. Raw `new`/`delete` pairs and manual cleanup code, by contrast, are skipped and leak.\n\nIf a destructor throws during unwinding, there would be two active exceptions, so the program calls `std::terminate`. That is why destructors must not throw (they are `noexcept` by default). If no handler is found at all, whether the stack is unwound before `std::terminate` is implementation-defined.',
+    example: `void Load() {
+    auto tex = std::make_unique<Texture>("hero.png");
+    std::lock_guard lock{assetMutex};
+    Parse(*tex);      // throws!
+}   // unwinding: lock released, then tex deleted
+
+// in a caller: try { Load(); } catch (...) { }`,
+    see: ['exception', 'raii', 'destructor', 'call-stack'],
+  },
+  {
+    id: 'exception-safety',
+    term: 'Exception Safety Guarantees',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'Promises about what state an operation leaves things in if it throws: **no-throw** (never fails), **strong** (all or nothing — state unchanged on failure), **basic** (no leaks and objects still valid) or none.',
+    long:
+      'The basic guarantee is the minimum for any well-written code: no resource leaks and all invariants intact, though values may have changed. The strong guarantee is like a transaction: `std::vector::push_back` offers it, so a failed push leaves the vector exactly as it was. The no-throw guarantee is needed for destructors, swaps and move operations, which other code relies on to provide its own guarantees.\n\nRAII gets you the basic guarantee almost for free. The strong guarantee typically uses "do the work on a copy, then commit with a non-throwing swap" — the copy-and-swap idiom.',
+    example: `void Inventory::Replace(std::vector<Item> newItems) {
+    // newItems is already a complete copy (may have thrown)
+    items.swap(newItems);   // no-throw commit
+}   // strong guarantee: either fully replaced or unchanged`,
+    see: ['exception', 'noexcept', 'raii', 'copy-assignment'],
+    reading: [cppref('Exceptions', 'language/exceptions', 'The "Exception safety" section defines each guarantee.')],
+  },
+  {
+    id: 'noexcept',
+    term: 'noexcept',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'A specifier declaring that a function will not throw exceptions: `void Swap(Buffer& other) noexcept;`. If it throws anyway, `std::terminate` is called instead of propagating the exception.',
+    long:
+      '`noexcept` is part of the function\'s contract and type. Its biggest practical effect is on move operations: `std::vector` moves elements during reallocation only if their move constructor is `noexcept`; otherwise it copies them to keep its strong exception guarantee. So mark move constructors, move assignments and `swap` `noexcept`.\n\nDestructors are implicitly `noexcept`. There is also the `noexcept(expr)` operator, which asks at compile time whether an expression can throw, used inside conditional specifications such as `noexcept(noexcept(T(std::declval<T>())))`.\n\nDo not sprinkle `noexcept` on functions that might reasonably fail; a violation terminates the program.',
+    example: `class Buffer {
+public:
+    Buffer(Buffer&& other) noexcept;            // enables fast
+    Buffer& operator=(Buffer&& other) noexcept; // vector growth
+    void swap(Buffer& other) noexcept;
+    ~Buffer();                                  // implicitly noexcept
+};`,
+    see: ['move-constructor', 'exception-safety', 'exception', 'destructor'],
+    reading: [cppref('noexcept specifier', 'language/noexcept_spec', 'Semantics of noexcept and noexcept(expression), and what happens on violation.')],
+  },
+  {
+    id: 'std-optional',
+    term: 'std::optional',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'A C++17 wrapper (`<optional>`) that either holds a value of type `T` or holds nothing (`std::nullopt`). It is a clear, type-safe way to say "there may be no result".',
+    long:
+      'Instead of magic values like `-1` or returning a null pointer, `std::optional<Enemy> FindNearest()` makes "nothing found" part of the type, and the caller must deal with it. Test with `if (opt)` or `has_value()`, access with `*opt` or `opt->member`, or use `value_or(default)`.\n\n`*opt` on an empty optional is undefined behaviour, while `.value()` throws `std::bad_optional_access`. The value is stored inside the optional itself — no heap allocation. C++23 adds monadic helpers (`and_then`, `transform`, `or_else`).\n\nUnreal\'s equivalent is `TOptional<T>`, with `IsSet()`, `GetValue()` and `Get(Default)`.',
+    example: `#include <optional>
+
+std::optional<int> FindSlot(const std::vector<int>& slots) {
+    for (int i = 0; i < std::ssize(slots); ++i) {
+        if (slots[i] == 0) return i;
+    }
+    return std::nullopt;
+}
+if (auto slot = FindSlot(bag)) { Store(*slot); }
+int s = FindSlot(bag).value_or(-1);`,
+    see: ['std-variant', 'std-expected', 'null-pointer', 'exception'],
+    reading: [cppref('std::optional', 'utility/optional', 'Members, comparison operators and the C++23 monadic operations.')],
+  },
+  {
+    id: 'std-variant',
+    term: 'std::variant',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'A C++17 type-safe union (`<variant>`) that holds exactly one value from a fixed list of alternative types at a time, such as `std::variant<int, float, std::string>`.',
+    long:
+      'A variant always knows which alternative it holds (`index()`, `std::holds_alternative<T>`). Access with `std::get<T>` (throws `std::bad_variant_access` on mismatch), `std::get_if<T>` (returns a pointer or null), or best of all `std::visit`, which calls a function with whatever is inside and makes the compiler check that every alternative is handled.\n\nVariants are a value-based alternative to inheritance for closed sets of types — events, commands, game states — with no heap allocation and no virtual calls. Adding a new alternative forces you to update every visitor, which is a feature.\n\nUnreal provides `TVariant<...>` with similar semantics (`Get`, `TryGet`, `Visit`).',
+    example: `#include <variant>
+
+struct Damage { int amount; };
+struct Heal   { int amount; };
+using Event = std::variant<Damage, Heal>;
+
+void Apply(int& hp, const Event& e) {
+    if (auto* d = std::get_if<Damage>(&e)) hp -= d->amount;
+    else hp += std::get<Heal>(e).amount;
+}`,
+    see: ['std-optional', 'std-expected', 'polymorphism', 'enum-class'],
+    reading: [cppref('std::variant', 'utility/variant', 'Members, std::visit and the valueless_by_exception state.')],
+  },
+  {
+    id: 'std-expected',
+    term: 'std::expected',
+    course: 'cpp',
+    category: 'Errors',
+    short:
+      'A C++23 type (`<expected>`) that holds either a successful value of type `T` or an error of type `E`: `std::expected<Save, LoadError>`. It makes failures explicit in the return type without exceptions.',
+    long:
+      'Like `std::optional`, but the "empty" case carries information about *why* it failed. Return a value for success, or `std::unexpected(error)` for failure. Callers check with `if (result)`, read the value with `*result` and the error with `result.error()`.\n\nThis style suits code built without exceptions — including game engines — and makes error paths visible in signatures. Monadic helpers (`and_then`, `transform`, `or_else`) chain fallible steps without nested `if`s.\n\nIt requires a C++23 compiler and library (compile with `-std=c++23`). Unreal 5.x offers `TValueOrError<T, E>` for the same purpose.',
+    example: `#include <expected>
+
+enum class LoadError { NotFound, Corrupt };
+
+std::expected<int, LoadError> LoadLevel(const std::string& f) {
+    if (f.empty()) return std::unexpected(LoadError::NotFound);
+    return 3;
+}
+if (auto lvl = LoadLevel("save.dat")) { Start(*lvl); }`,
+    see: ['std-optional', 'std-variant', 'exception', 'enum-class'],
+    reading: [cppref('std::expected', 'utility/expected', 'Members, std::unexpected and the monadic operations.')],
+  },
+  {
+    id: 'assertion',
+    term: 'Assertion',
+    aliases: ['assert', 'static_assert'],
+    course: 'both',
+    category: 'Errors',
+    short:
+      'A check that a condition you believe is always true really is: `assert(index < size);` aborts the program with a message if it is false. `static_assert` performs the check at compile time.',
+    long:
+      'Assertions catch programming errors — broken invariants, impossible states, misuse of a function — as close to the cause as possible. They are not for expected failures such as a missing file or bad user input; handle those normally.\n\n`assert` from `<cassert>` is compiled out entirely when `NDEBUG` is defined (typical release builds), so never put necessary side effects inside one: `assert(Init());` would skip `Init()` in release. `static_assert(sizeof(Header) == 16);` costs nothing at run time and is ideal for checking layout and template assumptions.\n\nUnreal has its own family: `check()` (fatal, removed in Shipping), `verify()` (keeps the expression in all builds), `ensure()` (logs a callstack once and continues) and `checkf`/`ensureMsgf` with messages.',
+    example: `#include <cassert>
+
+int GetItem(const std::vector<int>& v, std::size_t i) {
+    assert(i < v.size() && "index out of range");
+    return v[i];
+}
+static_assert(sizeof(int) >= 4, "need 32-bit int");`,
+    see: ['invariant', 'debugger', 'undefined-behavior', 'check-macro'],
+    reading: [cppref('assert', 'error/assert', 'How assert works with NDEBUG, and the message idiom with &&.')],
+  },
+  // ------------------------------------------------------------ Modern C++
+  {
+    id: 'enum',
+    term: 'Enumeration (enum)',
+    aliases: ['unscoped enum', 'plain enum'],
+    course: 'cpp',
+    category: 'Modern C++',
+    short:
+      'A user-defined type with a fixed set of named integer constants: `enum Direction { North, East, South, West };`. Plain (unscoped) enums leak their names into the surrounding scope and convert implicitly to `int`.',
+    long:
+      'Enums replace magic numbers with names, so `if (dir == North)` beats `if (dir == 0)`. By default the first enumerator is `0` and each next one is one larger, but you can assign values explicitly — useful for bit flags.\n\nThe old-style enum has two problems: its enumerators are visible without qualification (two enums in one scope cannot both have `None`), and they silently convert to integers, so `North + 3` or comparing a `Direction` with a `Color` compiles. Modern code prefers [[enum-class]].\n\nUnreal still uses plain enums in some places, often wrapped in a namespace (`namespace EMyState { enum Type { ... }; }`), but `UENUM()` with `enum class` is the recommended form today.',
+    example: `enum Direction { North, East, South, West };
+
+Direction d = East;
+int n = d;          // implicit conversion: 1
+enum Color { Red, Green };
+// enum Light { Red };   // error: Red already declared`,
+    see: ['enum-class', 'switch-statement', 'bitwise-operator', 'type'],
+    reading: [cppref('Enumeration declaration', 'language/enum', 'Unscoped and scoped enums, underlying types and conversions.')],
+  },
+  {
+    id: 'enum-class',
+    term: 'enum class',
+    aliases: ['scoped enum', 'enum struct'],
+    course: 'both',
+    category: 'Modern C++',
+    short:
+      'A scoped, strongly typed enumeration (C++11): `enum class State { Idle, Running };`. Enumerators must be qualified (`State::Idle`) and do not convert implicitly to integers.',
+    long:
+      'Scoping means two enums can both have `None` without clashing; strong typing means `State::Idle == 0` and `State::Idle + 1` do not compile, catching real bugs. When you really need the number, write `static_cast<int>(s)` (or C++23 `std::to_underlying(s)`).\n\nYou can choose the underlying type to control size, e.g. `enum class Rarity : std::uint8_t { ... };` — handy for compact data. C++20 also allows `using enum State;` inside a scope (such as a `switch`) to avoid repeating the prefix.\n\nThis is the recommended form for Unreal: `UENUM(BlueprintType) enum class EWeaponType : uint8 { Sword, Bow };` — Blueprint-exposed enums must use `uint8` as the underlying type.',
+    example: `enum class State : std::uint8_t { Idle, Running, Dead };
+
+State s = State::Running;
+// int n = s;                        // error: no conversion
+int n = static_cast<int>(s);         // 1
+switch (s) {
+    using enum State;                // C++20
+    case Idle: break;
+    case Running: break;
+    case Dead: break;
+}`,
+    see: ['enum', 'switch-statement', 'static-cast', 'uenum'],
+    reading: [cppref('Enumeration declaration', 'language/enum', 'The "Scoped enumerations" section and using enum declarations.')],
+  },
+  {
+    id: 'std-pair',
+    term: 'std::pair',
+    course: 'cpp',
+    category: 'Modern C++',
+    short:
+      'A simple struct template (`<utility>`) holding two values of possibly different types, accessed as `.first` and `.second`: `std::pair<std::string, int> entry{"Aria", 90};`.',
+    long:
+      '`std::pair` appears throughout the standard library: `std::map` elements are pairs of key and value, and `insert` returns a pair of iterator and success flag. With CTAD and `std::make_pair` you rarely need to spell the types.\n\n`.first` and `.second` say nothing about meaning, so for your own APIs a small named struct (`struct ScoreEntry { std::string name; int score; };`) is often clearer. [[structured-binding|Structured bindings]] make unpacking pairs pleasant: `auto [name, score] = entry;`.\n\nUnreal\'s `TPair<K, V>` (with `.Key` and `.Value`) is the equivalent and is what `TMap` iterates over.',
+    example: `#include <utility>
+
+std::pair<std::string, int> best{"Aria", 9000};
+std::cout << best.first << ": " << best.second << '\\n';
+auto p = std::make_pair("Bram", 7500);  // deduced types
+auto [name, score] = best;              // unpack`,
+    see: ['std-tuple', 'structured-binding', 'std-map', 'struct'],
+    reading: [cppref('std::pair', 'utility/pair', 'Members, make_pair and comparison of pairs.')],
+  },
+  {
+    id: 'std-tuple',
+    term: 'std::tuple',
+    course: 'cpp',
+    category: 'Modern C++',
+    short:
+      'A fixed-size collection of values of possibly different types (`<tuple>`), a generalisation of `std::pair` to any number of elements: `std::tuple<int, float, std::string>`.',
+    long:
+      'Elements are accessed by index or type at compile time with `std::get<0>(t)` or `std::get<std::string>(t)`, or unpacked with structured bindings. Tuples are handy for returning several values from a function and in generic code that handles arbitrary lists of types.\n\nFor anything with a lasting meaning, a named struct is more readable than `std::get<2>`. `std::tie` creates a tuple of references, which gives a neat way to implement lexicographic comparisons: `return std::tie(a.level, a.name) < std::tie(b.level, b.name);`.\n\nUnreal offers `TTuple` for the same role.',
+    example: `#include <tuple>
+
+std::tuple<int, float, std::string> Stats() {
+    return {42, 3.5f, "Aria"};
+}
+auto [level, speed, name] = Stats();
+int lv = std::get<0>(Stats());`,
+    see: ['std-pair', 'structured-binding', 'return-value'],
+    reading: [cppref('std::tuple', 'utility/tuple', 'Construction, std::get, std::tie, std::apply and tuple_cat.')],
+  },
+  {
+    id: 'structured-binding',
+    term: 'Structured Binding',
+    course: 'cpp',
+    category: 'Modern C++',
+    short:
+      'C++17 syntax that unpacks an aggregate, pair, tuple or array into named variables in one declaration: `auto [name, score] = entry;`.',
+    long:
+      'Structured bindings make code that works with pairs and tuples far more readable, especially map iteration: `for (const auto& [name, hp] : roster)` instead of `entry.first` / `entry.second`.\n\nThe `auto` applies to a hidden object holding the whole value; the names are aliases into it. So `auto [a, b] = x;` copies `x`, while `auto& [a, b] = x;` and `const auto& [a, b] = x;` refer to the original. The number of names must match the number of elements exactly.\n\nThey work with structs that have all-public data members, so `auto [x, y] = position;` works for a simple `struct Vec2 { float x, y; };`.',
+    example: `std::map<std::string, int> roster{{"Aria", 90}, {"Bram", 70}};
+for (const auto& [name, hp] : roster) {
+    std::cout << name << " has " << hp << " HP\\n";
+}
+struct Vec2 { float x, y; };
+auto [x, y] = Vec2{3.f, 4.f};`,
+    see: ['std-pair', 'std-tuple', 'auto', 'range-based-for'],
+    reading: [cppref('Structured binding declaration', 'language/structured_binding', 'The three binding cases (arrays, tuple-like types, data members) and their lifetime rules.')],
+  },
+  {
+    id: 'attribute',
+    term: 'Attribute ([[...]])',
+    aliases: ['[[nodiscard]]', '[[maybe_unused]]'],
+    course: 'cpp',
+    category: 'Modern C++',
+    short:
+      'Standard annotations written in double square brackets that give the compiler extra information, such as `[[nodiscard]]`, `[[maybe_unused]]`, `[[fallthrough]]`, `[[deprecated]]` and `[[likely]]`.',
+    long:
+      'Attributes do not change what correct code means; they enable better warnings and optimisations. `[[nodiscard]]` on a function (or type) warns when a caller ignores the return value — great for error codes and `bool TrySpend()`. `[[maybe_unused]]` silences unused-variable warnings deliberately. `[[deprecated("use X")]]` warns callers. `[[likely]]`/`[[unlikely]]` (C++20) hint branch probabilities.\n\nCompilers ignore attributes they do not recognise (often with a warning), and vendors have their own, such as `[[gnu::always_inline]]` or `[[msvc::noinline]]`.\n\nUnreal\'s `UPROPERTY()`/`UFUNCTION()` look like annotations but are macros read by UnrealHeaderTool, not C++ attributes. Unreal engine code uses `[[nodiscard]]` too (older code spells it with the `UE_NODISCARD` macro).',
+    example: `[[nodiscard]] bool TrySpend(int& gold, int cost) {
+    if (gold < cost) return false;
+    gold -= cost;
+    return true;
+}
+TrySpend(gold, 50);   // warning: result ignored
+[[maybe_unused]] int debugCounter = 0;`,
+    see: ['fallthrough', 'compiler-warning', 'macro'],
+    reading: [cppref('Attribute specifier sequence', 'language/attributes', 'All standard attributes with the version each was introduced in.')],
+  },
+  // ------------------------------------------------------------ Concurrency
+  {
+    id: 'thread',
+    term: 'Thread',
+    aliases: ['std::thread', 'std::jthread'],
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'An independent sequence of execution within a program. Multiple threads run concurrently (in parallel on multi-core CPUs) and share the same memory. C++11 provides `std::thread`; C++20 adds `std::jthread`.',
+    long:
+      'Threads let a program do several things at once — load assets while the menu stays responsive, simulate physics on other cores. Because they share memory, any data accessed by more than one thread, with at least one writing, must be synchronised, or you get a [[data-race]].\n\nA `std::thread` must be `join()`ed (wait for it to finish) or `detach()`ed before it is destroyed, or the program calls `std::terminate`. `std::jthread` joins automatically in its destructor and supports cooperative cancellation via `std::stop_token` — prefer it.\n\nUnreal games rarely create raw threads for gameplay. The engine has a game thread, a render thread and worker pools, and you use the task system (`UE::Tasks::Launch`, `AsyncTask`, `ParallelFor`) or `FRunnable`. Most `UObject` and Actor functions may only be called from the game thread.',
+    example: `#include <thread>
+
+void LoadAssets() { /* ... */ }
+
+int main() {
+    std::jthread loader{LoadAssets};  // starts running now
+    ShowMenu();                       // in parallel
+}   // loader joins automatically here`,
+    see: ['data-race', 'mutex', 'atomic', 'future'],
+    reading: [
+      cppref('std::thread', 'thread/thread', 'Starting, joining and detaching threads.'),
+      cppref('std::jthread', 'thread/jthread', 'The auto-joining thread with stop_token support.'),
+    ],
+  },
+  {
+    id: 'data-race',
+    term: 'Data Race',
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'Two threads accessing the same memory location at the same time without synchronisation, where at least one access is a write. In C++, a data race is **undefined behaviour**.',
+    long:
+      'Even `++counter;` from two threads is a data race: it is a read, an add and a write, and the threads can interleave so increments are lost. Worse, because it is UB, the compiler may optimise as if no other thread touches the variable — caching it in a register, reordering writes — producing failures that are rare, timing-dependent and different between builds.\n\nPrevent data races by protecting shared data with a [[mutex]], making it [[atomic]], or not sharing it (give each thread its own data and combine results afterwards). ThreadSanitizer (`-fsanitize=thread`) detects data races at run time.\n\nA data race is a specific, low-level bug; the broader logic problem of results depending on timing is a [[race-condition]].',
+    example: `int counter = 0;
+auto work = [&counter] {
+    for (int i = 0; i < 100'000; ++i) ++counter;  // race!
+};
+std::thread a{work}, b{work};
+a.join(); b.join();
+// counter is often less than 200000 — and the program has UB`,
+    see: ['race-condition', 'mutex', 'atomic', 'sanitizer'],
+    reading: [cppref('Memory model', 'language/memory_model', 'The formal definition of data races and why they are undefined behaviour.')],
+  },
+  {
+    id: 'race-condition',
+    term: 'Race Condition',
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'A bug where the program\'s outcome depends on the unpredictable timing or ordering of events, such as which thread gets somewhere first. It can exist even when every individual access is properly synchronised.',
+    long:
+      'Classic example: "check then act". Thread A checks `if (stock > 0)`, thread B does the same, both see 1, both sell the last item. Each read and write might be atomic, so there is no [[data-race]], but the *logic* is still broken because check and act are not one indivisible step.\n\nThe fix is to make the whole compound operation atomic — hold one lock across the check and the update, or use an atomic read-modify-write such as `compare_exchange`. Race conditions also occur without threads: two asynchronous callbacks, or a network message arriving before the actor it refers to has replicated in Unreal.',
+    example: `std::mutex m;
+int stock = 1;
+void Buy() {
+    std::lock_guard lock{m};   // check AND act under one lock
+    if (stock > 0) {
+        --stock;
+        GrantItem();
+    }
+}`,
+    see: ['data-race', 'mutex', 'atomic', 'deadlock'],
+  },
+  {
+    id: 'mutex',
+    term: 'Mutex',
+    aliases: ['std::mutex', 'mutual exclusion'],
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'A synchronisation object (`<mutex>`) that ensures only one thread at a time executes a protected section of code. A thread locks it before touching shared data and unlocks it afterwards.',
+    long:
+      'While one thread holds the lock, other threads calling `lock()` wait. Locking and unlocking also act as memory barriers, so writes made under the lock are visible to the next thread that takes it.\n\nNever call `lock()`/`unlock()` by hand — an early return or exception would leave the mutex locked forever. Use RAII wrappers: [[lock-guard|`std::lock_guard` / `std::scoped_lock`]], or `std::unique_lock` when you need to unlock early or use condition variables. Keep critical sections short; holding a lock while doing slow work turns parallel code into serial code.\n\nUnreal\'s equivalents are `FCriticalSection` with the RAII helper `FScopeLock`, and `UE::FMutex` in newer engine versions.',
+    example: `#include <mutex>
+
+std::mutex logMutex;
+std::vector<std::string> log;
+
+void Log(std::string msg) {
+    std::lock_guard lock{logMutex};   // locked here
+    log.push_back(std::move(msg));
+}                                     // unlocked here`,
+    see: ['lock-guard', 'deadlock', 'data-race', 'raii'],
+    reading: [cppref('std::mutex', 'thread/mutex', 'Members and the rules for locking and unlocking.')],
+  },
+  {
+    id: 'lock-guard',
+    term: 'std::lock_guard / std::scoped_lock',
+    aliases: ['lock_guard', 'scoped_lock', 'unique_lock'],
+    course: 'cpp',
+    category: 'Concurrency',
+    short:
+      'RAII wrappers that lock one or more mutexes in their constructor and unlock them in their destructor, so a lock can never be forgotten. `std::scoped_lock` (C++17) can lock several mutexes at once without deadlock.',
+    long:
+      '`std::lock_guard lock{m};` locks `m` until the end of the scope — on normal exit, early `return` or exception alike. It is the simplest correct way to use a mutex.\n\n`std::scoped_lock lock{a, b};` locks multiple mutexes using a deadlock-avoidance algorithm, so two threads locking the same pair in different orders cannot deadlock. `std::unique_lock` is the flexible version: it can be unlocked and relocked, moved, and is required by `std::condition_variable`.\n\nA classic mistake is forgetting the variable name: `std::lock_guard<std::mutex>{m};` creates a temporary that unlocks immediately at the semicolon.',
+    example: `std::mutex accountsMutex, logMutex;
+
+void Transfer(Account& from, Account& to, int amount) {
+    std::scoped_lock lock{accountsMutex, logMutex};
+    from.balance -= amount;
+    to.balance += amount;
+}   // both unlocked, in reverse order`,
+    see: ['mutex', 'deadlock', 'raii'],
+    reading: [
+      cppref('std::lock_guard', 'thread/lock_guard', 'The simplest RAII lock.'),
+      cppref('std::scoped_lock', 'thread/scoped_lock', 'Locking several mutexes at once with deadlock avoidance.'),
+    ],
+  },
+  {
+    id: 'deadlock',
+    term: 'Deadlock',
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'A situation where two or more threads each wait for a resource held by another, so none of them can ever proceed — the program hangs.',
+    long:
+      'The textbook case: thread A locks mutex 1 then tries to lock mutex 2, while thread B locks mutex 2 then tries mutex 1. Each holds what the other needs, forever. Locking a non-recursive `std::mutex` twice from the same thread is also a deadlock (formally, undefined behaviour).\n\nAvoid it by always acquiring locks in one global order, locking several mutexes together with `std::scoped_lock`, holding locks for as short a time as possible, and never calling unknown code (callbacks, virtual functions) while holding a lock.\n\nIn Unreal, a deadlock on the game thread freezes the editor; the debugger\'s "break all" and thread view show which locks each thread is waiting on.',
+    example: `// Thread A               // Thread B
+// lock(m1);               lock(m2);
+// lock(m2);  // waits...   lock(m1);  // waits... forever
+
+// Fix: lock both at once, in a deadlock-free way
+std::scoped_lock lock{m1, m2};`,
+    see: ['mutex', 'lock-guard', 'race-condition', 'thread'],
+  },
+  {
+    id: 'atomic',
+    term: 'std::atomic',
+    course: 'both',
+    category: 'Concurrency',
+    short:
+      'A template (`<atomic>`) whose operations are indivisible and safe to perform from multiple threads without a mutex: `std::atomic<int> score{0}; ++score;` never loses an update.',
+    long:
+      'Atomic operations cannot be observed half-done, and they are not data races. They are ideal for counters, flags (`std::atomic<bool> stopRequested`) and lock-free data structures. Operations include `load`, `store`, `fetch_add`, `exchange` and `compare_exchange_weak/strong`.\n\nAtomics are not magic: each operation is atomic individually, but a sequence of them is not, so "check then act" logic still needs care ([[race-condition]]). By default they use sequentially consistent memory ordering, the easiest to reason about; weaker orderings (`memory_order_relaxed`, `acquire`/`release`) are faster but expert territory.\n\nModern Unreal code uses `std::atomic` directly; Epic recommends it over the engine\'s older `TAtomic`.',
+    example: `#include <atomic>
+
+std::atomic<int> enemiesKilled{0};
+std::atomic<bool> stop{false};
+
+void Worker() {
+    while (!stop.load()) {
+        enemiesKilled.fetch_add(1);   // or ++enemiesKilled
+    }
+}`,
+    see: ['data-race', 'mutex', 'thread', 'race-condition'],
+    reading: [cppref('std::atomic', 'atomic/atomic', 'Member operations, specialisations and memory-order parameters.')],
+  },
+  {
+    id: 'future',
+    term: 'std::future',
+    aliases: ['std::async', 'std::promise'],
+    course: 'cpp',
+    category: 'Concurrency',
+    short:
+      'An object (`<future>`) representing a result that will become available later, typically from work running on another thread. Calling `get()` waits for the result (or rethrows the exception the work threw).',
+    long:
+      '`std::async(std::launch::async, f)` runs `f` on another thread and immediately returns a `std::future` for its result, so you can do other work and collect the answer later. A `std::promise` lets you set a future\'s value manually from any thread.\n\n`get()` can only be called once. A subtle trap: the future returned by `std::async` blocks in its destructor until the task finishes, so discarding it (`std::async(...);` on its own) silently makes the call synchronous.\n\nUnreal provides `TFuture`/`TPromise` and its task system (`UE::Tasks::Launch` returns a task you can wait on), which integrate with the engine\'s worker threads.',
+    example: `#include <future>
+
+int ComputePath(int from, int to);
+
+auto path = std::async(std::launch::async, ComputePath, 1, 9);
+UpdateUi();                 // runs while the path computes
+int length = path.get();    // waits if not finished yet`,
+    see: ['thread', 'exception', 'atomic'],
+    reading: [cppref('std::future', 'thread/future', 'Waiting, retrieving results and shared_future.')],
+  },
+  {
+    id: 'garbage-collection',
+    term: 'Garbage Collection',
+    aliases: ['GC'],
+    course: 'both',
+    category: 'Memory',
+    short:
+      'Automatic memory management in which a runtime periodically finds objects that are no longer reachable from the program and frees them. Standard C++ has no garbage collector; Unreal Engine adds one for `UObject`s.',
+    long:
+      'Languages like C# and Java rely on a tracing garbage collector: starting from "roots", it marks every reachable object and frees the rest. You never call `delete`, but objects are freed at unpredictable times, and collections cost CPU time (and can cause frame hitches in games).\n\nStandard C++ instead uses deterministic destruction — [[raii]], scope-based lifetimes and smart pointers. Memory is released exactly when the owner lets go, which also works for non-memory resources such as files and locks. (C++11 added minimal GC support hooks, which were removed in C++23 because no implementation used them.)\n\nUnreal Engine runs a mark-and-sweep garbage collector for `UObject`s. An object stays alive while it is reachable through `UPROPERTY()` references (or other references reported to the GC); a raw `UObject*` member *without* `UPROPERTY` is invisible to the GC and can dangle after a collection. Plain C++ types inside Unreal still use RAII.',
+    example: `// Unreal: the GC sees this reference and keeps the
+// component alive while this actor is alive.
+UPROPERTY()
+TObjectPtr<UHealthComponent> Health;
+
+// Invisible to the GC: may dangle after a collection!
+UHealthComponent* Unsafe = nullptr;`,
+    see: ['raii', 'reference-counting', 'ue-garbage-collector', 'uproperty'],
+  },
 ];
