@@ -10,9 +10,9 @@
  *
  * Exit code is non-zero when any ERROR is found. WARNINGS are advisory.
  */
-import { courses, glossary, cheatSheets } from '../src/content/index';
 import type { Block, Lesson, Step, QuestionStep, GlossaryEntry, ReadingRef } from '../src/content/types';
 import { CPP_GLOSSARY_IDS, UNREAL_GLOSSARY_IDS } from './glossary-master';
+import { loadContent } from './load-content';
 
 const args = process.argv.slice(2);
 const units = new Set<string>();
@@ -24,6 +24,7 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--allow-stubs') allowStubs = true;
 }
 const partial = units.size > 0 || glossaryOnly;
+const { courses, glossary, cheatSheets, loadProblems } = await loadContent(units, { glossary: !partial || glossaryOnly });
 
 const errors: string[] = [];
 const warnings: string[] = [];
@@ -359,6 +360,8 @@ function checkGlossary() {
 if (!partial || glossaryOnly) checkGlossary();
 
 // --------------------------------------------------------------------- report
+if (loadProblems.length)
+  console.log('Note: some shared files failed to load (probably mid-edit by another author):\n  ' + loadProblems.join('\n  ') + '\n');
 if (warnings.length) console.log(warnings.join('\n') + '\n');
 if (errors.length) console.log(errors.join('\n') + '\n');
 console.log(

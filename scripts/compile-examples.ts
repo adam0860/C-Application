@@ -12,13 +12,15 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { courses } from '../src/content/index';
+import { loadContent, outline } from './load-content';
 import type { Block, CodeBlock } from '../src/content/types';
 
 const run = promisify(execFile);
 const args = process.argv.slice(2);
 const units = new Set<string>();
 for (let i = 0; i < args.length; i++) if (args[i] === '--unit') units.add(args[++i]);
+if (units.size === 0) for (const u of outline.cpp) units.add(u.id);
+const { courses } = await loadContent(units, { glossary: false });
 
 interface Job {
   where: string;
@@ -103,7 +105,7 @@ function indent(s: string, prefix = '    ') {
     .join('\n');
 }
 
-const concurrency = Math.max(1, os.cpus().length);
+const concurrency = Number(process.env.CONCURRENCY) || Math.max(1, os.cpus().length);
 let next = 0;
 await Promise.all(
   Array.from({ length: concurrency }, async () => {
