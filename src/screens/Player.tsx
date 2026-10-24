@@ -8,7 +8,7 @@ import { haptic } from '../lib/platform';
 import { pick, hashString } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { useSettings } from '../lib/store';
-import { confirmDialog } from '../lib/ui';
+import { confirmDialog, pushBackHandler } from '../lib/ui';
 
 export interface PlayerItem {
   lessonId: string;
@@ -155,6 +155,16 @@ export function Player({
       onExit();
     }
   }, [pos, revealed, onExit]);
+
+  // Android back button asks before abandoning the lesson.
+  useEffect(
+    () =>
+      pushBackHandler(() => {
+        void exit();
+        return true;
+      }),
+    [exit],
+  );
 
   // Keyboard: Enter = primary action, ← = back, Esc = exit, H = hint.
   useEffect(() => {

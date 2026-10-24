@@ -66,6 +66,20 @@ export function confirmDialog(req: Omit<ConfirmRequest, 'resolve'>): Promise<boo
   });
 }
 
+// Screens (like the lesson player) can intercept the Android back button.
+const backHandlers: (() => boolean)[] = [];
+export function pushBackHandler(handler: () => boolean): () => void {
+  backHandlers.push(handler);
+  return () => {
+    const i = backHandlers.lastIndexOf(handler);
+    if (i >= 0) backHandlers.splice(i, 1);
+  };
+}
+export function runBackHandlers(): boolean {
+  for (let i = backHandlers.length - 1; i >= 0; i--) if (backHandlers[i]()) return true;
+  return false;
+}
+
 /** Close the top-most overlay. Returns true if something was closed (used by the Android back button). */
 export function closeTopOverlay(): boolean {
   if (state.confirm) {

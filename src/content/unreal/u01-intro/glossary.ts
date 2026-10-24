@@ -1,4 +1,75 @@
 import type { GlossaryEntry } from '../../types';
 
 // Glossary terms introduced by this unit that are NOT in scripts/glossary-master.ts.
-export const glossary: GlossaryEntry[] = [];
+export const glossary: GlossaryEntry[] = [
+  {
+    id: 'ue-build-configuration',
+    term: 'Unreal Build Configuration',
+    aliases: ['DebugGame', 'Development', 'Shipping', 'Development Editor'],
+    course: 'unreal',
+    category: 'Build',
+    short: 'One of Unreal\'s named build settings — **Debug**, **DebugGame**, **Development**, **Test** or **Shipping** — combined with a target such as Editor or Game (for example *Development Editor*).',
+    long: 'The configurations differ in how optimized the engine and your game code are, and which development features (logging, assertions, console commands, stats) are compiled in. Development is the everyday default; DebugGame leaves only your modules unoptimized for comfortable debugging; Shipping is what players receive.\n\nThe Debug configuration also unoptimizes the engine and requires a source build of the engine.',
+    see: ['unreal-build-tool', 'target-cs', 'debugger'],
+    reading: [
+      {
+        title: 'Build Configurations Reference',
+        url: 'https://dev.epicgames.com/documentation/en-us/unreal-engine/build-configurations-reference-for-unreal-engine',
+        source: 'unreal-docs',
+        note: 'Official definitions of every configuration and target type.',
+      },
+    ],
+  },
+  {
+    id: 'ue-unity-build',
+    term: 'Unity Build (UBT)',
+    aliases: ['unity build', 'jumbo build', 'adaptive unity'],
+    course: 'unreal',
+    category: 'Build',
+    short: 'A build mode in which UnrealBuildTool combines several `.cpp` files into one generated file (for example `Module.MyGame.cpp`) and compiles that, so shared headers are parsed once per batch instead of once per file.',
+    long: 'Unity builds make full rebuilds much faster, but a file can accidentally compile only because a neighbour in the same batch included a header it needs. **Adaptive unity** compiles the files you are actively editing on their own to catch this and to speed up iteration. The cure is to include what you use in every file.',
+    see: ['unreal-build-tool', 'translation-unit', 'include-directive'],
+  },
+  {
+    id: 'ue-api-macro',
+    term: 'Module API Macro (MYGAME_API)',
+    aliases: ['MYGAME_API', 'export macro', 'ENGINE_API'],
+    course: 'unreal',
+    category: 'Build',
+    short: 'A macro named after a module (`MYGAME_API`, `ENGINE_API`, `UMG_API`…) placed in a class or function declaration to export it from the module\'s DLL so other modules can link against it.',
+    long: 'UnrealBuildTool defines the macro for each module. In modular (editor) builds it expands to `__declspec(dllexport)` while compiling the module itself and `__declspec(dllimport)` for modules that use it; in monolithic builds (packaged games) it expands to nothing.\n\nThe macro also tells you which module a class lives in — handy for knowing what to add to `Build.cs`.',
+    example: 'class MYGAME_API AMyActor : public AActor',
+    see: ['ue-module', 'build-cs', 'linker-error'],
+  },
+  {
+    id: 'derived-data-cache',
+    term: 'Derived Data Cache (DDC)',
+    aliases: ['DDC', 'DerivedDataCache'],
+    course: 'unreal',
+    category: 'Build',
+    short: 'A cache of data the engine derives from your assets — compiled shaders, compressed textures, processed meshes — so the work isn\'t repeated every time the editor starts.',
+    long: 'Everything in the DDC can be regenerated from the source assets, so it is never committed to version control. Studios often run a **shared** DDC on the network so one person\'s shader compilation benefits the whole team.',
+    see: ['asset', 'uproject-file'],
+  },
+  {
+    id: 'core-minimal',
+    term: 'CoreMinimal.h',
+    course: 'unreal',
+    category: 'Build',
+    short: 'The header that brings in Unreal\'s most basic types — `int32`, `FString`, `FName`, `TArray`, `FVector`, math helpers and logging — and is included at the top of almost every Unreal header.',
+    long: 'Older Unreal code included huge umbrella headers such as `Engine.h`, which made every file slow to compile. Modern Unreal follows **include what you use**: start from `CoreMinimal.h` and add only the specific headers a file needs, such as `GameFramework/Actor.h`.',
+    see: ['header-file', 'include-directive'],
+  },
+  {
+    id: 'ue-super',
+    term: 'Super',
+    aliases: ['Super::', 'ThisClass'],
+    course: 'unreal',
+    category: 'OOP',
+    short: 'A type alias for the parent class, generated for every reflected class by `GENERATED_BODY()`. `Super::BeginPlay()` calls the parent\'s version of an overridden function.',
+    long: 'Standard C++ has no `super` keyword (unlike Java), so you would normally write the parent\'s name: `AActor::BeginPlay()`. Unreal\'s generated alias means the call stays correct even if you later change the base class. `GENERATED_BODY()` also defines `ThisClass` as an alias for the class itself.\n\nForgetting the `Super::` call in an override of `BeginPlay`, `Tick` or `EndPlay` skips the engine work the parent class does there.',
+    example: 'void AMyActor::BeginPlay() {\n    Super::BeginPlay();\n    // your code\n}',
+    exampleLang: 'cpp',
+    see: ['generated-body', 'override', 'virtual-function', 'beginplay'],
+  },
+];

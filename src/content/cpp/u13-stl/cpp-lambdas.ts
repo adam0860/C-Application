@@ -1,13 +1,667 @@
 import type { Lesson } from '../../types';
 
-// STUB — replace this whole file with the finished lesson.
 export const lesson: Lesson = {
-  id: "cpp-lambdas",
-  title: "Lambdas and Captures",
-  summary: 'This lesson is being written.',
-  minutes: 10,
-  objectives: [],
-  steps: [{ kind: 'concept', title: "Lambdas and Captures", blocks: [{ type: 'p', text: 'Coming soon.' }] }],
-  takeaways: [],
-  reading: [],
+  id: 'cpp-lambdas',
+  title: 'Lambdas and Captures',
+  summary: 'Write behavior inline, capture exactly what it needs — and see the hidden class the compiler builds for every lambda.',
+  minutes: 19,
+  objectives: [
+    'Write lambdas with parameters, return types and capture lists',
+    'Choose between capture by value, by reference and init-captures, and spot dangling captures',
+    'Explain what the compiler generates for a lambda (the closure class) and why lambdas are cheap',
+    'Use `mutable`, generic lambdas and immediately invoked lambdas',
+    'Decide between `auto`, templates and `std::function` for storing and passing callables',
+  ],
+  steps: [
+    {
+      kind: 'concept',
+      title: 'Functions you can write inline',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Many tools need a small piece of behavior from you: *how* to compare two scores when sorting, *which* enemies count as weak, *what* to do when health drops. Before C++11 you had to write a named function (or a whole class) somewhere else in the file. A [[lambda]] lets you write that behavior right where it is used:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main() {
+    auto greet = [] { std::cout << "Welcome, adventurer!\\n"; };
+    greet();
+
+    auto critDamage = [](int base, double multiplier) {
+        return base * multiplier;
+    };
+    std::cout << critDamage(40, 1.5) << '\\n';
+
+    std::vector<int> scores{300, 1200, 450, 900};
+    std::sort(scores.begin(), scores.end(),
+              [](int a, int b) { return a > b; });
+    for (int s : scores) std::cout << s << ' ';
+    std::cout << '\\n';
+}`,
+          output: `Welcome, adventurer!
+60
+1200 900 450 300`,
+          annotations: [
+            { lines: 6, text: 'The simplest lambda: `[]` (capture nothing), no parameter list (allowed when empty), and a body. Storing it in `greet` lets you call it like a function.' },
+            { lines: '9-11', text: 'Parameters work as in a normal function. The return type is deduced from the `return` statement: `int * double` is `double`.' },
+            { lines: '15-16', text: 'The real power: passing behavior to another function. `std::sort` (covered fully in the algorithms lesson) calls this lambda to decide the order — "a comes first if it is larger" gives descending scores.' },
+          ],
+        },
+        {
+          type: 'table',
+          headers: ['Part', 'Example', 'Meaning'],
+          rows: [
+            ['Capture list', '`[threshold, &kills]`', 'Which surrounding variables the lambda can use, and how'],
+            ['Parameters', '`(int hp)`', 'Like function parameters; may be omitted when empty'],
+            ['Specifiers', '`mutable`, `noexcept`', 'Optional; `mutable` allows changing copied captures'],
+            ['Return type', '`-> int`', 'Optional; deduced from `return` when left out'],
+            ['Body', '`{ return hp < threshold; }`', 'The code that runs when the lambda is called'],
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'why',
+          title: 'Why lambdas instead of named functions?',
+          text: 'Keeping the behavior next to the call that uses it makes intent obvious: you read "sort descending" right where the sort happens, not 200 lines away. Lambdas can also *capture* local variables, which a plain function cannot do without extra parameters. And as you will see, they cost nothing extra at run time — the compiler turns each one into a tiny class it can fully inline.',
+        },
+      ],
+    },
+    {
+      kind: 'mcq',
+      prompt: 'After this line runs, what exactly is `twice`?',
+      code: 'auto twice = [](int x) { return x * 2; };',
+      options: [
+        {
+          text: 'A function pointer of type `int (*)(int)`',
+          why: 'A captureless lambda *can be converted* to a function pointer, but its own type is a class. `auto` deduces that class type, not a pointer.',
+        },
+        {
+          text: 'A `std::function<int(int)>`',
+          why: '`std::function` is a separate library wrapper that can *hold* a lambda. `auto` never deduces it unless you write it explicitly.',
+        },
+        {
+          text: 'A new function named `twice` declared in the enclosing scope',
+          why: '`twice` is a variable holding an object. It follows normal variable scope and lifetime rules — unlike a function, it can be copied, passed around and stored.',
+        },
+        {
+          text: 'An object of a unique, unnamed class type generated by the compiler, which can be called with `()`',
+          correct: true,
+          why: 'Every lambda expression creates an object of its own compiler-generated class (its closure type). Calling it invokes that class\'s `operator()`.',
+        },
+      ],
+      explanation:
+        'A lambda expression evaluates to a [[closure]]: an object of a class type with no name you can write, which is why it is stored with `auto`. Treating behavior as an object is what lets you pass it into algorithms, return it from functions, and keep state inside it.',
+    },
+    {
+      kind: 'concept',
+      title: 'Captures: by value or by reference',
+      blocks: [
+        {
+          type: 'p',
+          text: 'A lambda body cannot use the surrounding function\'s local variables unless it **captures** them. Each [[capture]] says how: by value (a copy made when the lambda is created) or by reference (`&`, the lambda refers to the original variable).',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <iostream>
+
+int main() {
+    int threshold = 50;
+    int kills = 0;
+
+    auto isWeak = [threshold](int hp) { return hp < threshold; };
+    auto recordKill = [&kills] { ++kills; };
+
+    threshold = 10;
+    std::cout << (isWeak(30) ? "weak" : "strong") << '\\n';
+
+    recordKill();
+    recordKill();
+    std::cout << kills << " kills\\n";
+}`,
+          output: `weak
+2 kills`,
+          annotations: [
+            { lines: 7, text: 'Capture by value: the lambda stores its own copy of `threshold`, taken **now**, while it is 50.' },
+            { lines: 8, text: 'Capture by reference: the lambda refers to the real `kills`, so its changes are visible outside.' },
+            { lines: '10-11', text: 'Changing `threshold` afterwards does not affect the copy. The lambda still compares against 50, so 30 is "weak".' },
+            { lines: '13-15', text: 'Both calls increment the original `kills`.' },
+          ],
+        },
+        {
+          type: 'p',
+          text: 'Copies captured by value are **read-only** inside the lambda by default — writing `threshold = 0;` in the body would not compile. Global and `static` variables never need capturing; they are reachable from anywhere.',
+        },
+        {
+          type: 'callout',
+          variant: 'tip',
+          title: 'Choosing',
+          text: 'Capture **by reference** when the lambda is used immediately, within the current scope — passed straight into an algorithm, say — and needs to see or change the latest values. Capture **by value** when the lambda might be stored and run later, or when you want a snapshot. The C++ Core Guidelines summarize it as: by reference for local use, by value for anything that escapes.',
+        },
+      ],
+    },
+    {
+      kind: 'mcq',
+      prompt: 'What does this print?',
+      code: `int gold = 100;
+auto byValue = [gold] { return gold; };
+auto byRef = [&gold] { return gold; };
+gold = 250;
+std::cout << byValue() << ' ' << byRef() << '\\n';`,
+      options: [
+        { text: '100 100', why: '`byRef` refers to the variable itself, so it sees the value at the time it is *called*, which is 250.' },
+        { text: '250 250', why: '`byValue` copied `gold` when the lambda was created, while it was still 100. Later changes do not reach the copy.' },
+        { text: '100 250', correct: true, why: 'The by-value capture is a snapshot from creation time; the by-reference capture reads the current value at call time.' },
+        { text: 'It does not compile: `gold` is captured twice', why: 'Each lambda has its own capture list, so two lambdas capturing the same variable in different ways is fine.' },
+      ],
+      explanation:
+        'The difference between the two capture modes is *when* the value is read. By value: once, when the lambda object is created, stored inside the closure. By reference: every time the lambda runs, through a reference to the original variable — which therefore must still exist.',
+    },
+    {
+      kind: 'concept',
+      title: 'Default captures and dangling references',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Instead of listing variables, you can write a **default capture**: `[=]` captures everything the body uses by value, `[&]` captures everything by reference. You can mix them: `[&, multiplier]` means "by reference, except `multiplier` by value". They are convenient, but they hide what the lambda depends on — and that is where bugs creep in.',
+        },
+        {
+          type: 'compare',
+          left: {
+            title: 'Dangling: reference to a dead local',
+            tone: 'bad',
+            code: `std::function<int()> makeCounter() {
+    int count = 0;
+    return [&] { return ++count; };
+}   // count is destroyed here
+
+auto counter = makeCounter();
+counter();   // undefined behavior`,
+            text: 'The lambda outlives `count`, but still refers to it — a [[dangling-reference]].',
+          },
+          right: {
+            title: 'Fixed: the lambda owns its state',
+            tone: 'good',
+            code: `std::function<int()> makeCounter() {
+    return [count = 0]() mutable {
+        return ++count;
+    };
+}
+
+auto counter = makeCounter();
+counter();   // 1`,
+            text: 'The counter lives inside the closure object (an *init-capture*, explained on the next card), so it lives exactly as long as the lambda does.',
+          },
+        },
+        {
+          type: 'callout',
+          variant: 'warning',
+          title: '`[=]` inside a member function captures `this`, not your members',
+          text: 'In a member function, `[=] { return damage_; }` looks like it copies `damage_`. It does not: it captures the `this` pointer and reads `this->damage_` when called. If the object is destroyed before the lambda runs, that is a dangling pointer. C++20 deprecates capturing `this` implicitly through `[=]` (g++ warns), so write what you mean: `[this]` (pointer, object must outlive the lambda), `[*this]` (copy the whole object, C++17), or `[dmg = damage_]` (copy just the value).',
+        },
+        {
+          type: 'callout',
+          variant: 'unreal',
+          title: 'Lambdas, timers and delegates in Unreal',
+          text: 'Unreal timers and delegates happily accept lambdas, and the most common crash with them is a lambda that captures `this` (or a raw pointer) and runs after the actor was destroyed. A captured pointer does not keep a `UObject` alive. Prefer bindings that check the object first: `BindUObject`/`CreateUObject`, or weak lambdas (`CreateWeakLambda(this, ...)`, `AddWeakLambda`), which skip the call if the object is gone — or capture a `TWeakObjectPtr` and test it inside. Epic\'s coding standard also asks for explicit captures rather than `[=]` and `[&]`.',
+        },
+        {
+          type: 'code',
+          title: 'BombActor.cpp (Unreal, excerpt)',
+          code: `// Risky: if this actor is destroyed within 2 seconds,
+// the lambda calls Explode() on a dead object.
+GetWorldTimerManager().SetTimer(FuseHandle,
+    [this]() { Explode(); }, 2.0f, false);
+
+// Safer: the weak lambda only runs while 'this' is valid.
+GetWorldTimerManager().SetTimer(FuseHandle,
+    FTimerDelegate::CreateWeakLambda(this, [this]() {
+        Explode();
+    }),
+    2.0f, false);`,
+          annotations: [
+            { lines: '3-4', text: 'The timer stores the lambda and its captured raw `this`. Nothing ties the timer to the actor\'s lifetime.' },
+            { lines: '7-11', text: '`CreateWeakLambda` records a weak reference to the object alongside the lambda; when the timer fires, it checks the object is still alive before calling.' },
+          ],
+        },
+      ],
+    },
+    {
+      kind: 'bug',
+      prompt: 'This code compiles, but calling the returned lambda has undefined behavior. Tap the line that causes it.',
+      code: `#include <functional>
+#include <string>
+
+std::function<std::string()> makeGreeter(int level) {
+    std::string title = level > 10 ? "Hero" : "Rookie";
+    return [&title] {
+        return "Welcome, " + title + "!";
+    };
+}
+
+int main() {
+    auto greet = makeGreeter(12);
+    greet();
+}`,
+      bugLines: [6],
+      hint: 'How long does `title` live, and how long does the lambda live?',
+      explanation:
+        'Line 6 captures `title` by reference, but `title` is a local variable destroyed when `makeGreeter` returns. The returned lambda keeps a reference to a dead `std::string`, so `greet()` reads freed memory — it may print garbage, crash, or appear to work. Capture by value instead: `[title]`, or move it in with `[title = std::move(title)]`. Rule of thumb: a lambda that leaves its scope must not capture locals by reference.',
+    },
+    {
+      kind: 'concept',
+      title: 'Init-captures and mutable',
+      blocks: [
+        {
+          type: 'p',
+          text: 'C++14 added [[init-capture|init-captures]]: `[name = expression]` creates a brand-new member of the lambda, initialized from any expression. Use them to capture a computed value, to rename a capture, or to **move** a move-only object such as a `std::unique_ptr` into the lambda.',
+        },
+        {
+          type: 'p',
+          text: 'Remember that by-value captures are read-only? The keyword `mutable` lifts that restriction, letting the lambda change its *own copies* between calls. Combined with an init-capture, this gives a lambda private, persistent state:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <iostream>
+#include <memory>
+#include <string>
+#include <utility>
+
+struct Weapon {
+    std::string name;
+};
+
+int main() {
+    auto nextId = [id = 0]() mutable { return ++id; };
+    std::cout << nextId() << ' ' << nextId() << ' ' << nextId() << '\\n';
+
+    auto copy = nextId;
+    std::cout << copy() << ' ' << nextId() << '\\n';
+
+    auto sword = std::make_unique<Weapon>(Weapon{"Sword"});
+    auto equip = [w = std::move(sword)] {
+        std::cout << "Equipped " << w->name << '\\n';
+    };
+    equip();
+    std::cout << (sword ? "still here" : "moved into lambda") << '\\n';
+}`,
+          output: `1 2 3
+4 4
+Equipped Sword
+moved into lambda`,
+          annotations: [
+            { lines: 11, text: '`id = 0` creates a member of type `int` inside the lambda (the type is deduced like `auto`). `mutable` allows `++id` to modify it.' },
+            { lines: 12, text: 'The state persists between calls because it lives in the lambda object. (Since C++17, the operands of `<<` are evaluated left to right, so this reliably prints 1 2 3.)' },
+            { lines: '14-15', text: 'Copying a lambda copies its state. `copy` starts from 3, independently of `nextId` — both print 4.' },
+            { lines: 18, text: 'A `unique_ptr` cannot be copied, so `[sword]` would not compile. The init-capture moves ownership into the lambda instead.' },
+            { lines: 22, text: 'After the move, the original `unique_ptr` is null — the lambda is now the owner, and the sword is destroyed when the lambda is.' },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'warning',
+          title: '`mutable` changes the copy, never the original',
+          text: 'A `mutable` lambda that captured `hp` by value can change *its* `hp`, but the variable outside never sees it. If you want to modify the original, capture it by reference instead. Seeing `mutable` paired with a by-value capture of something the caller expects to change is a classic code-review catch.',
+        },
+      ],
+    },
+    {
+      kind: 'fill',
+      prompt: 'Complete the code: `nextWave` should return 1, 2, 3… on successive calls, and `fire` should take ownership of `launcher` (a `std::unique_ptr`).',
+      template: `auto nextWave = [wave = 0]() ___ { return ++wave; };
+
+auto fire = [l = std::___(launcher)] {
+    l->launch();
+};`,
+      blanks: [{ answers: ['mutable'] }, { answers: ['move'] }],
+      wordBank: ['mutable', 'move', 'const', 'static', 'copy', 'forward'],
+      explanation:
+        'Without `mutable`, the lambda\'s call operator is `const` and `++wave` would not compile, because `wave` is a by-value member of the closure. A `std::unique_ptr` cannot be copied into a lambda, so the init-capture must `std::move` it; afterwards `launcher` is null and the lambda owns the launcher.',
+    },
+    {
+      kind: 'concept',
+      title: 'Under the hood: the closure class',
+      blocks: [
+        {
+          type: 'p',
+          text: 'There is no magic in a lambda. For every lambda expression, the compiler generates a unique class — the **closure type** — with one data member per capture and an `operator()` containing your body. The lambda expression creates an object of that class. You could write the equivalent [[functor|function object]] yourself:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <iostream>
+
+struct DamageScaler {
+    double multiplier;
+    double operator()(int base) const { return base * multiplier; }
+};
+
+int main() {
+    double multiplier = 1.5;
+    auto lambda = [multiplier](int base) { return base * multiplier; };
+    DamageScaler manual{multiplier};
+    std::cout << lambda(40) << ' ' << manual(40) << '\\n';
+
+    int (*doubler)(int) = [](int x) { return x * 2; };
+    std::cout << doubler(21) << '\\n';
+}`,
+          output: `60 60
+42`,
+          annotations: [
+            { lines: '3-6', text: 'Roughly what the compiler writes for the lambda on line 10: a member for the captured `multiplier` and a call operator holding the body.' },
+            { lines: 5, text: 'The generated `operator()` is `const`. That is *why* by-value captures are read-only, and why `mutable` exists: it removes this `const`.' },
+            { lines: 10, text: 'Creating the lambda constructs the closure object, copying `multiplier` into its member — exactly like `DamageScaler manual{multiplier}`.' },
+            { lines: 14, text: 'A lambda with **no captures** has no state, so it can convert to an ordinary function pointer — handy for C-style APIs that take callbacks.' },
+          ],
+        },
+        {
+          type: 'list',
+          items: [
+            '**By-value captures** become data members holding copies.',
+            '**By-reference captures** become references (or pointers) to the originals — which is why they can dangle.',
+            '**`[this]`** stores the `this` pointer, so members are reached through it.',
+            'A captureless lambda has no data members at all; its closure object is empty.',
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'perf',
+          title: 'Why lambdas are free',
+          text: 'Because each lambda has its own distinct type, a template such as `std::sort` is instantiated specifically for that lambda, and the compiler can see the body at the call site and inline it completely. Sorting with a lambda is typically *faster* than sorting with a function pointer, which the optimizer usually cannot see through. A lambda costs exactly what its captures cost to store, plus whatever its body does.',
+        },
+        {
+          type: 'deepdive',
+          title: 'Two identical lambdas, two types',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Every lambda *expression* produces a new closure type, even if the text is identical. `auto a = []{ return 1; }; auto b = []{ return 1; };` gives `a` and `b` different types, so `a = b;` does not compile, and you cannot put both directly in one `std::vector`. That is the price of the inlining benefit above — and the reason type-erasing wrappers like `std::function` exist, as the next cards show.',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      kind: 'truefalse',
+      prompt: 'Two lambdas written with exactly the same text, such as `[] { return 1; }`, still have two different types.',
+      answer: true,
+      explanation:
+        'Each lambda expression creates its own unique, unnamed closure class, even when the source text matches character for character. That is what lets templates specialize and inline each lambda separately. To store different lambdas in one variable or container, you need a common wrapper type such as `std::function` (or, for captureless lambdas, a function pointer).',
+    },
+    {
+      kind: 'concept',
+      title: 'Generic lambdas',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Give a lambda `auto` parameters and it becomes a [[generic-lambda]]: its `operator()` is a template, exactly like the abbreviated function templates from the templates unit. One lambda object then works with many argument types. C++20 also lets you write an explicit template parameter list when the body needs to name the type:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <iostream>
+#include <string>
+#include <vector>
+
+int main() {
+    auto show = [](const auto& value) {
+        std::cout << '[' << value << "] ";
+    };
+    show(42);
+    show(2.5);
+    show(std::string{"Potion"});
+    std::cout << '\\n';
+
+    auto countOf = []<typename T>(const std::vector<T>& items,
+                                  const T& wanted) {
+        int n = 0;
+        for (const T& item : items) {
+            if (item == wanted) ++n;
+        }
+        return n;
+    };
+    std::vector<std::string> bag{"Potion", "Rope", "Potion"};
+    std::cout << countOf(bag, std::string{"Potion"}) << '\\n';
+}`,
+          output: `[42] [2.5] [Potion]
+2`,
+          annotations: [
+            { lines: 6, text: '`const auto&` makes the call operator a template: `template <typename T> void operator()(const T& value) const`.' },
+            { lines: '9-11', text: 'Three calls, three instantiations of the same lambda\'s `operator()`, for `int`, `double` and `std::string`.' },
+            { lines: 14, text: 'C++20 template lambda: `<typename T>` after the capture list. Here it forces `items` and `wanted` to agree on `T`, which two independent `auto` parameters could not.' },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'tip',
+          title: 'Constrain them too',
+          text: 'Everything from the concepts lesson applies: give a generic lambda the parameter `std::integral auto amount` and it accepts only integer types, with a clear error message for anything else.',
+        },
+      ],
+    },
+    {
+      kind: 'concept',
+      title: 'Storing and passing lambdas: auto, templates or std::function?',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Since every lambda has a unique type, how do you write a function that *accepts* one, or a class member that *stores* one? There are two strategies with very different costs.',
+        },
+        {
+          type: 'compare',
+          left: {
+            title: 'Template: keep the real type',
+            tone: 'good',
+            code: `template <std::invocable F>
+void repeat(int times, F action) {
+    for (int i = 0; i < times; ++i) {
+        action();
+    }
+}`,
+            text: 'Instantiated for each lambda type: the call is direct and can be inlined. Zero overhead. But the lambda\'s type must be known at compile time, and each lambda produces another instantiation.',
+          },
+          right: {
+            title: '`std::function`: erase the type',
+            tone: 'neutral',
+            code: `void repeat(int times,
+            std::function<void()> action) {
+    for (int i = 0; i < times; ++i) {
+        action();
+    }
+}`,
+            text: 'One function for every callable with that signature. Needed for storage and runtime choice — at the cost of an indirect call and a possible heap allocation.',
+          },
+        },
+        {
+          type: 'p',
+          text: '[[std-function|std::function<R(Args...)>]] can hold *any* callable whose signature matches — lambdas, plain functions, functors — behind one type. That is what you need for a list of callbacks, where each element may be a different lambda:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <functional>
+#include <iostream>
+#include <utility>
+#include <vector>
+
+class HealthComponent {
+public:
+    void onDamaged(std::function<void(int)> callback) {
+        listeners_.push_back(std::move(callback));
+    }
+    void takeDamage(int amount) {
+        health_ -= amount;
+        for (const auto& listener : listeners_) listener(amount);
+    }
+    int health() const { return health_; }
+
+private:
+    int health_ = 100;
+    std::vector<std::function<void(int)>> listeners_;
+};
+
+void logDamage(int amount) {
+    std::cout << "Log: took " << amount << '\\n';
+}
+
+int main() {
+    int totalTaken = 0;
+    HealthComponent hp;
+    hp.onDamaged(logDamage);
+    hp.onDamaged([&totalTaken](int amount) { totalTaken += amount; });
+    hp.onDamaged([](int amount) {
+        if (amount >= 30) std::cout << "Screen shake!\\n";
+    });
+
+    hp.takeDamage(10);
+    hp.takeDamage(35);
+    std::cout << "Total " << totalTaken
+              << ", health " << hp.health() << '\\n';
+}`,
+          output: `Log: took 10
+Log: took 35
+Screen shake!
+Total 45, health 55`,
+          annotations: [
+            { lines: 19, text: 'One vector, three completely different callable types inside. Only [[type-erasure]] makes that possible.' },
+            { lines: 13, text: 'Calling a `std::function` goes through an internal indirection, much like a virtual call. (Calling an *empty* `std::function` throws `std::bad_function_call`.)' },
+            { lines: '27-28', text: '`totalTaken` is declared before `hp`, so it outlives the component holding a reference to it. Declaration order is lifetime order.' },
+            { lines: 29, text: 'A plain function works too — anything callable as `void(int)`.' },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'perf',
+          title: 'The cost of type erasure',
+          text: 'To hold an arbitrary callable, `std::function` typically stores it on the heap — unless it is small enough for an internal buffer, a size that varies between library implementations — and calls it through a pointer the optimizer usually cannot inline. It also requires the callable to be copyable, so a lambda that owns a `unique_ptr` will not fit (C++23 adds `std::move_only_function`). Use templates or `auto` parameters for functions that just *call* a lambda; reach for `std::function` when you must *store* callables of different types.',
+        },
+        {
+          type: 'callout',
+          variant: 'unreal',
+          title: 'Unreal\'s equivalents',
+          text: 'Unreal provides `TFunction` (like `std::function`), `TUniqueFunction` (move-only, like `std::move_only_function`) and `TFunctionRef` — a cheap, non-owning reference to a callable, ideal for parameters that are called during the function and never stored. For events, Unreal\'s delegate types play the role of our `listeners_` vector, with the weak-binding safety discussed earlier.',
+        },
+      ],
+    },
+    {
+      kind: 'mcq',
+      prompt: 'A `QuestLog` class needs a member that stores a *list* of callbacks, each a different lambda, to run when a quest completes. What should the element type be?',
+      options: [
+        {
+          text: '`auto`',
+          why: '`auto` cannot be used for non-static data members or as a container element type — there would be no single type to deduce for lambdas added later.',
+        },
+        {
+          text: 'A template parameter `F`, as in `std::vector<F>`',
+          why: 'A `std::vector<F>` holds elements of *one* type `F`. Since every lambda has a unique type, it could store only copies of a single lambda kind.',
+        },
+        {
+          text: '`std::function<void()>`',
+          correct: true,
+          why: 'Type erasure gives every callable with the signature `void()` the same type, so different lambdas can share one container.',
+        },
+        {
+          text: '`decltype` of the first lambda you add',
+          why: 'That names exactly one closure type. Any other lambda — even with identical text — has a different type and would not fit.',
+        },
+      ],
+      explanation:
+        'Templates and `auto` are perfect when a lambda is *passed and called*: the compiler knows its exact type and can inline it. Storage of *heterogeneous* callables — event listeners, a list of quest rewards to grant — needs one common type, which is precisely what `std::function` (or `TFunction` in Unreal) provides, in exchange for an indirect call and possibly an allocation.',
+    },
+    {
+      kind: 'concept',
+      title: 'Immediately invoked lambdas',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Sometimes a variable should be `const`, but computing its value takes several statements. Instead of declaring it non-const and assigning later, wrap the computation in a lambda and **call it immediately** with a trailing `()`. This is an [[immediately-invoked-lambda]]:',
+        },
+        {
+          type: 'code',
+          runnable: true,
+          code: `#include <iostream>
+
+int main() {
+    int level = 12;
+    bool hardMode = true;
+
+    const int enemyCount = [&] {
+        int count = 3 + level / 4;
+        if (hardMode) count *= 2;
+        return count;
+    }();
+
+    std::cout << enemyCount << " enemies\\n";
+}`,
+          output: '12 enemies',
+          annotations: [
+            { lines: 7, text: '`[&]` is safe here: the lambda runs immediately, while `level` and `hardMode` are certainly alive.' },
+            { lines: '8-10', text: 'Any logic you like — temporaries, branches, loops — stays contained inside the lambda.' },
+            { lines: 11, text: 'The `()` after the closing brace calls the lambda right away. `enemyCount` receives the result: (3 + 12 / 4) × 2 = 12.' },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'why',
+          title: 'Why bother?',
+          text: 'A `const` variable can never be accidentally changed later, and it can never be read before it has a value — whereas "declare now, assign in an `if` chain" leaves a window where it is uninitialized or modifiable. The C++ Core Guidelines recommend this pattern (ES.28) for complex initialization of `const` variables.',
+        },
+      ],
+    },
+    {
+      kind: 'order',
+      prompt: 'Assemble a complete lambda that captures `hp` by value, takes an `int damage`, may modify its own copy of `hp`, explicitly returns `int`, and returns the reduced health. Put the parts in the order the grammar requires.',
+      lines: ['[hp]', '(int damage)', 'mutable', '-> int', '{ hp -= damage; return hp; }'],
+      distractors: ['const'],
+      explanation:
+        'A lambda is written capture list, parameter list, specifiers such as `mutable`, optional trailing return type, then the body — the same order as the table in the first card. `mutable` is required because `hp -= damage` modifies a by-value capture. `const` is not a lambda specifier at all: the call operator is already `const` by default, which is exactly what `mutable` switches off.',
+    },
+  ],
+  takeaways: [
+    'A lambda — capture list, parameters, optional `mutable` and `-> ret`, then the body — creates a closure object: an instance of a unique, compiler-generated class with an `operator()`.',
+    'By-value captures copy when the lambda is created and are read-only unless `mutable`; by-reference captures read the original at call time and must not outlive it.',
+    'Default captures hide dependencies: `[&]` on an escaping lambda dangles, and `[=]` in a member function captures `this`, not the members.',
+    'Init-captures (`[x = expr]`, `[p = std::move(ptr)]`) create new closure members — computed values, renamed captures, move-only ownership or private state.',
+    'Each lambda has a distinct type, so templates can inline it completely; generic lambdas (`auto` parameters) have a templated call operator.',
+    'Use templates or `auto` parameters to pass lambdas; use `std::function` only to store different callables, accepting an indirect call and possible allocation.',
+    'In Unreal, a lambda capturing `this` does not keep an actor alive — prefer weak lambdas or UObject bindings for timers and delegates.',
+  ],
+  reading: [
+    {
+      title: 'Lambda expressions',
+      url: 'https://en.cppreference.com/w/cpp/language/lambda',
+      source: 'cppreference',
+      note: 'The complete rules for captures, the closure type, generic lambdas and conversion to function pointers.',
+    },
+    {
+      title: 'std::function',
+      url: 'https://en.cppreference.com/w/cpp/utility/functional/function',
+      source: 'cppreference',
+      note: 'What `std::function` can hold and what happens when an empty one is called.',
+    },
+    {
+      title: 'Lambda captures',
+      url: 'https://www.learncpp.com/cpp-tutorial/lambda-captures/',
+      source: 'learncpp',
+      note: 'More worked examples of by-value, by-reference and mutable captures, with common mistakes.',
+    },
+    {
+      title: 'C++ Core Guidelines: F.52 Prefer capturing by reference in lambdas that will be used locally',
+      url: 'https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rf-reference-capture',
+      source: 'core-guidelines',
+      note: 'Read together with F.53 (capture by value for non-local lambdas) for the reasoning behind the capture rules.',
+    },
+    {
+      title: 'Epic C++ Coding Standard for Unreal Engine',
+      url: 'https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine',
+      source: 'unreal-docs',
+      note: 'See the section on lambdas for Epic\'s rules on captures and `auto` in engine and game code.',
+    },
+  ],
 };

@@ -1,4 +1,75 @@
 import type { GlossaryEntry } from '../../types';
 
 // Glossary terms introduced by this unit that are NOT in scripts/glossary-master.ts.
-export const glossary: GlossaryEntry[] = [];
+export const glossary: GlossaryEntry[] = [
+  {
+    id: 'indeterminate-value',
+    term: 'Indeterminate Value',
+    aliases: ['garbage value', 'uninitialized variable'],
+    course: 'cpp',
+    category: 'Types',
+    short: 'The "value" of a local variable of a basic type that was declared without an initializer. Reading it is [[undefined-behavior]] (erroneous behavior from C++26).',
+    long: 'Default-initializing an `int`, `double` or other fundamental type performs no initialization at all: the object holds whatever bits were left in that memory or register. Because optimizers assume such values are never read, the consequences of reading one are unpredictable and can differ between debug and release builds.\n\nAlways initialize variables when you declare them, for example `int kills = 0;` or `int kills{};`.',
+    example: 'int kills;          // indeterminate\nint deaths = 0;     // initialized\nint assists{};      // value-initialized to 0',
+    see: ['default-initialization', 'value-initialization', 'undefined-behavior'],
+  },
+  {
+    id: 'ieee-754',
+    term: 'IEEE 754',
+    aliases: ['IEEE floating point'],
+    course: 'both',
+    category: 'Types',
+    short: 'The international standard for binary floating-point arithmetic used by virtually all hardware. It defines the 32-bit format behind `float` and the 64-bit format behind `double`.',
+    long: 'A floating-point number stores a sign, an exponent and a fixed number of significant binary digits (24 for `float`, 53 for `double`). Precision is therefore relative: the gap between neighbouring values grows with their magnitude. Most decimal fractions, such as 0.1, have no exact binary representation and are rounded to the nearest representable value.\n\nIEEE 754 also defines special values: positive and negative infinity, and NaN ("not a number") for results such as 0.0 / 0.0.',
+    see: ['floating-point', 'fundamental-type'],
+    reading: [
+      {
+        title: 'What Every Computer Scientist Should Know About Floating-Point Arithmetic',
+        url: 'https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html',
+        source: 'article',
+        note: 'The classic, thorough explanation of floating-point representation and rounding.',
+      },
+    ],
+  },
+  {
+    id: 'ascii',
+    term: 'ASCII',
+    course: 'cpp',
+    category: 'Types',
+    short: 'A 7-bit character encoding that maps the numbers 0–127 to English letters, digits, punctuation and control characters such as newline (10). `\'A\'` is 65 and `\'a\'` is 97.',
+    long: 'A `char` stores a number; an encoding decides which symbol that number represents. ASCII is the common subset shared by almost every modern encoding, including UTF-8, which extends it to cover all of Unicode using sequences of bytes.\n\nUseful properties: digits, uppercase letters and lowercase letters are each consecutive, so `c - \'0\'` converts a digit character to its value.',
+    example: "char letter = 'A';      // stores 65\nchar next = letter + 1; // 66, which is 'B'",
+    see: ['char-type', 'string-literal'],
+  },
+  {
+    id: 'twos-complement',
+    term: "Two's Complement",
+    course: 'cpp',
+    category: 'Types',
+    short: 'The way virtually all CPUs represent signed integers, required by C++ since C++20. With n bits, values range from −2ⁿ⁻¹ to 2ⁿ⁻¹ − 1, and −1 is all bits set.',
+    long: 'To negate a number, invert all its bits and add 1. The big advantage is that addition and subtraction use exactly the same hardware for signed and unsigned numbers.\n\nNote that C++20 standardizing the representation did **not** make signed overflow well-defined: overflowing signed arithmetic is still [[undefined-behavior]].',
+    example: '// 8-bit patterns\n// 0000 0101 =  5\n// 1111 1011 = -5\n// 1111 1111 = -1\n// 1000 0000 = -128',
+    see: ['signedness', 'integer-overflow', 'integer-type'],
+  },
+  {
+    id: 'usual-arithmetic-conversions',
+    term: 'Usual Arithmetic Conversions',
+    course: 'cpp',
+    category: 'Types',
+    short: 'The rules that convert the two operands of a binary arithmetic or comparison operator to a common type: floating-point wins, then the larger integer type, and at equal size unsigned wins.',
+    long: 'Before the rules are applied, small integer types are promoted to `int` ([[integral-promotion]]). The "unsigned wins" step is the source of a classic bug: in `-1 < 1u`, the `-1` is converted to a huge unsigned value, so the comparison is false. C++20\'s `std::cmp_less` and related functions compare mixed-signedness integers correctly.',
+    example: 'auto a = 7 / 2.0;  // double: 3.5\nauto b = 5 + 2LL;  // long long\nauto c = 5u - 10;  // unsigned int: 4294967291',
+    see: ['implicit-conversion', 'integral-promotion', 'signedness'],
+  },
+  {
+    id: 'c-style-cast',
+    term: 'C-Style Cast',
+    aliases: ['(T)x', 'functional cast'],
+    course: 'cpp',
+    category: 'Types',
+    short: 'A cast written in C syntax, `(int)x` or `int(x)`. It tries `const_cast`, `static_cast` and `reinterpret_cast` combinations in turn and uses the first that compiles, so it can silently remove `const` or reinterpret memory.',
+    long: 'For simple numeric conversions a C-style cast behaves like [[static-cast|static_cast]], but it gives the compiler no way to reject a dangerous conversion, and it is hard to search for. Modern C++ uses the named casts (`static_cast`, `const_cast`, `reinterpret_cast`, `dynamic_cast`), which state exactly which conversion is intended.',
+    example: 'const int maxHealth{100};\nint* p = (int*)&maxHealth;               // compiles: const silently removed\nint* q = static_cast<int*>(&maxHealth);  // error: refuses to remove const',
+    see: ['static-cast', 'reinterpret-cast', 'dynamic-cast'],
+  },
+];

@@ -8,7 +8,7 @@ import { RichText } from './components/RichText';
 import { isDesktopApp, onBackButton, syncSystemBars } from './lib/platform';
 import { canGoBack, goBack, navigate, useRoute } from './lib/router';
 import { dueReviews, effectiveStreak, levelInfo, useProgress, useSettings, type Settings } from './lib/store';
-import { closeGlossary, closeTopOverlay, useUi } from './lib/ui';
+import { closeGlossary, closeTopOverlay, runBackHandlers, useUi } from './lib/ui';
 import { useReducedMotion } from './lib/motion';
 import { CourseScreen } from './screens/CourseScreen';
 import { HomeScreen } from './screens/HomeScreen';
@@ -60,6 +60,7 @@ export function App() {
   useEffect(() => {
     void onBackButton(() => {
       if (closeTopOverlay()) return true;
+      if (runBackHandlers()) return true;
       if (window.location.hash.replace('#', '') === '/' || window.location.hash === '') return false;
       if (canGoBack()) goBack();
       else navigate('/', { replace: true });
