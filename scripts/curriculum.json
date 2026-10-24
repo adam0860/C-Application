@@ -1,0 +1,194 @@
+{
+  "cpp": [
+    { "dir": "u01-getting-started", "id": "cpp-u01-getting-started", "icon": "🚀", "title": "Getting Started", "description": "What C++ is, how source code becomes a program, and your first program dissected token by token.",
+      "lessons": [
+        ["cpp-what-is-cpp", "What C++ Is and Why It Exists"],
+        ["cpp-compilation-pipeline", "From Source Code to Executable"],
+        ["cpp-hello-world", "Hello, World — Dissected"],
+        ["cpp-statements-comments", "Statements, Comments and Whitespace"] ] },
+    { "dir": "u02-variables-types", "id": "cpp-u02-variables-types", "icon": "📦", "title": "Variables and Types", "description": "How C++ stores data: variables, fundamental types, initialization, const, auto and conversions.",
+      "lessons": [
+        ["cpp-variables", "Variables and Objects in Memory"],
+        ["cpp-fundamental-types", "Fundamental Types"],
+        ["cpp-initialization", "Initialization in All Its Forms"],
+        ["cpp-const-constexpr-auto", "const, constexpr and auto"],
+        ["cpp-conversions", "Type Conversions and Casts"] ] },
+    { "dir": "u03-operators", "id": "cpp-u03-operators", "icon": "➗", "title": "Operators and Expressions", "description": "Arithmetic, comparisons, logic, precedence and bit manipulation — and the surprises hiding in each.",
+      "lessons": [
+        ["cpp-arithmetic", "Arithmetic Operators"],
+        ["cpp-comparison-logic", "Comparison and Logical Operators"],
+        ["cpp-precedence-bitwise", "Precedence, Associativity and Bitwise Operators"] ] },
+    { "dir": "u04-strings-io", "id": "cpp-u04-strings-io", "icon": "💬", "title": "Strings and Console I/O", "description": "Talking to the user: streams, std::string, and efficient text handling with std::string_view.",
+      "lessons": [
+        ["cpp-console-io", "Console Input and Output"],
+        ["cpp-std-string", "std::string in Depth"],
+        ["cpp-string-view", "std::string_view and Text Processing"] ] },
+    { "dir": "u05-control-flow", "id": "cpp-u05-control-flow", "icon": "🔀", "title": "Control Flow", "description": "Decisions and repetition: if, switch, loops, break and continue.",
+      "lessons": [
+        ["cpp-if-else", "Making Decisions with if / else"],
+        ["cpp-switch", "switch Statements"],
+        ["cpp-loops", "while, do-while and for Loops"],
+        ["cpp-range-for-break", "Range-based for, break and continue"] ] },
+    { "dir": "u06-functions", "id": "cpp-u06-functions", "icon": "🧩", "title": "Functions", "description": "Breaking programs into reusable pieces: parameters, references, overloading, headers, scope and recursion.",
+      "lessons": [
+        ["cpp-functions-basics", "Defining and Calling Functions"],
+        ["cpp-pass-by", "Pass by Value, Reference and const Reference"],
+        ["cpp-overloading-defaults", "Overloading and Default Arguments"],
+        ["cpp-declarations-headers", "Declarations, Definitions and Header Files"],
+        ["cpp-scope-lifetime-recursion", "Scope, Lifetime and Recursion"] ] },
+    { "dir": "u07-containers", "id": "cpp-u07-containers", "icon": "🗃️", "title": "Arrays and Containers", "description": "Storing collections: C arrays, std::array, std::vector and associative containers.",
+      "lessons": [
+        ["cpp-arrays", "C-Style Arrays and std::array"],
+        ["cpp-vector", "std::vector in Depth"],
+        ["cpp-maps-sets", "std::map, std::unordered_map and std::set"] ] },
+    { "dir": "u08-pointers", "id": "cpp-u08-pointers", "icon": "📍", "title": "Pointers and References", "description": "The memory model, addresses, pointers, references and dynamic memory — demystified.",
+      "lessons": [
+        ["cpp-memory-model", "Stack, Heap and Addresses"],
+        ["cpp-pointers", "Pointers Explained"],
+        ["cpp-references", "References vs Pointers"],
+        ["cpp-dynamic-memory", "new, delete and the Dangers of Raw Ownership"],
+        ["cpp-pointers-arrays-const", "Pointer Arithmetic, Arrays and const Pointers"] ] },
+    { "dir": "u09-classes", "id": "cpp-u09-classes", "icon": "🏗️", "title": "Classes and Objects", "description": "Designing your own types: members, constructors, destructors, const correctness and operators.",
+      "lessons": [
+        ["cpp-structs-classes", "Structs and Classes"],
+        ["cpp-constructors", "Constructors and Member Initializer Lists"],
+        ["cpp-destructors-this", "Destructors, this and Object Lifetime"],
+        ["cpp-const-static-members", "const Member Functions and static Members"],
+        ["cpp-operator-overloading", "Operator Overloading"] ] },
+    { "dir": "u10-inheritance", "id": "cpp-u10-inheritance", "icon": "🧬", "title": "Inheritance and Polymorphism", "description": "Base and derived classes, virtual functions, vtables and abstract interfaces.",
+      "lessons": [
+        ["cpp-inheritance", "Inheritance Basics"],
+        ["cpp-virtual-functions", "Virtual Functions and override"],
+        ["cpp-vtables", "Under the Hood: How Virtual Calls Work"],
+        ["cpp-abstract-interfaces", "Abstract Classes, Interfaces and Virtual Destructors"] ] },
+    { "dir": "u11-modern-memory", "id": "cpp-u11-modern-memory", "icon": "🧠", "title": "Modern Memory Management", "description": "RAII, copy and move semantics, and smart pointers — how modern C++ makes leaks a thing of the past.",
+      "lessons": [
+        ["cpp-raii", "RAII — The Most Important Idiom in C++"],
+        ["cpp-copy-semantics", "Copying Objects and the Rule of Three"],
+        ["cpp-move-semantics", "Move Semantics and rvalue References"],
+        ["cpp-smart-pointers", "unique_ptr, shared_ptr and weak_ptr"] ] },
+    { "dir": "u12-templates", "id": "cpp-u12-templates", "icon": "🧪", "title": "Templates", "description": "Generic programming: function templates, class templates and C++20 concepts.",
+      "lessons": [
+        ["cpp-function-templates", "Function Templates and Type Deduction"],
+        ["cpp-class-templates", "Class Templates"],
+        ["cpp-concepts", "Constraining Templates with Concepts"] ] },
+    { "dir": "u13-stl", "id": "cpp-u13-stl", "icon": "⚙️", "title": "Iterators, Lambdas and Algorithms", "description": "The power tools of the standard library: iterators, lambdas, algorithms and ranges.",
+      "lessons": [
+        ["cpp-iterators", "Iterators"],
+        ["cpp-lambdas", "Lambdas and Captures"],
+        ["cpp-algorithms", "Standard Algorithms"],
+        ["cpp-ranges", "Ranges and Views"] ] },
+    { "dir": "u14-errors", "id": "cpp-u14-errors", "icon": "🛡️", "title": "Error Handling", "description": "Exceptions, exception safety, and value-based error handling with optional, variant and expected.",
+      "lessons": [
+        ["cpp-exceptions", "Exceptions and Stack Unwinding"],
+        ["cpp-exception-safety", "Exception Safety and noexcept"],
+        ["cpp-optional-variant-expected", "optional, variant and expected"] ] },
+    { "dir": "u15-modern", "id": "cpp-u15-modern", "icon": "✨", "title": "The Modern C++ Toolbox", "description": "enum class, tuples and structured bindings, compile-time programming, namespaces and aliases.",
+      "lessons": [
+        ["cpp-enums", "enum and enum class"],
+        ["cpp-structured-bindings-tuples", "pair, tuple and Structured Bindings"],
+        ["cpp-constexpr-compile-time", "Compile-Time Programming"],
+        ["cpp-namespaces-type-aliases", "Namespaces, using and Type Aliases"] ] },
+    { "dir": "u16-building", "id": "cpp-u16-building", "icon": "🔧", "title": "Building Real Programs", "description": "Multi-file projects, linker errors, undefined behavior, CMake and debugging.",
+      "lessons": [
+        ["cpp-multi-file", "Multi-File Projects and the Linker"],
+        ["cpp-undefined-behavior", "Undefined Behavior and How to Avoid It"],
+        ["cpp-cmake-tooling", "CMake, Compilers and Warnings"],
+        ["cpp-debugging", "Debugging Like a Pro"] ] },
+    { "dir": "u17-concurrency", "id": "cpp-u17-concurrency", "icon": "🧵", "title": "Concurrency Basics", "description": "Threads, data races, mutexes, atomics and futures — doing more than one thing at once safely.",
+      "lessons": [
+        ["cpp-threads", "Threads and std::jthread"],
+        ["cpp-mutex-race", "Data Races, Mutexes and Locks"],
+        ["cpp-atomics-async", "Atomics, Futures and std::async"] ] }
+  ],
+  "unreal": [
+    { "dir": "u01-intro", "id": "ue-u01-intro", "icon": "🎮", "title": "Welcome to Unreal C++", "description": "Why Unreal uses C++, how a project is laid out, how it builds, and your first C++ Actor.",
+      "lessons": [
+        ["ue-why-cpp", "Why C++ in Unreal? C++ and Blueprints"],
+        ["ue-project-structure", "Anatomy of an Unreal Project"],
+        ["ue-build-system", "UnrealBuildTool, UnrealHeaderTool and Live Coding"],
+        ["ue-first-class", "Your First C++ Actor"] ] },
+    { "dir": "u02-core-types", "id": "ue-u02-core-types", "icon": "🔤", "title": "Conventions and Core Types", "description": "Unreal's naming prefixes, numeric types, the three string types, containers and logging.",
+      "lessons": [
+        ["ue-naming-conventions", "Naming Conventions and Prefixes"],
+        ["ue-numeric-types", "Core Numeric Types and FMath"],
+        ["ue-strings", "FString, FName and FText"],
+        ["ue-containers", "TArray, TMap and TSet"],
+        ["ue-logging", "Logging and On-Screen Messages"] ] },
+    { "dir": "u03-uobject", "id": "ue-u03-uobject", "icon": "🪞", "title": "The UObject System and Reflection", "description": "Reflection, the U-macros, how objects are created, and how garbage collection keeps them alive.",
+      "lessons": [
+        ["ue-reflection", "What Reflection Is and Why Unreal Needs It"],
+        ["ue-uclass-macros", "UCLASS, USTRUCT and UENUM"],
+        ["ue-uobject-creation", "Creating Objects the Unreal Way"],
+        ["ue-garbage-collection", "Garbage Collection and UPROPERTY"] ] },
+    { "dir": "u04-actors", "id": "ue-u04-actors", "icon": "🧱", "title": "Actors and Components", "description": "The actor lifecycle, component hierarchies, transforms, and spawning and destroying actors.",
+      "lessons": [
+        ["ue-actor-lifecycle", "The Actor Lifecycle"],
+        ["ue-components", "Components and the Scene Hierarchy"],
+        ["ue-transforms", "FVector, FRotator, FQuat and FTransform"],
+        ["ue-spawning-destroying", "Spawning, Destroying and Finding Actors"] ] },
+    { "dir": "u05-exposure", "id": "ue-u05-exposure", "icon": "🎛️", "title": "Exposing C++ to the Editor and Blueprints", "description": "UPROPERTY and UFUNCTION specifiers, metadata, and designing a clean C++/Blueprint workflow.",
+      "lessons": [
+        ["ue-uproperty-specifiers", "UPROPERTY Specifiers in Depth"],
+        ["ue-ufunction-specifiers", "UFUNCTION Specifiers and Blueprint Events"],
+        ["ue-meta-specifiers", "Metadata, Categories and Editor Polish"],
+        ["ue-cpp-bp-workflow", "Designing a C++ / Blueprint Workflow"] ] },
+    { "dir": "u06-gameplay-framework", "id": "ue-u06-gameplay-framework", "icon": "🏛️", "title": "The Gameplay Framework", "description": "GameMode, GameState, PlayerState, Pawns, Characters, Controllers, GameInstance and Subsystems.",
+      "lessons": [
+        ["ue-framework-overview", "GameMode, GameState and PlayerState"],
+        ["ue-pawns-characters", "Pawns, Characters and Possession"],
+        ["ue-player-controller", "PlayerController, HUD and Cameras"],
+        ["ue-game-instance-subsystems", "GameInstance and Subsystems"] ] },
+    { "dir": "u07-input", "id": "ue-u07-input", "icon": "🕹️", "title": "Player Input", "description": "The Enhanced Input system from concepts to C++ bindings, and character movement.",
+      "lessons": [
+        ["ue-enhanced-input-concepts", "Enhanced Input Concepts"],
+        ["ue-enhanced-input-cpp", "Binding Enhanced Input in C++"],
+        ["ue-character-movement", "Movement, Looking and Jumping"] ] },
+    { "dir": "u08-delegates", "id": "ue-u08-delegates", "icon": "📡", "title": "Delegates and Events", "description": "Single, multicast and dynamic delegates, Blueprint-assignable events and collision events.",
+      "lessons": [
+        ["ue-delegates-basics", "Delegates Explained"],
+        ["ue-dynamic-delegates", "Dynamic Delegates and Blueprint Events"],
+        ["ue-component-events", "Hit and Overlap Events"] ] },
+    { "dir": "u09-collision", "id": "ue-u09-collision", "icon": "💥", "title": "Collision, Traces and Physics", "description": "Collision channels and profiles, line traces and sweeps, and physics simulation.",
+      "lessons": [
+        ["ue-collision-setup", "Collision Channels, Profiles and Responses"],
+        ["ue-line-traces", "Line Traces, Sweeps and FHitResult"],
+        ["ue-physics", "Physics Simulation, Forces and Impulses"] ] },
+    { "dir": "u10-time", "id": "ue-u10-time", "icon": "⏱️", "title": "Tick, Timers and Time", "description": "Frame-rate independence, timers, and keeping Tick from eating your frame budget.",
+      "lessons": [
+        ["ue-tick-deltatime", "Tick and DeltaTime"],
+        ["ue-timers", "Timers with FTimerManager"],
+        ["ue-performance-tick", "Tick Performance and Event-Driven Design"] ] },
+    { "dir": "u11-memory", "id": "ue-u11-memory", "icon": "🧠", "title": "Memory and Pointers in Unreal", "description": "TObjectPtr, weak pointers, Unreal's smart pointers for non-UObjects, and soft references.",
+      "lessons": [
+        ["ue-pointer-types", "TObjectPtr, Raw and Weak Object Pointers"],
+        ["ue-smart-pointers", "TSharedPtr, TUniquePtr and TWeakPtr"],
+        ["ue-soft-references", "Hard vs Soft References and Asset Loading"] ] },
+    { "dir": "u12-communication", "id": "ue-u12-communication", "icon": "🔗", "title": "Casting, Interfaces and Communication", "description": "Cast<T>, Unreal interfaces, and choosing the right way for actors to talk to each other.",
+      "lessons": [
+        ["ue-casting", "Cast, IsA and Class Hierarchies"],
+        ["ue-interfaces", "Unreal Interfaces"],
+        ["ue-actor-communication", "Patterns for Actor Communication"] ] },
+    { "dir": "u13-data", "id": "ue-u13-data", "icon": "📊", "title": "Data-Driven Design", "description": "Data Assets, Data Tables and Gameplay Tags — moving tuning out of code.",
+      "lessons": [
+        ["ue-data-assets", "Data Assets and Primary Data Assets"],
+        ["ue-data-tables", "Data Tables and FTableRowBase"],
+        ["ue-gameplay-tags", "Gameplay Tags"] ] },
+    { "dir": "u14-networking", "id": "ue-u14-networking", "icon": "🌐", "title": "Networking and Replication", "description": "The client–server model, authority, replicated properties, RepNotify and RPCs.",
+      "lessons": [
+        ["ue-network-model", "The Client–Server Model and Authority"],
+        ["ue-property-replication", "Replicated Properties and RepNotify"],
+        ["ue-rpcs", "Remote Procedure Calls"] ] },
+    { "dir": "u15-debugging", "id": "ue-u15-debugging", "icon": "🐞", "title": "Debugging and Best Practices", "description": "Assertions, visual debugging, avoiding common crashes and following Epic's coding standard.",
+      "lessons": [
+        ["ue-assertions", "check, verify and ensure"],
+        ["ue-debug-drawing", "Visual Debugging Tools"],
+        ["ue-common-crashes", "Common Crashes and How to Avoid Them"],
+        ["ue-coding-standard", "Epic's Coding Standard and Performance Habits"] ] },
+    { "dir": "u16-capstone", "id": "ue-u16-capstone", "icon": "🏆", "title": "Capstone: Building Gameplay Features", "description": "Put it all together: a health component, an interactive pickup and a projectile weapon.",
+      "lessons": [
+        ["ue-capstone-health", "A Health Component from Scratch"],
+        ["ue-capstone-pickup", "An Interactive Pickup"],
+        ["ue-capstone-projectile", "A Projectile Weapon with Damage"] ] }
+  ]
+}
