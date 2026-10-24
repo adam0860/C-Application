@@ -31,7 +31,7 @@ export const lesson: Lesson = {
           type: 'table',
           headers: ['Event', 'Declared on', 'Fires when', 'Also requires'],
           rows: [
-            ['`OnComponentHit`', '`UPrimitiveComponent`', 'This component takes part in a blocking collision', 'For collisions from physics simulation: *Simulation Generates Hit Events*'],
+            ['`OnComponentHit`', '`UPrimitiveComponent`', 'This component takes part in a blocking collision', 'For collisions from physics simulation: [[simulation-generates-hit-events|Simulation Generates Hit Events]]'],
             ['`OnComponentBeginOverlap`', '`UPrimitiveComponent`', 'It starts overlapping another component', '*Generate Overlap Events* on **both** components'],
             ['`OnComponentEndOverlap`', '`UPrimitiveComponent`', 'It stops overlapping', 'Same as begin overlap'],
             ['`OnActorHit`, `OnActorBeginOverlap`, `OnActorEndOverlap`', '`AActor`', 'The same contacts, summarised per actor', 'Same as above'],

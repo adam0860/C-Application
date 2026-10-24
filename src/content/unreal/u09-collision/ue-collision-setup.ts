@@ -26,7 +26,7 @@ export const lesson: Lesson = {
         {
           type: 'steps',
           items: [
-            { title: 'Do I take part, and in what?', text: 'The **Collision Enabled** mode: queries, physics, both or neither.' },
+            { title: 'Do I take part, and in what?', text: 'The [[collision-enabled|Collision Enabled]] mode: queries, physics, both or neither.' },
             { title: 'What am I?', text: 'The **Object Type**: one channel such as WorldStatic, Pawn or PhysicsBody.' },
             { title: 'How do I react to each channel?', text: 'A **response** — Ignore, Overlap or Block — for every object type and trace channel.' },
           ],

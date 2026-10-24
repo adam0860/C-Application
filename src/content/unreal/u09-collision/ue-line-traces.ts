@@ -114,7 +114,7 @@ const bool bHit = GetWorld()->LineTraceSingleByChannel(
     Hit, Start, End, ECC_Visibility, Params);`,
           annotations: [
             { lines: 2, text: 'Ignore every component of this actor — the fix for the bug above. `AddIgnoredActors(Array)` and `AddIgnoredComponent(Comp)` also exist; a projectile usually ignores its owner too.' },
-            { lines: 3, text: 'Test against *simple* collision (the default). See the table below.' },
+            { lines: 3, text: 'Test against [[simple-complex-collision|simple collision]] (the default). See the table below.' },
             { lines: 4, text: 'Ask for `Hit.PhysMaterial`, so you can choose a footstep sound or impact effect per surface. Off by default because it costs a little extra.' },
             { lines: 5, text: 'A name for debugging and profiling: the `TraceTag ProbeAhead` console command draws traces carrying this tag.' },
             { lines: 9, text: 'Params go after the channel.' },
@@ -405,7 +405,8 @@ const bool bHit = GetWorld()->SweepSingleByChannel(
     Controller->GetPlayerViewPoint(ViewLoc, ViewRot);
     const FVector AimEnd = ViewLoc + ViewRot.Vector() * WeaponRange;
 
-    FCollisionQueryParams Params(SCENE_QUERY_STAT(Hitscan), false, this);
+    FCollisionQueryParams Params(
+        SCENE_QUERY_STAT(Hitscan), false, this);
 
     FHitResult AimHit;
     const bool bAimHit = GetWorld()->LineTraceSingleByChannel(
@@ -423,10 +424,10 @@ const bool bHit = GetWorld()->SweepSingleByChannel(
 }`,
           annotations: [
             { lines: 4, text: 'For a player controller this is the camera\'s location and rotation — exactly what the crosshair represents.' },
-            { lines: 7, text: 'Profiling tag, simple collision, ignore ourselves.' },
-            { lines: '9-12', text: 'Trace 1: what is under the crosshair? If nothing, aim at the far end of the range.' },
-            { lines: '14-15', text: 'Trace 2 starts at a `Muzzle` socket on the weapon mesh and heads toward the aim point.' },
-            { lines: '17-21', text: 'It continues past the target so it still registers the hit, and a wall between gun and target correctly blocks the shot. In multiplayer the *server* must confirm hits like this — never trust the client\'s word.' },
+            { lines: '7-8', text: 'Profiling tag, simple collision, ignore ourselves.' },
+            { lines: '10-13', text: 'Trace 1: what is under the crosshair? If nothing, aim at the far end of the range.' },
+            { lines: '15-16', text: 'Trace 2 starts at a `Muzzle` socket on the weapon mesh and heads toward the aim point.' },
+            { lines: '18-22', text: 'It continues past the target so it still registers the hit, and a wall between gun and target correctly blocks the shot. In multiplayer the *server* must confirm hits like this — never trust the client\'s word.' },
           ],
         },
         {
