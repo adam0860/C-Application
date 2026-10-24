@@ -44,11 +44,13 @@ function checkInline(where: string, text: string) {
     return;
   }
   if (!text.trim()) err(where, 'empty text');
-  for (const m of text.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)) {
+  // Code spans are literal text: `[[nodiscard]]` or `[](int x)` inside backticks is not markup.
+  const prose = text.replace(/`[^`]+`/g, '``');
+  for (const m of prose.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)) {
     const id = m[1].trim();
     if (!resolvable(id)) err(where, `unknown glossary id [[${id}]]`);
   }
-  for (const m of text.matchAll(/\]\(([^)]+)\)/g)) {
+  for (const m of prose.matchAll(/\]\(([^)]+)\)/g)) {
     if (!/^https:\/\//.test(m[1])) err(where, `link must be https: ${m[1]}`);
   }
   // Odd number of backticks usually means a broken `code` span.

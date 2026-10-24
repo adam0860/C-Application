@@ -33,6 +33,8 @@ function parseInline(text: string, keyPrefix = ''): ReactNode[] {
       const inner = tok.slice(2, -2);
       const [id, label] = inner.split('|').map((s) => s.trim());
       const entry = getGlossaryEntry(id);
+      const before = text.slice(0, m.index).trimEnd();
+      const sentenceStart = before === '' || /[.!?:]$/.test(before);
       out.push(
         <button
           key={key}
@@ -45,7 +47,7 @@ function parseInline(text: string, keyPrefix = ''): ReactNode[] {
           }}
           title={entry?.short.replace(/[`*[\]]/g, '')}
         >
-          {label ?? entry?.term ?? id}
+          {label ?? (entry ? displayTerm(entry.term, entry.course, sentenceStart) : id)}
         </button>,
       );
     } else if (m[3]) {
@@ -72,6 +74,17 @@ function parseInline(text: string, keyPrefix = ''): ReactNode[] {
   }
   if (last < text.length) out.push(...withBreaks(text.slice(last), `${keyPrefix}t${n}`));
   return out;
+}
+
+/**
+ * Generic C++ terms are stored in Title Case ("Stack Frame"); mid-sentence they
+ * read better in lowercase ("a stack frame"). Code-like terms, acronyms and
+ * Unreal's proper names are left untouched.
+ */
+function displayTerm(term: string, course: string, sentenceStart: boolean): string {
+  if (sentenceStart || course === 'unreal') return term;
+  if (!/^[A-Z][a-z]+([ -][A-Za-z][a-z]+)*$/.test(term)) return term;
+  return term.replace(/\b[A-Z](?=[a-z])/g, (c) => c.toLowerCase());
 }
 
 function withBreaks(s: string, key: string): ReactNode[] {
