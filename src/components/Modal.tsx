@@ -17,6 +17,10 @@ export function Modal({
   className?: string;
 }) {
   const panel = useRef<HTMLDivElement>(null);
+  // Keep the latest onClose without re-running the focus effect: callers often pass
+  // an inline function, and re-focusing the panel on every render stole focus from inputs.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
@@ -24,7 +28,7 @@ export function Modal({
     const h = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
-        onClose();
+        closeRef.current();
       }
     };
     window.addEventListener('keydown', h, true);
@@ -32,7 +36,7 @@ export function Modal({
       window.removeEventListener('keydown', h, true);
       prev?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
   return createPortal(
