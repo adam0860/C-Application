@@ -55,7 +55,7 @@ export function CourseScreen({ courseId }: { courseId: string }) {
             }}
           >
             <CourseGlyph course={c.id} size={22} />
-            <span>{c.id === 'cpp' ? 'C++' : 'Unreal C++'}</span>
+            <span>{c.id === 'cpp' ? 'C++' : c.id === 'unreal' ? 'Unreal C++' : 'SFML'}</span>
           </button>
         ))}
       </div>
@@ -86,11 +86,11 @@ export function CourseScreen({ courseId }: { courseId: string }) {
         <CourseGlyph course={course.id} size={96} className="hero-glyph" />
       </header>
 
-      {course.id === 'unreal' && cppProg.ratio < 0.3 && (
+      {course.id !== 'cpp' && cppProg.ratio < 0.3 && (
         <div className="recommend">
           <Icon name="info" size={18} />
           <div>
-            <b>New to C++?</b> Unreal C++ builds directly on standard C++. We recommend working through C++ Fundamentals first —
+            <b>New to C++?</b> {course.id === 'sfml' ? 'SFML game development' : 'Unreal C++'} builds directly on standard C++. We recommend working through C++ Fundamentals first —
             or dive in if you already know the basics.
           </div>
           <button type="button" className="btn btn-sm btn-soft" onClick={() => navigate('/course/cpp', { replace: true })}>
@@ -292,5 +292,5 @@ function LessonSheet({ loc, onClose, progress: p, freeNav }: { loc: LessonLocati
 }
 
 export function courseOf(id: string): CourseId {
-  return id === 'unreal' ? 'unreal' : 'cpp';
+  return id === 'unreal' || id === 'sfml' ? id : 'cpp';
 }

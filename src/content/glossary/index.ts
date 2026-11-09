@@ -34,6 +34,12 @@ import { glossary as unreal_u13 } from '../unreal/u13-data/glossary';
 import { glossary as unreal_u14 } from '../unreal/u14-networking/glossary';
 import { glossary as unreal_u15 } from '../unreal/u15-debugging/glossary';
 import { glossary as unreal_u16 } from '../unreal/u16-capstone/glossary';
+import { glossary as sfml_u01 } from '../sfml/u01-setup/glossary';
+import { glossary as sfml_u02 } from '../sfml/u02-input-time/glossary';
+import { glossary as sfml_u03 } from '../sfml/u03-drawing/glossary';
+import { glossary as sfml_u04 } from '../sfml/u04-animation-audio/glossary';
+import { glossary as sfml_u05 } from '../sfml/u05-gameplay/glossary';
+import { glossary as sfml_u06 } from '../sfml/u06-projects/glossary';
 
 export const glossary: GlossaryEntry[] = [
   ...cppGlossary,
@@ -71,4 +77,10 @@ export const glossary: GlossaryEntry[] = [
   ...unreal_u14,
   ...unreal_u15,
   ...unreal_u16,
+  ...sfml_u01,
+  ...sfml_u02,
+  ...sfml_u03,
+  ...sfml_u04,
+  ...sfml_u05,
+  ...sfml_u06,
 ];

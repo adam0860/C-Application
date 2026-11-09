@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { cheatSheets, findLesson, getGlossaryEntry, glossary } from '../content';
+import { cheatSheets, courseLabel, findLesson, getGlossaryEntry, glossary, glossaryCourseLabel } from '../content';
 import type { CourseId, GlossaryEntry } from '../content/types';
 import { CodeBlock } from '../components/CodeBlock';
 import { Icon } from '../components/Icon';
@@ -118,7 +118,7 @@ function GlossaryList() {
     <div>
       <div className="filter-row">
         <div className="seg small">
-          {(['all', 'cpp', 'unreal'] as const).map((c) => (
+          {(['all', 'cpp', 'unreal', 'sfml'] as const).map((c) => (
             <button
               key={c}
               type="button"
@@ -128,7 +128,7 @@ function GlossaryList() {
                 setCategory(null);
               }}
             >
-              {c === 'all' ? 'All' : c === 'cpp' ? 'C++' : 'Unreal'}
+              {c === 'all' ? 'All' : courseLabel(c)}
             </button>
           ))}
         </div>
@@ -172,9 +172,9 @@ function SheetGrid() {
     <div>
       <div className="filter-row">
         <div className="seg small">
-          {(['all', 'cpp', 'unreal'] as const).map((c) => (
+          {(['all', 'cpp', 'unreal', 'sfml'] as const).map((c) => (
             <button key={c} type="button" className={`seg-btn${course === c ? ' on' : ''}`} onClick={() => setCourse(c)}>
-              {c === 'all' ? 'All' : c === 'cpp' ? 'C++' : 'Unreal'}
+              {c === 'all' ? 'All' : courseLabel(c)}
             </button>
           ))}
         </div>
@@ -186,7 +186,7 @@ function SheetGrid() {
             <span className="sheet-icon">{s.icon}</span>
             <b>{s.title}</b>
             <span className="muted">{s.description}</span>
-            <span className="sheet-badge">{s.course === 'cpp' ? 'C++' : 'Unreal'}</span>
+            <span className="sheet-badge">{courseLabel(s.course)}</span>
           </button>
         ))}
       </div>
@@ -271,7 +271,7 @@ export function GlossaryEntryScreen({ id }: { id: string }) {
         <BookmarkButton bookmarkKey={`glossary:${g.id}`} />
       </BackBar>
       <div className="detail-badges">
-        <span className={`course-badge ${g.course}`}>{g.course === 'cpp' ? 'C++' : g.course === 'unreal' ? 'Unreal' : 'C++ & Unreal'}</span>
+        <span className={`course-badge ${g.course}`}>{glossaryCourseLabel(g.course)}</span>
         <span className="cat-badge">{g.category}</span>
       </div>
       <h1 className="detail-title">{g.term}</h1>

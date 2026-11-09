@@ -67,6 +67,7 @@ export async function loadContent(units: Set<string>, opts: { glossary: boolean 
   if (opts.glossary) {
     await tryImport('cheatsheets/cpp.ts', 'cppCheatSheets', cheatSheets);
     await tryImport('cheatsheets/unreal.ts', 'unrealCheatSheets', cheatSheets);
+    await tryImport('cheatsheets/sfml.ts', 'sfmlCheatSheets', cheatSheets);
   }
   return { courses, glossary, cheatSheets, loadProblems };
 }

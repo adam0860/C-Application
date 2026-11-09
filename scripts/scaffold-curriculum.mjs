@@ -22,6 +22,13 @@ const courseMeta = {
     description:
       "Learn the dialect of C++ that powers Unreal Engine 5: reflection and the UObject system, actors and components, Blueprint exposure, the gameplay framework, input, collision, networking and the habits that keep a project fast and crash-free.",
   },
+  sfml: {
+    exportName: 'sfmlCourse',
+    title: 'SFML Game Development',
+    subtitle: 'Build 2D games in C++ with SFML 3',
+    description:
+      'Make real 2D games with SFML 3 and modern C++: windows and the game loop, events and input, delta time, shapes, sprites, text, cameras, animation, tilemaps, audio, collision, game states, and two complete projects.',
+  },
 };
 
 const q = (s) => JSON.stringify(s);

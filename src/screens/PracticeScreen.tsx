@@ -134,7 +134,7 @@ export function PracticeSession({ mode, target }: { mode: 'review' | 'quick' | '
     const p = progressStore.get();
     if (mode === 'review') return reviewItems(p);
     if (mode === 'quick') {
-      const ids = completedIn(p, target === 'unreal' ? 'unreal' : 'cpp');
+      const ids = completedIn(p, target === 'unreal' || target === 'sfml' ? target : 'cpp');
       return shuffled(questionItems(ids), Date.now() % 100000).slice(0, 10);
     }
     const unit = courses.flatMap((c) => c.units).find((u) => u.id === target);

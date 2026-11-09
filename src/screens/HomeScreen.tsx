@@ -24,7 +24,8 @@ export function HomeScreen() {
 
   // Continue where you left off: the course of the last lesson, else C++.
   const lastCourse: CourseId = (p.lastLessonId && findLesson(p.lastLessonId)?.course.id) || 'cpp';
-  const nextId = nextLessonId(p, lastCourse) ?? nextLessonId(p, lastCourse === 'cpp' ? 'unreal' : 'cpp');
+  const otherCourses = courses.map((c) => c.id).filter((id) => id !== lastCourse);
+  const nextId = nextLessonId(p, lastCourse) ?? otherCourses.map((id) => nextLessonId(p, id)).find((id): id is string => !!id) ?? null;
   const next = nextId ? findLesson(nextId) : null;
   const started = Object.keys(p.lessons).length > 0;
 
@@ -216,10 +217,11 @@ function Onboarding() {
       <div className="onb-hero">
         <CourseGlyph course="cpp" size={64} />
         <CourseGlyph course="unreal" size={64} />
+        <CourseGlyph course="sfml" size={64} />
       </div>
       <h2 className="sheet-title center">Welcome to C++ Forge</h2>
       <p className="center muted">
-        Deep, interactive lessons that take you from your first line of C++ to gameplay programming in Unreal Engine — and always explain
+        Deep, interactive lessons that take you from your first line of C++ to 2D games with SFML and gameplay programming in Unreal Engine — and always explain
         the <b>why</b>.
       </p>
       <label className="field">
@@ -257,6 +259,13 @@ function Onboarding() {
             <span>
               <b>I know C++ — take me to Unreal</b>
               <small>Start with Unreal Engine C++</small>
+            </span>
+          </button>
+          <button type="button" className={`choice${path === 'sfml' ? ' on' : ''}`} onClick={() => setPath('sfml')}>
+            <CourseGlyph course="sfml" size={36} />
+            <span>
+              <b>I know C++ — I want to make 2D games</b>
+              <small>Start with SFML Game Development</small>
             </span>
           </button>
         </div>

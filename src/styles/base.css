@@ -418,6 +418,10 @@ a {
   background: linear-gradient(90deg, var(--ue-1), var(--ue-2), var(--ue-3));
 }
 
+.bar.course-sfml .bar-fill {
+  background: linear-gradient(90deg, var(--sf-1), var(--sf-2));
+}
+
 .ring-track {
   stroke: var(--surface-3);
 }

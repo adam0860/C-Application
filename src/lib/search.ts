@@ -1,4 +1,4 @@
-import { cheatSheets, courses, glossary, isStub } from '../content';
+import { cheatSheets, courses, glossary, glossaryCourseLabel, isStub } from '../content';
 import type { Block, Lesson } from '../content/types';
 
 export interface SearchHit {
@@ -69,7 +69,7 @@ function build() {
       }
   for (const g of glossary)
     docs.push({
-      hit: { kind: 'glossary', id: g.id, title: g.term, subtitle: `${g.course === 'unreal' ? 'Unreal' : g.course === 'both' ? 'C++ & Unreal' : 'C++'} · ${g.category}` },
+      hit: { kind: 'glossary', id: g.id, title: g.term, subtitle: `${glossaryCourseLabel(g.course)} · ${g.category}` },
       title: `${g.term} ${(g.aliases ?? []).join(' ')}`.toLowerCase(),
       aux: strip(g.short),
       body: strip(g.long ?? ''),

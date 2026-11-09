@@ -1,6 +1,6 @@
 # C++ Forge — Content Authoring Guide
 
-C++ Forge teaches C++ and then Unreal Engine C++ through short interactive lessons. It is
+C++ Forge teaches C++, then Unreal Engine C++ and SFML game development through short interactive lessons. It is
 inspired by Sololearn/Duolingo but aims to be **much deeper**: every lesson explains *why*
 things work the way they do, shows what happens under the hood, warns about real-world
 pitfalls, and checks understanding with varied questions whose feedback teaches.
@@ -18,8 +18,9 @@ src/content/
   cpp/<unit-dir>/index.ts          unit metadata + lesson imports (already wired up)
   cpp/<unit-dir>/glossary.ts       extra glossary terms introduced by this unit
   unreal/...                       same structure for the Unreal course
+  sfml/...                         same structure for the SFML course (lesson ids start with `sfml-`)
   glossary/cpp.ts, unreal.ts       the core glossary (ids listed in scripts/glossary-master.ts)
-  cheatsheets/cpp.ts, unreal.ts    quick-reference sheets
+  cheatsheets/cpp.ts, unreal.ts, sfml.ts quick-reference sheets
 ```
 
 Every lesson file already exists as a **stub**. Replace the whole stub with the finished
@@ -208,3 +209,16 @@ Also type-check (filter to your own files, since other authors are editing their
 ```
 npx tsc --noEmit -p tsconfig.content.json 2>&1 | grep -E "<your-unit-dir>|glossary" || echo "types OK"
 ```
+
+## SFML course conventions
+
+- Target **SFML 3** only (`std::optional<Event>` polling, `getIf<T>()`, `VideoMode({w, h})`,
+  scoped enums, `sf::degrees`). Old SFML 2 tutorial code does not compile against it.
+- Lessons use CMake for builds; use `cmake` as the `lang` of those blocks.
+- Every code block containing `int main` is compiled by `npm run check-sfml` (optionally
+  `-- --unit <unit-id>`). Set `SFML_INCLUDE` to the SFML 3 `include` folder (required; the folder containing
+  `SFML/Graphics.hpp`).
+- Prefer self-contained programs: build textures and sounds in memory so a learner can
+  paste the code and run it without asset files.
+- In template literals escape backticks and `${`; the CMake variables `${CMAKE_BINARY_DIR}`
+  etc. need the escaped form in source.

@@ -119,6 +119,9 @@
 .continue-card.course-unreal {
   background: linear-gradient(140deg, color-mix(in srgb, var(--ue-1) 12%, var(--surface)), var(--surface) 60%);
 }
+.continue-card.course-sfml {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--sf-1) 12%, var(--surface)), var(--surface) 60%);
+}
 .continue-top {
   display: flex;
   align-items: center;
@@ -229,6 +232,9 @@
 }
 .course-card.course-unreal {
   background: linear-gradient(135deg, #2e1065, #6d28d9 45%, #c026d3 75%, #f59e0b);
+}
+.course-card.course-sfml {
+  background: linear-gradient(135deg, #064e3b, #15803d 45%, #65a30d 80%, #bef264);
 }
 .course-card-top {
   display: flex;
@@ -345,6 +351,10 @@
   background: color-mix(in srgb, var(--ue-1) 15%, transparent);
   color: color-mix(in srgb, var(--ue-1) 60%, var(--text));
 }
+.course-tab.on.course-sfml {
+  background: color-mix(in srgb, var(--sf-1) 15%, transparent);
+  color: color-mix(in srgb, var(--sf-1) 70%, var(--text));
+}
 .course-hero {
   position: relative;
   overflow: hidden;
@@ -362,6 +372,9 @@
 }
 .course-hero.course-unreal {
   background: linear-gradient(135deg, #1e0b4b, #5b21b6 45%, #a21caf 75%, #ea8a07);
+}
+.course-hero.course-sfml {
+  background: linear-gradient(135deg, #052e16, #166534 45%, #4d7c0f 80%, #84cc16);
 }
 .course-hero::before {
   content: '';
@@ -1115,6 +1128,11 @@
   color: color-mix(in srgb, var(--ue-1) 70%, var(--text));
 }
 
+.sheet-card.course-sfml .sheet-badge {
+  background: color-mix(in srgb, var(--sf-1) 16%, transparent);
+  color: color-mix(in srgb, var(--sf-1) 75%, var(--text));
+}
+
 /* --------------------------------------------------------------- Details */
 .back-bar {
   display: flex;
@@ -1150,6 +1168,10 @@
 .course-badge.unreal {
   background: color-mix(in srgb, var(--ue-1) 16%, transparent);
   color: color-mix(in srgb, var(--ue-1) 65%, var(--text));
+}
+.course-badge.sfml {
+  background: color-mix(in srgb, var(--sf-1) 16%, transparent);
+  color: color-mix(in srgb, var(--sf-1) 75%, var(--text));
 }
 .course-badge.both {
   background: color-mix(in srgb, #10b981 14%, transparent);

@@ -45,6 +45,9 @@ export const achievements: Achievement[] = [
   { id: 'cpp-graduate', icon: '🎖️', title: 'C++ Graduate', description: 'Complete the entire C++ Fundamentals course.', test: courseDone('cpp') },
   { id: 'mirror', icon: '🪞', title: 'Mirror, Mirror', description: 'Finish the UObject and Reflection unit.', test: unitDone('ue-u03-uobject') },
   { id: 'netcode', icon: '🌐', title: 'Netcode Navigator', description: 'Finish the Networking and Replication unit.', test: unitDone('ue-u14-networking') },
+  { id: 'first-window', icon: '🪟', title: 'First Window', description: 'Finish the Getting Started with SFML unit.', test: unitDone('sfml-u01-setup') },
+  { id: 'game-feel', icon: '🎞️', title: 'Game Feel', description: 'Finish the Animation, Tiles and Audio unit.', test: unitDone('sfml-u04-animation-audio') },
+  { id: 'sfml-developer', icon: '🕹️', title: 'SFML Game Dev', description: 'Complete the entire SFML Game Development course.', test: courseDone('sfml') },
   { id: 'unreal-engineer', icon: '🏆', title: 'Unreal Engineer', description: 'Complete the entire Unreal Engine C++ course.', test: courseDone('unreal') },
   {
     id: 'night-owl',

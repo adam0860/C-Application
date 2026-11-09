@@ -1,11 +1,11 @@
 # C++ Forge
 
-**Learn C++, then Unreal Engine C++, with deep, interactive lessons.** C++ Forge is a
+**Learn C++, then Unreal Engine C++ and SFML game development, with deep, interactive lessons.** C++ Forge is a
 Windows and Android app in the spirit of Sololearn and Duolingo, with more depth: every
 lesson explains *why* the language or engine works the way it does, shows what happens
 under the hood, and checks your understanding with questions whose feedback teaches.
 
-- **Two complete courses**
+- **Three complete courses**
   - **C++ Fundamentals:** 17 units and 66 lessons, from how the compiler sees your code
     through memory, classes, templates, the STL, error handling, building real
     programs and concurrency.
@@ -13,6 +13,11 @@ under the hood, and checks your understanding with questions whose feedback teac
     system, actors and components, Blueprint exposure, the gameplay framework, Enhanced
     Input, delegates, collision, timers, memory, interfaces, data-driven design,
     networking and debugging. It ends with three capstone features.
+  - **SFML Game Development:** 6 units and 20 lessons on SFML 3 with CMake: windows and
+    the game loop, input and delta time, sprites, text and views, animation, tile maps and
+    audio, collision, game objects, resources and game states. It ends with complete Pong
+    and top-down shooter projects and a polish-and-ship lesson. Every program in the
+    course is compile-checked against the SFML 3 headers (`npm run check-sfml`).
 - **Rich lessons:** annotated code (tap a line to see why it is there), memory diagrams
   with pointer arrows, do/don't comparisons, step-by-step processes, collapsible deep
   dives, "Why?" boxes, and "In Unreal Engine" notes that connect the two courses.

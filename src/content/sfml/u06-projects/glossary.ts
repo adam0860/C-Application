@@ -1,0 +1,55 @@
+import type { GlossaryEntry } from '../../types';
+
+// Glossary terms introduced by this unit that are NOT in scripts/glossary-master.ts.
+export const glossary: GlossaryEntry[] = [
+  {
+    id: 'game-feel',
+    term: 'Game Feel (Juice)',
+    aliases: ['juice', 'game juice'],
+    course: 'sfml',
+    category: 'Game Architecture',
+    short: 'The small, cheap reactions (shake, flashes, particles, sounds) that make player actions feel weighty without changing the rules.',
+    long: 'Most effects work the same way: a value jumps when something happens, then decays back to rest over a fraction of a second. Effects must stay out of the game logic, so they never affect collision or scoring.',
+    see: ['screen-shake', 'particle-system'],
+  },
+  {
+    id: 'screen-shake',
+    term: 'Screen Shake',
+    aliases: ['camera shake', 'trauma'],
+    course: 'sfml',
+    category: 'Graphics',
+    short: 'A short camera jolt made by offsetting a copy of the view by a random amount that decays over time.',
+    long: 'A common approach keeps a *trauma* value between 0 and 1 that rises on impact and drains each frame, and uses trauma squared as the pixel offset so small hits are subtle and large hits are strong. Apply it to a copy of the view, not to the camera that gameplay uses.',
+    example: 'const float shake = trauma * trauma * 14.f;',
+    see: ['game-feel'],
+  },
+  {
+    id: 'particle-system',
+    term: 'Particle System',
+    aliases: ['particles', 'particle emitter'],
+    course: 'sfml',
+    category: 'Graphics',
+    short: 'A collection of many short-lived, simple objects (sparks, smoke, dust) updated and drawn together.',
+    long: 'Each particle stores a position, velocity and remaining life. Updating is a loop that moves and ages them and erases the expired. Drawing is fast when all particles are written into one vertex array and drawn with a single call.',
+    see: ['game-feel'],
+  },
+  {
+    id: 'frame-time',
+    term: 'Frame Time',
+    aliases: ['ms per frame', 'delta time budget'],
+    course: 'sfml',
+    category: 'Time',
+    short: 'How long one pass of the game loop takes, in milliseconds. It is a better performance measure than frames per second because costs add up linearly.',
+    long: 'At 60 FPS the budget is about 16.7 ms per frame. FPS is the reciprocal of frame time, so the same extra cost looks large at low FPS and tiny at high FPS. Measure frame time in a Release build, with v-sync and the frame limit off.',
+    example: 'const float ms = 1000.f * fpsTimer / static_cast<float>(fpsFrames);',
+  },
+  {
+    id: 'release-build',
+    term: 'Release Build',
+    aliases: ['debug vs release', 'optimised build'],
+    course: 'sfml',
+    category: 'SFML Basics',
+    short: 'A build configuration with optimisation on and extra debugging checks off, which is the one to measure and ship.',
+    long: 'A Debug build is for finding bugs and can be many times slower. Always check performance, and make the build players receive, in Release. With dynamic linking, the Release build also needs the Release versions of the SFML libraries.',
+  },
+];

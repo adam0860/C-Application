@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import type { CourseId } from '../content/types';
 
-/** Course emblems: a hexagon "C++" badge and a ringed "U" badge (generic, not official logos). */
+/** Course emblems: a hexagon "C++" badge, a ringed "U" badge and a green game-window badge (generic, not official logos). */
 export function CourseGlyph({ course, size = 48, className }: { course: CourseId; size?: number; className?: string }) {
   // Gradient ids must be unique per instance: a duplicate id inside a hidden
   // (display: none) subtree makes every other reference to it render empty.
@@ -20,6 +20,27 @@ export function CourseGlyph({ course, size = 48, className }: { course: CourseId
         <text x="32" y="39.5" textAnchor="middle" fontFamily="Inter, system-ui, sans-serif" fontWeight="800" fontSize="19" fill="#fff" letterSpacing="-1">
           C++
         </text>
+      </svg>
+    );
+  }
+  if (course === 'sfml') {
+    return (
+      <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#4d7c0f" />
+            <stop offset="0.5" stopColor="#16a34a" />
+            <stop offset="1" stopColor="#065f46" />
+          </linearGradient>
+        </defs>
+        <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#${gid})`} />
+        <rect x="11" y="14" width="42" height="36" rx="5" fill="#052e16" opacity="0.55" />
+        <rect x="11" y="14" width="42" height="8" rx="4" fill="#fff" opacity="0.28" />
+        <circle cx="16" cy="18" r="1.6" fill="#fff" />
+        <circle cx="21" cy="18" r="1.6" fill="#fff" opacity="0.8" />
+        <rect x="21" y="30" width="9" height="9" rx="1.5" fill="#bef264" />
+        <circle cx="42" cy="38" r="5.5" fill="#fff" opacity="0.92" />
+        <path d="M13 46h38" stroke="#bef264" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
       </svg>
     );
   }

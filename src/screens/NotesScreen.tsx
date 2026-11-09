@@ -1,4 +1,4 @@
-import { findLesson, isStub } from '../content';
+import { courseLabel, findLesson, isStub } from '../content';
 import { Blocks } from '../components/Blocks';
 import { Icon } from '../components/Icon';
 import { Inline } from '../components/RichText';
@@ -35,7 +35,7 @@ export function NotesScreen({ lessonId }: { lessonId: string }) {
         </div>
       </div>
       <div className="detail-badges">
-        <span className={`course-badge ${course.id}`}>{course.id === 'cpp' ? 'C++' : 'Unreal'}</span>
+        <span className={`course-badge ${course.id}`}>{courseLabel(course.id)}</span>
         <span className="cat-badge">
           Unit {unitIndex + 1} · {unit.title}
         </span>

@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import { getGlossaryEntry } from './content';
+import { getGlossaryEntry, glossaryCourseLabel } from './content';
 import { CodeBlock } from './components/CodeBlock';
 import { CourseGlyph } from './components/CourseGlyph';
 import { Icon } from './components/Icon';
@@ -222,7 +222,7 @@ function GlossarySheet() {
       {g ? (
         <>
           <div className="detail-badges">
-            <span className={`course-badge ${g.course}`}>{g.course === 'cpp' ? 'C++' : g.course === 'unreal' ? 'Unreal' : 'C++ & Unreal'}</span>
+            <span className={`course-badge ${g.course}`}>{glossaryCourseLabel(g.course)}</span>
             <span className="cat-badge">{g.category}</span>
           </div>
           <h2 className="sheet-title">{g.term}</h2>

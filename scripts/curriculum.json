@@ -190,5 +190,39 @@
         ["ue-capstone-health", "A Health Component from Scratch"],
         ["ue-capstone-pickup", "An Interactive Pickup"],
         ["ue-capstone-projectile", "A Projectile Weapon with Damage"] ] }
+  ],
+  "sfml": [
+    { "dir": "u01-setup", "id": "sfml-u01-setup", "icon": "🧰", "title": "Getting Started with SFML", "description": "What SFML is, how to install and build it, and your first window with a proper game loop.",
+      "lessons": [
+        ["sfml-what-is-sfml", "What SFML Is (and What Changed in SFML 3)"],
+        ["sfml-setup-build", "Installing and Building with SFML"],
+        ["sfml-window-game-loop", "Your First Window and the Game Loop"] ] },
+    { "dir": "u02-input-time", "id": "sfml-u02-input-time", "icon": "🎮", "title": "Events, Input and Time", "description": "Handling events the SFML 3 way, reading the keyboard and mouse, and moving things at the same speed on every computer.",
+      "lessons": [
+        ["sfml-events", "Events in SFML 3"],
+        ["sfml-keyboard-mouse", "Keyboard, Mouse and Real-Time Input"],
+        ["sfml-delta-time", "Time, Clocks and Delta Time"] ] },
+    { "dir": "u03-drawing", "id": "sfml-u03-drawing", "icon": "🎨", "title": "Drawing and Graphics", "description": "Shapes, transforms, textures, sprites, text and cameras: everything you put on screen.",
+      "lessons": [
+        ["sfml-shapes-transforms", "Shapes, Vectors and Transforms"],
+        ["sfml-textures-sprites", "Textures and Sprites"],
+        ["sfml-text-fonts", "Text and Fonts"],
+        ["sfml-views-camera", "Views and Cameras"] ] },
+    { "dir": "u04-animation-audio", "id": "sfml-u04-animation-audio", "icon": "🔊", "title": "Animation, Tiles and Audio", "description": "Spritesheet animation, drawing thousands of tiles cheaply, and sound effects and music.",
+      "lessons": [
+        ["sfml-sprite-animation", "Spritesheet Animation"],
+        ["sfml-vertex-arrays-tilemaps", "Vertex Arrays and Tilemaps"],
+        ["sfml-audio", "Sound Effects and Music"] ] },
+    { "dir": "u05-gameplay", "id": "sfml-u05-gameplay", "icon": "⚔️", "title": "Gameplay Architecture", "description": "Collision, game objects, resource management and game states: the structure that keeps a game maintainable.",
+      "lessons": [
+        ["sfml-collision", "Collision Detection"],
+        ["sfml-game-objects", "Structuring Game Objects"],
+        ["sfml-resource-management", "Resource Management"],
+        ["sfml-game-states", "Game States and Scenes"] ] },
+    { "dir": "u06-projects", "id": "sfml-u06-projects", "icon": "🏆", "title": "Projects and Next Steps", "description": "Build Pong and a top-down shooter from scratch, then learn how to polish, ship and keep growing.",
+      "lessons": [
+        ["sfml-project-pong", "Project: Pong"],
+        ["sfml-project-shooter", "Project: Top-Down Shooter"],
+        ["sfml-polish-ship", "Polish, Performance and Shipping"] ] }
   ]
 }
