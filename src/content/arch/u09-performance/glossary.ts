@@ -1,4 +1,92 @@
 import type { GlossaryEntry } from '../../types';
 
 // Glossary terms introduced by this unit that are NOT in scripts/glossary-master.ts.
-export const glossary: GlossaryEntry[] = [];
+export const glossary: GlossaryEntry[] = [
+  {
+    id: 'frame-budget',
+    term: 'Frame Budget',
+    aliases: ['frame budget', 'ms budget'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'The time available to produce one frame at the target frame rate: 16.67 ms at 60 fps, 8.33 ms at 120 fps, 33.3 ms at 30 fps. Teams split it into per-system slices.',
+    long: 'Because a frame that misses its deadline is visible as a hitch, game performance is managed as a budget rather than as "faster is better". A studio might give gameplay 3 ms, physics 2 ms, animation 2 ms and render submission 4 ms of the game thread\'s 16.67 ms, and track each slice in automated performance tests on every build.',
+    see: ['frame-time', 'iron-law-of-performance', 'amdahls-law'],
+  },
+  {
+    id: 'iron-law-of-performance',
+    term: 'Iron Law of Performance',
+    aliases: ['iron law', 'CPI', 'IPC', 'cycles per instruction', 'instructions per cycle'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'Run time = instruction count × CPI (average cycles per instruction) × cycle time. IPC, instructions per cycle, is 1 / CPI.',
+    long: 'Each factor is moved by different things: instruction count by the algorithm, compiler and ISA (SIMD does more per instruction); CPI by cache misses, branch mispredictions and dependency chains; cycle time by the clock, which software does not control. Because the factors interact (SIMD lowers the instruction count but often raises CPI), only their product, time, is a fair scoreboard.',
+    example: `// 30M instructions, CPI 1.5, 3 GHz:
+// 30e6 * 1.5 / 3e9 s = 15 ms`,
+    see: ['amdahls-law', 'hardware-performance-counter'],
+  },
+  {
+    id: 'amdahls-law',
+    term: 'Amdahl\'s Law',
+    aliases: ['Amdahl', 'serial fraction'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'If a fraction *p* of the run time is made *s* times faster, the overall speedup is 1 / ((1 − p) + p / s), which can never exceed 1 / (1 − p).',
+    long: 'Formulated by Gene Amdahl in 1967. With *s* = number of cores it bounds parallel speedup: a frame that is 80% parallel can never run more than 5× faster, however many cores you add. With *s* = the speedup of one system it predicts what an optimization does for the whole frame: making a system that is 25% of the frame 5× faster gives only 1.25×.',
+    example: `double amdahl(double p, double s) {
+    return 1.0 / ((1.0 - p) + p / s);
+}`,
+    see: ['iron-law-of-performance', 'frame-budget', 'thread-pool'],
+  },
+  {
+    id: 'dead-code-elimination',
+    term: 'Dead-Code Elimination',
+    aliases: ['DCE', 'dead code'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'A compiler optimization that removes computations whose results can never affect the program\'s observable behavior. It is the classic way naive benchmarks end up timing nothing.',
+    long: 'Under the as-if rule, a compiler only has to preserve observable behavior (I/O, `volatile` accesses, atomic and synchronization operations). A loop whose result is never used, printed or stored anywhere visible can be deleted entirely. Benchmarks defend against it by making results escape: printing a checksum, storing into a `volatile` sink, or using a helper such as Google Benchmark\'s `benchmark::DoNotOptimize`.',
+    see: ['as-if-rule', 'microbenchmark'],
+  },
+  {
+    id: 'microbenchmark',
+    term: 'Microbenchmark',
+    aliases: ['micro-benchmark', 'benchmark harness'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'A small program that times one function or loop in isolation, usually many times over. Fast to iterate on, but easy to fool and not always representative of the real program.',
+    long: 'Good microbenchmarks warm up first, repeat many runs and report the median and spread, use run-time data the compiler cannot constant-fold, and keep results observable to defeat dead-code elimination. Even then, a microbenchmark usually runs with hot caches and a trained branch predictor, which the real frame may not provide, so wins must be confirmed with a profiler in context.',
+    see: ['dead-code-elimination', 'sampling-profiler'],
+  },
+  {
+    id: 'sampling-profiler',
+    term: 'Sampling Profiler',
+    aliases: ['statistical profiler', 'sampler'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'A profiler that periodically interrupts the program (on a timer or every N hardware events) and records the running instruction and call stack. Hot code collects proportionally more samples.',
+    long: 'Sampling needs no code changes, sees every function including libraries and the OS, and has low, fixed overhead. Its answer is statistical: shares are estimates, and very brief or rare events can be missed. Examples: Linux `perf record`, Intel VTune, Superluminal, and the CPU sampling modes of Visual Studio and AMD uProf.',
+    see: ['instrumenting-profiler', 'hardware-performance-counter'],
+  },
+  {
+    id: 'instrumenting-profiler',
+    term: 'Instrumenting Profiler',
+    aliases: ['instrumentation', 'instrumented profiler', 'zone profiler', 'frame profiler'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'A profiler that records timestamps at the start and end of marked code regions (zones), giving exact per-frame, per-thread timelines and call counts for those regions.',
+    long: 'Tracy (`ZoneScoped`), Unreal Insights (`TRACE_CPUPROFILER_EVENT_SCOPE`) and PIX timing captures are instrumentation-based. Each zone costs a little time, so they are placed around systems and jobs rather than tiny helper functions. Their strength is finding hitches: you can open the one slow frame and see exactly which zone grew.',
+    see: ['sampling-profiler', 'unreal-insights', 'frame-budget'],
+  },
+  {
+    id: 'hardware-performance-counter',
+    term: 'Hardware Performance Counter',
+    aliases: ['PMU', 'performance counter', 'PMC', 'perf counters'],
+    course: 'arch',
+    category: 'Performance',
+    short: 'A register in the CPU\'s performance monitoring unit that counts microarchitectural events (cycles, retired instructions, cache misses, branch mispredictions) as they happen.',
+    long: 'Tools such as `perf stat`, VTune and Superluminal program and read these counters. Ratios built from them explain slowness: IPC (instructions / cycles), misses per thousand instructions, branch-miss rate. Event names and exact meanings vary between CPU vendors and generations, so compare runs on the same machine.',
+    example: `perf stat -e cycles,instructions,cache-misses,branch-misses ./game`,
+    exampleLang: 'shell',
+    see: ['iron-law-of-performance', 'sampling-profiler'],
+  },
+];
