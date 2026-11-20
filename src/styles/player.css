@@ -911,3 +911,34 @@
     font-size: 1.2rem;
   }
 }
+
+/* Numeric answers */
+.numeric-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 4px;
+  font-size: 1.05rem;
+}
+.numeric-input {
+  min-width: 9em;
+  height: 2.4em;
+  font-size: 1.05rem;
+}
+.numeric-label,
+.numeric-unit {
+  color: var(--text-2);
+  font-weight: 600;
+}
+.answer-reveal {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+}
+.answer-reveal span {
+  color: var(--text-2);
+  font-size: 0.9em;
+  margin-right: 6px;
+}

@@ -13,6 +13,7 @@ import './styles/layout.css';
 import './styles/content.css';
 import './styles/player.css';
 import './styles/screens.css';
+import './styles/visual.css';
 import { App } from './App';
 import { isDesktopApp } from './lib/platform';
 

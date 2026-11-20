@@ -116,7 +116,7 @@ export function Player({
         sfx.wrong();
         void haptic('error');
         // Options shake themselves; for other question types shake the whole card.
-        if (step.kind === 'fill' || step.kind === 'order' || step.kind === 'bug') {
+        if (step.kind === 'fill' || step.kind === 'order' || step.kind === 'bug' || step.kind === 'numeric') {
           cardRef.current?.animate(
             [0, -7, 7, -7, 7, -4, 4, 0].map((x) => ({ transform: `translateX(${x}px)` })),
             { duration: 450, easing: 'ease-out' },

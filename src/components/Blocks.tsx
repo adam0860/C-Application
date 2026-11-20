@@ -1,5 +1,6 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react';
 import type { Block, CalloutVariant, MemoryRegion } from '../content/types';
+import { Algo } from './Algo';
 import { CodeBlock } from './CodeBlock';
 import { Icon } from './Icon';
 import { Inline, RichText } from './RichText';
@@ -148,6 +149,25 @@ function BlockView({ block: b }: { block: Block }) {
       );
     case 'memory':
       return <MemoryDiagram regions={b.regions} caption={b.caption} />;
+    case 'figure':
+      return (
+        <figure className="figure">
+          <div
+            className="figure-svg"
+            role="img"
+            aria-label={b.alt}
+            style={{ maxWidth: b.maxWidth ?? 520 }}
+            dangerouslySetInnerHTML={{ __html: b.svg }}
+          />
+          {b.caption && (
+            <figcaption>
+              <Inline text={b.caption} />
+            </figcaption>
+          )}
+        </figure>
+      );
+    case 'algo':
+      return <Algo a={b} />;
     case 'definition':
       return (
         <div className="definition">

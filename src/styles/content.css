@@ -131,6 +131,9 @@ strong {
   margin: 0;
   padding: 12px 0;
   font-family: var(--font-code);
+  /* Show C++ operators as typed (no != → ≠ ligatures): learners must read real syntax. */
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
   font-size: 1em;
   line-height: 1.65;
   tab-size: 4;
