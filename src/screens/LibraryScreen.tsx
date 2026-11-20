@@ -118,7 +118,7 @@ function GlossaryList() {
     <div>
       <div className="filter-row">
         <div className="seg small">
-          {(['all', 'cpp', 'unreal', 'sfml'] as const).map((c) => (
+          {(['all', 'cpp', 'unreal', 'sfml', 'arch', 'os'] as const).map((c) => (
             <button
               key={c}
               type="button"
@@ -172,7 +172,7 @@ function SheetGrid() {
     <div>
       <div className="filter-row">
         <div className="seg small">
-          {(['all', 'cpp', 'unreal', 'sfml'] as const).map((c) => (
+          {(['all', 'cpp', 'unreal', 'sfml', 'arch', 'os'] as const).map((c) => (
             <button key={c} type="button" className={`seg-btn${course === c ? ' on' : ''}`} onClick={() => setCourse(c)}>
               {c === 'all' ? 'All' : courseLabel(c)}
             </button>

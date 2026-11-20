@@ -1,4 +1,4 @@
-import { cheatSheets, courses, glossary, glossaryCourseLabel, isStub } from '../content';
+import { cheatSheets, courseLabel, courses, glossary, glossaryCourseLabel, isStub } from '../content';
 import type { Block, Lesson } from '../content/types';
 
 export interface SearchHit {
@@ -33,6 +33,10 @@ function blockText(blocks: Block[]): string {
           return `${b.title} ${blockText(b.blocks)}`;
         case 'steps':
           return b.items.map((i) => `${i.title} ${i.text}`).join(' ');
+        case 'figure':
+          return `${b.alt} ${b.caption ?? ''}`;
+        case 'algo':
+          return b.caption ?? '';
         default:
           return '';
       }
@@ -61,7 +65,7 @@ function build() {
       for (const l of u.lessons) {
         if (isStub(l)) continue;
         docs.push({
-          hit: { kind: 'lesson', id: l.id, title: l.title, subtitle: `${c.id === 'cpp' ? 'C++' : 'Unreal'} · ${u.title}` },
+          hit: { kind: 'lesson', id: l.id, title: l.title, subtitle: `${courseLabel(c.id)} · ${u.title}` },
           title: l.title.toLowerCase(),
           aux: strip(`${l.summary} ${l.objectives.join(' ')}`),
           body: strip(lessonBody(l)),

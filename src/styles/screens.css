@@ -1701,3 +1701,47 @@
   content-visibility: auto;
   contain-intrinsic-size: auto 480px;
 }
+
+.bar.course-arch .bar-fill {
+  background: linear-gradient(90deg, var(--arch-1), var(--arch-2));
+}
+.continue-card.course-arch {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--arch-1) 12%, var(--surface)), var(--surface) 60%);
+}
+.course-card.course-arch {
+  background: linear-gradient(135deg, #083344, #0e7490 50%, #b45309);
+}
+.course-tab.on.course-arch {
+  background: color-mix(in srgb, var(--arch-1) 15%, transparent);
+  color: color-mix(in srgb, var(--arch-1) 70%, var(--text));
+}
+.course-hero.course-arch {
+  background: linear-gradient(135deg, #042f2e, #155e75 50%, #92400e);
+}
+.sheet-card.course-arch .sheet-badge,
+.course-badge.arch {
+  background: color-mix(in srgb, var(--arch-1) 16%, transparent);
+  color: color-mix(in srgb, var(--arch-1) 75%, var(--text));
+}
+
+.bar.course-os .bar-fill {
+  background: linear-gradient(90deg, var(--os-1), var(--os-2));
+}
+.continue-card.course-os {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--os-1) 12%, var(--surface)), var(--surface) 60%);
+}
+.course-card.course-os {
+  background: linear-gradient(135deg, #3b0a1e, #9f1239 50%, #5b21b6);
+}
+.course-tab.on.course-os {
+  background: color-mix(in srgb, var(--os-1) 15%, transparent);
+  color: color-mix(in srgb, var(--os-1) 70%, var(--text));
+}
+.course-hero.course-os {
+  background: linear-gradient(135deg, #2a0815, #881337 50%, #4c1d95);
+}
+.sheet-card.course-os .sheet-badge,
+.course-badge.os {
+  background: color-mix(in srgb, var(--os-1) 16%, transparent);
+  color: color-mix(in srgb, var(--os-1) 75%, var(--text));
+}

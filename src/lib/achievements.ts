@@ -47,6 +47,10 @@ export const achievements: Achievement[] = [
   { id: 'netcode', icon: '🌐', title: 'Netcode Navigator', description: 'Finish the Networking and Replication unit.', test: unitDone('ue-u14-networking') },
   { id: 'first-window', icon: '🪟', title: 'First Window', description: 'Finish the Getting Started with SFML unit.', test: unitDone('sfml-u01-setup') },
   { id: 'game-feel', icon: '🎞️', title: 'Game Feel', description: 'Finish the Animation, Tiles and Audio unit.', test: unitDone('sfml-u04-animation-audio') },
+  { id: 'cache-whisperer', icon: '🗄️', title: 'Cache Whisperer', description: 'Finish the Memory Hierarchy unit of Computer Architecture.', test: unitDone('arch-u07-memory-hierarchy') },
+  { id: 'arch-graduate', icon: '🔬', title: 'Architect', description: 'Complete the entire Computer Architecture course.', test: courseDone('arch') },
+  { id: 'deadlock-free', icon: '🔐', title: 'Deadlock-Free', description: 'Finish the Threads and Synchronization unit of Operating Systems.', test: unitDone('os-u05-threads') },
+  { id: 'os-graduate', icon: '🖥️', title: 'Kernel Hacker', description: 'Complete the entire Operating Systems course.', test: courseDone('os') },
   { id: 'sfml-developer', icon: '🕹️', title: 'SFML Game Dev', description: 'Complete the entire SFML Game Development course.', test: courseDone('sfml') },
   { id: 'unreal-engineer', icon: '🏆', title: 'Unreal Engineer', description: 'Complete the entire Unreal Engine C++ course.', test: courseDone('unreal') },
   {

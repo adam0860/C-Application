@@ -420,7 +420,7 @@ function checkLesson(where: string, lesson: Lesson, coursePrefix: string) {
 if (!glossaryOnly) {
   const unitIds = new Set<string>();
   for (const course of courses) {
-    const prefix = course.id === 'cpp' ? 'cpp-' : course.id === 'sfml' ? 'sfml-' : 'ue-';
+    const prefix = { cpp: 'cpp-', unreal: 'ue-', sfml: 'sfml-', arch: 'arch-', os: 'os-' }[course.id];
     for (const unit of course.units) {
       if (unitIds.has(unit.id)) err(unit.id, 'duplicate unit id');
       unitIds.add(unit.id);
