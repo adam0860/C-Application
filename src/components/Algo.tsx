@@ -212,7 +212,7 @@ export function Algo({ a }: { a: AlgoBlock }) {
         <div className="graph-readouts">
           {frame.vars.map(([name, val], i) => (
             <span key={i} className="graph-readout">
-              <Inline text={name} /> <b>{val}</b>
+              <Inline text={name} /> <b><Inline text={val} /></b>
             </span>
           ))}
         </div>

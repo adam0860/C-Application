@@ -128,7 +128,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -195,7 +195,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -264,7 +264,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -338,7 +338,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -410,7 +410,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -482,7 +482,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -558,7 +558,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -637,7 +637,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -710,7 +710,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -788,7 +788,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -866,7 +866,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -944,7 +944,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1018,7 +1018,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1092,7 +1092,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1170,7 +1170,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1244,7 +1244,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1318,7 +1318,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -1396,7 +1396,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1476,7 +1476,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1548,7 +1548,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1624,7 +1624,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1696,7 +1696,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1768,7 +1768,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1840,7 +1840,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1912,7 +1912,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -1989,7 +1989,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`clampHp`"
+                  "clampHp"
                 ],
                 [
                   "rsp",
@@ -2069,7 +2069,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -2151,7 +2151,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`takeHit`"
+                  "takeHit"
                 ],
                 [
                   "rsp",
@@ -2238,7 +2238,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -2330,7 +2330,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -2418,7 +2418,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -2501,7 +2501,7 @@ int main() {
               "vars": [
                 [
                   "in",
-                  "`main`"
+                  "main"
                 ],
                 [
                   "rsp",
@@ -3025,7 +3025,7 @@ void greet(const char* input) {
           type: 'figure',
           svg: '<svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg"><text x="220.0" y="18" text-anchor="middle" font-size="12" class="t-gray">higher addresses</text><rect x="120" y="30" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-gray"/><text x="220.0" y="50.0" text-anchor="middle" font-size="13" class="t-gray">… caller\'s frame …</text><text x="112" y="50.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray"></text><rect x="120" y="60" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-purple"/><text x="220.0" y="80.0" text-anchor="middle" font-size="13" class="t-purple">return address</text><text x="112" y="80.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+40</text><rect x="120" y="90" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-gray"/><text x="220.0" y="110.0" text-anchor="middle" font-size="13" class="t-gray">(alignment padding)</text><text x="112" y="110.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+32</text><rect x="120" y="120" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-green"/><text x="220.0" y="140.0" text-anchor="middle" font-size="13" class="t-green">stack canary</text><text x="112" y="140.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+24</text><rect x="120" y="150" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-gray"/><text x="220.0" y="170.0" text-anchor="middle" font-size="13" class="t-gray">(unused)</text><text x="112" y="170.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+16</text><rect x="120" y="180" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-blue"/><text x="220.0" y="200.0" text-anchor="middle" font-size="13" class="t-blue">name[8..15]</text><text x="112" y="200.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+8</text><rect x="120" y="210" width="200" height="30" fill="currentColor" fill-opacity="0.06" stroke="currentColor" stroke-width="1.5" class="s-blue"/><text x="220.0" y="230.0" text-anchor="middle" font-size="13" class="t-blue">name[0..7]</text><text x="112" y="230.0" text-anchor="end" font-size="12" font-family="monospace" class="t-gray">rsp+0</text><path d="M60,240 L110,240" stroke="currentColor" stroke-width="2" class="s-orange" fill="none"/><path d="M110,235 L120,240 L110,245 Z" class="f-orange"/><text x="54" y="244" text-anchor="end" font-size="13" font-family="monospace" class="t-orange">rsp</text><text x="220.0" y="262" text-anchor="middle" font-size="12" class="t-gray">lower addresses</text><path d="M344,230 L344,85" stroke="currentColor" stroke-width="2.5" class="s-red" fill="none"/><path d="M338,87 L344,75 L350,87 Z" class="f-red"/><text x="356" y="120" font-size="12" class="t-red">writing past name</text><text x="356" y="137" font-size="12" class="t-red">runs upward: first the</text><text x="356" y="154" font-size="12" class="t-red">canary, then the</text><text x="356" y="171" font-size="12" class="t-red">return address</text></svg>',
           alt: 'The frame of greet: name occupies rsp+0 to rsp+15, an unused slot at rsp+16, the stack canary at rsp+24, alignment padding at rsp+32 and the return address at rsp+40. A red arrow shows an overrun moving upward from name through the canary to the return address.',
-          caption: 'The real frame of `greet`. An overrun of 24 or more bytes overwrites the canary; one of 40 or more also reaches the return address.',
+          caption: 'The real frame of `greet`. Writing more than 24 bytes into `name` reaches the canary; more than 40 bytes reaches the return address.',
         },
         {
           type: 'p',

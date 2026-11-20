@@ -226,6 +226,16 @@ export const glossary: GlossaryEntry[] = [
     see: ['branch-prediction'],
   },
   {
+    id: 'conditional-move',
+    term: 'Conditional Move (cmov)',
+    aliases: ['cmov', 'if-conversion', 'branchless code'],
+    course: 'arch',
+    category: 'Pipeline',
+    short: 'An instruction that copies a value only if a condition holds, such as x86 `cmovg`. It turns a data-dependent choice into a data dependence instead of a branch, so there is nothing to mispredict.',
+    long: 'Compilers use conditional moves and `setcc` (if-conversion) for simple selections like `a < b ? a : b` or `count += x > 0`. The trade-off: both inputs must be computed, and the result depends on the condition, which lengthens dependency chains. When a branch is very predictable, the branchy version can be faster. Compilers will not if-convert a branch around a store, because an unconditional write could introduce a data race.',
+    see: ['branch-misprediction', 'branch-prediction'],
+  },
+  {
     id: 'profile-guided-optimization',
     term: 'Profile-Guided Optimization (PGO)',
     aliases: ['PGO'],
