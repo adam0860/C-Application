@@ -22,7 +22,7 @@ export const glossary: GlossaryEntry[] = [
     long: 'Each factor is moved by different things: instruction count by the algorithm, compiler and ISA (SIMD does more per instruction); CPI by cache misses, branch mispredictions and dependency chains; cycle time by the clock, which software does not control. Because the factors interact (SIMD lowers the instruction count but often raises CPI), only their product, time, is a fair scoreboard.',
     example: `// 30M instructions, CPI 1.5, 3 GHz:
 // 30e6 * 1.5 / 3e9 s = 15 ms`,
-    see: ['amdahls-law', 'hardware-performance-counter'],
+    see: ['cpi', 'amdahls-law', 'hardware-performance-counter'],
   },
   {
     id: 'amdahls-law',

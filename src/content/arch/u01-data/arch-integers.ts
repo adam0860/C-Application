@@ -678,7 +678,7 @@ int main() {
         },
         {
           type: 'p',
-          text: 'The hardware always produces the same 8 result bits. What differs is whether they are *correct* for your interpretation, so the CPU records two separate [[cpu-status-flags|status flags]] after every addition (x86 calls them CF and OF; ARM calls them C and V):',
+          text: 'The hardware always produces the same 8 result bits. What differs is whether they are *correct* for your interpretation, so the CPU records two separate [[cpu-flags|status flags]] after every addition (x86 calls them CF and OF; ARM calls them C and V):',
         },
         {
           type: 'list',

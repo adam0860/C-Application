@@ -117,7 +117,7 @@ export interface AlgoBlock {
 }
 
 export interface AlgoFrame {
-  /** What happens in this frame (inline markdown + TeX). */
+  /** What happens in this frame (inline format; no TeX in this app). */
   note: string;
   /** array view: the array contents in this frame. Carry it forward by repeating it. */
   array?: (number | string)[];

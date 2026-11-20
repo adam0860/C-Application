@@ -476,7 +476,7 @@ LEVEL1_DCACHE_LINESIZE             64`,
         }
       ],
       "lines": [
-        5
+        6
       ],
       "vars": [
         [
@@ -512,7 +512,7 @@ LEVEL1_DCACHE_LINESIZE             64`,
         }
       ],
       "lines": [
-        5
+        6
       ],
       "vars": [
         [

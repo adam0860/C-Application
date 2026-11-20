@@ -63,7 +63,7 @@ void updateAll(float dt) {
         },
         {
           type: 'p',
-          text: 'Before touching anything, apply [[amdahls-law]]. `UpdateEntities` is 6.0 of 19 ms, about 32% of the frame. Even an infinitely fast update would only bring the frame to 13 ms; to reach 16.67 ms you must save at least 2.33 ms, so the update must drop to about 3.6 ms or less. That is a concrete, checkable goal.',
+          text: 'Before touching anything, apply [[amdahls-law]]. `UpdateEntities` is 6.0 of 19 ms, about 32% of the frame. Even an infinitely fast update would only bring the frame to 13 ms; to reach 16.67 ms you must save at least 2.33 ms, so the update must drop to about 3.7 ms or less. That is a concrete, checkable goal.',
         },
         {
           type: 'callout',
@@ -131,7 +131,7 @@ hot bytes: 24 of 136 (17.6%)`,
             { lines: 5, text: 'The virtual destructor adds the 8-byte vptr at offset 0.' },
             { lines: 7, text: '`std::string` is 32 bytes in libstdc++ (GCC) and MSVC, 24 in libc++, so the sizes printed here are for GCC on x86-64.' },
             { lines: '8-9', text: 'With the vptr first, `pos` starts at offset 40 and `vel` at 52: the 24 hot bytes are bytes 40 to 63 of the object.' },
-            { lines: '31-32', text: 'Less than a fifth of each object is useful to the movement update, yet the cache moves data in whole 64-byte lines.' },
+            { lines: '31-32', text: 'Less than a fifth of each object is useful to the movement update, yet the cache moves data in whole 64-byte [[cache-line|cache lines]].' },
           ],
         },
         {
@@ -142,8 +142,8 @@ hot bytes: 24 of 136 (17.6%)`,
           type: 'list',
           ordered: true,
           items: [
-            '**Memory:** each entity costs a pointer load plus one or two scattered cache lines, of which 24 bytes are used. 100,000 objects of 144 bytes (136 rounded up by the allocator) are about 14 MB, more than many CPUs\' L3 cache, so many of those lines come from DRAM, and scattered addresses defeat the hardware prefetcher.',
-            '**Control flow:** each entity costs an indirect call whose target depends on its type. In spawn order, the types are effectively random, so the branch predictor often guesses the wrong target.',
+            '**Memory:** each entity costs a pointer load plus one or two scattered cache lines, of which 24 bytes are used. 100,000 objects of 144 bytes (136 rounded up by the allocator) are about 14 MB, more than many CPUs\' L3 cache, so many of those lines come from DRAM, and scattered addresses defeat the hardware [[prefetching|prefetcher]].',
+            '**Control flow:** each entity costs an indirect call whose target depends on its type. In spawn order, the types are effectively random, so the branch predictor often [[branch-misprediction|guesses the wrong target]].',
             '**Work:** the actual math is 3 multiply-adds. It cannot be inlined, let alone vectorized, because the compiler cannot see through the virtual call.',
           ],
         },
@@ -174,7 +174,7 @@ hot bytes: 24 of 136 (17.6%)`,
       blocks: [
         {
           type: 'p',
-          text: 'The data-oriented fix is to store each field the update needs in its own contiguous array: a **structure of arrays** (SoA) instead of an array of structures (AoS). The movement system then streams through exactly the bytes it uses.',
+          text: 'The [[data-oriented-design|data-oriented]] fix is to store each field the update needs in its own contiguous array: a [[structure-of-arrays|structure of arrays]] (SoA) instead of an array of structures (AoS). The movement system then streams through exactly the bytes it uses.',
         },
         {
           type: 'code',
@@ -302,13 +302,13 @@ int main() {
           type: 'callout',
           variant: 'perf',
           title: 'Misses are not all equal',
-          text: 'The simulator counts misses but cannot price them. In real hardware the SoA misses are almost free: the access pattern is sequential, so the prefetcher fetches lines before they are needed. The scattered misses are the expensive kind, each a dependent load to an unpredictable address. Fewer misses *and* predictable ones is why moving a pointer-chasing update to arrays commonly makes that loop several times faster, often in the 2–4× range on desktop CPUs, though the exact factor depends on the CPU and the data size.',
+          text: 'The simulator counts misses but cannot price them. In real hardware the SoA misses are almost free: the access pattern is sequential, so the prefetcher fetches lines before they are needed. The scattered misses are the expensive kind, each a dependent load to an unpredictable address. Fewer misses *and* predictable ones is why moving a [[pointer-chasing|pointer-chasing]] update to arrays commonly makes that loop several times faster, often in the 2–4× range on desktop CPUs, though the exact factor depends on the CPU and the data size.',
         },
         {
           type: 'callout',
           variant: 'unreal',
           title: 'Engines do this for you at scale',
-          text: 'This is the core idea of the Entity Component System (ECS) pattern: libraries such as EnTT and flecs, Unity\'s DOTS and Unreal\'s **Mass** framework store components in contiguous arrays and run systems over them. Unreal uses Mass for crowds and traffic in large worlds, exactly the "100,000 simple entities" case where `AActor` per entity would be far too heavy.',
+          text: 'This is the core idea of the [[entity-component-system|Entity Component System]] (ECS) pattern: libraries such as EnTT and flecs, Unity\'s DOTS and Unreal\'s **Mass** framework store components in contiguous arrays and run systems over them. Unreal uses Mass for crowds and traffic in large worlds, exactly the "100,000 simple entities" case where `AActor` per entity would be far too heavy.',
         },
       ],
     },
@@ -380,7 +380,7 @@ sorted by type: 3 mispredicts`,
         },
         {
           type: 'p',
-          text: 'Sorting fixes prediction, but the call is still indirect, so the compiler still cannot inline `update`, cannot hoist `dt` out of the loop, and cannot vectorize. The full fix is to stop asking each entity what it is. Keep one array (or one SoA block) **per type** and run a plain loop over each:',
+          text: 'Sorting fixes prediction, but the call is still indirect, so the compiler still cannot [[function-inlining|inline]] `update`, cannot hoist `dt` out of the loop, and cannot vectorize. The full fix is to stop asking each entity what it is. Keep one array (or one SoA block) **per type** and run a plain loop over each:',
         },
         {
           type: 'compare',
@@ -429,7 +429,7 @@ updateTurrets(turrets, dt);
       blocks: [
         {
           type: 'p',
-          text: 'Gameplay adds a poison cloud: every entity within radius *r* of its center loses `dmg` health per frame. The obvious code branches on the distance. Entities are sorted by type, not by position, so about half are inside and half outside in no useful order. A 2-bit saturating counter, the classic branch predictor, shows what that means:',
+          text: 'Gameplay adds a poison cloud: every entity within radius *r* of its center loses `dmg` health per frame. The obvious code branches on the distance. Entities are sorted by type, not by position, so about half are inside and half outside in no useful order. A 2-bit [[saturating-counter|saturating counter]], the classic branch predictor, shows what that means:',
         },
         {
           type: 'code',

@@ -50,9 +50,9 @@ export const lesson: Lesson = {
         "3,3"
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -92,9 +92,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -134,9 +134,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -176,9 +176,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -218,9 +218,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -276,9 +276,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -334,9 +334,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -392,9 +392,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -450,9 +450,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -508,9 +508,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -566,9 +566,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -624,9 +624,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -682,9 +682,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -740,9 +740,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -798,9 +798,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -856,9 +856,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -914,9 +914,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ],
       "vars": [
         [
@@ -938,9 +938,9 @@ export const lesson: Lesson = {
         ]
       ],
       "lines": [
-        1,
         2,
-        3
+        3,
+        4
       ]
     },
     {
@@ -964,9 +964,9 @@ export const lesson: Lesson = {
         "3,3"
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1006,9 +1006,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1064,9 +1064,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1122,9 +1122,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1180,9 +1180,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1238,9 +1238,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1296,9 +1296,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1354,9 +1354,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1412,9 +1412,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1470,9 +1470,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1528,9 +1528,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1586,9 +1586,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1644,9 +1644,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1702,9 +1702,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1760,9 +1760,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1818,9 +1818,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1876,9 +1876,9 @@ export const lesson: Lesson = {
         }
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ],
       "vars": [
         [
@@ -1900,13 +1900,13 @@ export const lesson: Lesson = {
         ]
       ],
       "lines": [
-        5,
         6,
-        7
+        7,
+        8
       ]
     }
   ],
-  "code": "for (int i = 0; i < 4; ++i)       // row-major\n    for (int j = 0; j < 4; ++j)\n        sum += a[i][j];\n\nfor (int j = 0; j < 4; ++j)       // column-major\n    for (int i = 0; i < 4; ++i)\n        sum += a[i][j];",
+  "code": "// row-major\nfor (int i = 0; i < 4; ++i)\n    for (int j = 0; j < 4; ++j)\n        sum += a[i][j];\n// column-major\nfor (int j = 0; j < 4; ++j)\n    for (int i = 0; i < 4; ++i)\n        sum += a[i][j];",
   "caption": "Cells are the 16 elements in memory order (`i,j`). Blue = in the cache, green = hit, red = miss."
 },
         {
@@ -1999,7 +1999,7 @@ int main() {
       kind: 'numeric',
       prompt: 'A 1024 × 1024 `int` matrix is summed in row-major order through a cache with 64-byte lines. The matrix starts on a line boundary and nothing is cached at the start. How many cache misses occur? (Ignore prefetching.)',
       answer: 65536,
-      alsoAccept: ['65_536', '2^16'],
+      alsoAccept: ['65_536'],
       unit: 'misses',
       hint: 'In row-major order, each line is fetched once and then fully used.',
       explanation:
