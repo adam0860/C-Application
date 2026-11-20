@@ -199,7 +199,7 @@ int main() {
         {
           type: 'algo',
           view: 'array',
-          caption: 'Purple: sign. Blue: biased exponent. Green: fraction (the last cell stands for the remaining 18 zero bits).',
+          caption: 'Cell 0 is bit 31. Purple: sign. Blue: biased exponent (bits 30 to 23). Green: fraction, of which the last cell stands for the remaining 18 zero bits.',
           interval: 1500,
           frames: [
             {

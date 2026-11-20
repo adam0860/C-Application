@@ -118,7 +118,7 @@ as float: 3284.08`,
           view: 'array',
           caption: 'Repeated division by 2. The cell numbers under the boxes count from the left; the pointer names the bit position, which counts from the right.',
           code: `while (n > 0) {
-    int bit = n % 2;   // remainder = next bit
+    int bit = n % 2;   // next bit
     n = n / 2;
     // write bit, moving left
 }
