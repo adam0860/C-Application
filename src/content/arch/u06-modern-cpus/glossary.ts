@@ -192,28 +192,4 @@ export const glossary: GlossaryEntry[] = [
       },
     ],
   },
-  {
-    id: 'structure-of-arrays',
-    term: 'Structure of Arrays (SoA)',
-    aliases: ['SoA', 'AoS', 'array of structures', 'AoSoA'],
-    course: 'arch',
-    category: 'Data Layout',
-    short: 'A data layout that stores each field in its own array (all x values together, all y values together) instead of an array of structs (AoS) where each element holds all its fields.',
-    long: 'SoA puts the same field of consecutive items side by side, so SIMD loads fill a register with one instruction and loops touch only the fields they use, which also helps the cache. AoSoA (arrays of small SoA blocks) is a common hybrid. Entity-component systems such as Unity DOTS, EnTT and Unreal\'s Mass store components in SoA-like packed arrays.',
-    see: ['simd', 'auto-vectorization', 'cache-locality'],
-    reading: [
-      {
-        title: 'AoS and SoA',
-        url: 'https://en.wikipedia.org/wiki/AoS_and_SoA',
-        source: 'article',
-        note: 'The two layouts and the AoSoA hybrid compared.',
-      },
-      {
-        title: 'Game Programming Patterns: Data Locality',
-        url: 'https://gameprogrammingpatterns.com/data-locality.html',
-        source: 'book',
-        note: 'Data-oriented layouts explained for game programmers.',
-      },
-    ],
-  },
 ];

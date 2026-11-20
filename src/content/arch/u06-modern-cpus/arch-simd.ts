@@ -677,7 +677,7 @@ void addFixed() {
           headers: ['What blocks vectorization', 'Example', 'Typical fix'],
           rows: [
             [
-              'Possible **aliasing**',
+              'Possible **[[pointer-aliasing|aliasing]]**',
               '`out` might overlap `a`',
               '`__restrict` (a widely supported extension), or local copies',
             ],
@@ -943,7 +943,7 @@ Enemies enemies;
           type: 'callout',
           variant: 'unreal',
           title: 'ECS and data-oriented design',
-          text: 'This is the layout behind data-oriented engines and entity-component systems: Unity\'s DOTS, the EnTT library, and Unreal\'s **Mass** framework store each component type in tightly packed arrays (chunks) and run systems over them in bulk. Mike Acton\'s talk "Data-Oriented Design and C++" (CppCon 2014) is the classic argument for designing around the data and the hardware rather than around objects.',
+          text: 'This is the layout behind [[data-oriented-design|data-oriented]] engines and [[entity-component-system|entity-component systems]]: Unity\'s DOTS, the EnTT library, and Unreal\'s **Mass** framework store each component type in tightly packed arrays (chunks) and run systems over them in bulk. Mike Acton\'s talk "Data-Oriented Design and C++" (CppCon 2014) is the classic argument for designing around the data and the hardware rather than around objects.',
         },
       ],
     },
