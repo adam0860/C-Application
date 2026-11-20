@@ -124,6 +124,46 @@ items, table cells, option text unless `codeOptions`, takeaways, objectives…):
 - `memory` — memory diagram (stack/heap boxes with names, values, addresses,
   `pointsTo` arrows by cell `id`). Excellent for pointers, references, objects, vectors.
 - `deepdive` — collapsible "go deeper" section containing other blocks.
+- `figure` — a hand-drawn diagram as inline SVG (`svg`, `alt`, optional `caption`,
+  `maxWidth`): CPU datapaths, cache organizations, page tables, process state diagrams,
+  file-system layouts. Use `currentColor` for strokes and fills and the accent classes
+  `s-<c>` (stroke), `f-<c>` (fill), `t-<c>` (text), c ∈ blue, red, green, purple, orange,
+  teal, gray, so it follows the theme. Give `font-size` as an attribute. No scripts, event
+  handlers, images or foreignObject; the svg needs a `viewBox`. Draw arrowheads as small
+  filled paths.
+- `algo` — a step-through algorithm animation: the learner steps (◀ ▶), scrubs or plays a
+  sequence of frames. Use it to show an algorithm *running*: a sort partitioning, a binary
+  search narrowing, BFS/Dijkstra settling nodes, a heap sifting, a tree rotating.
+  ```ts
+  {
+    type: 'algo',
+    view: 'array',                 // or 'graph' (nodes at fixed positions; trees too)
+    bars?: true,                   // array: draw values as bar heights
+    code?: 'for (int i = 0; …',    // optional listing; frames highlight `lines`
+    interval?: 900,                // ms per frame when playing
+    // graph view only:
+    nodes: [{ id: 'A', x: 60, y: 60, label? }], edges: [{ from: 'A', to: 'B', label?: '4', directed? }],
+    width?: 420, height?: 260,
+    frames: [
+      { note: 'Compare $a[j]$ with the pivot.',            // required, inline markdown
+        array: [7, 2, 9, 1, 4],                           // array view; carries forward if omitted
+        marks: [{ index: 4, color: 'purple' }],           // colored cells
+        pointers: [{ index: 0, label: 'i' }, { index: 1, label: 'j', color: 'blue' }],
+        dim: [0],                                         // faded cells (outside the active range)
+        lines: [3, 4],                                    // highlighted code lines (1-based)
+        vars: [['comparisons', '3'], ['queue', 'B, C']],  // readouts under the note
+        // graph view:
+        nodeColors: [{ id: 'A', color: 'green' }], nodeNotes: [{ id: 'A', text: 'd=0' }],
+        nodeLabels: [{ id: 'A', label: '42' }], hidden: ['E'],
+        edgeColors: [{ from: 'A', to: 'B', color: 'blue' }] },
+    ],
+  }
+  ```
+  Generate frames with a script that actually runs the algorithm (Python or C++), so every
+  frame is a true state, and keep notes short (one sentence). Only `array` carries forward
+  between frames; marks, pointers, colors and notes are per frame. Color conventions:
+  orange = current/active, blue = being compared or in the frontier, green = done/sorted/settled,
+  red = swapped/rejected, purple = pivot/special, gray = visited.
 
 ## 7. Questions
 
@@ -145,6 +185,12 @@ Every question has a `prompt`, an `explanation` (shown after answering — it mu
   not belong. Make sure there is exactly one valid order.
 - `bug` — `code` with a realistic bug; `bugLines` = the 1-based line(s) at fault.
   Explain the bug, the consequence (compile error? UB? crash? wrong result?) and the fix.
+- `numeric` — type a number: an address, a bit width, a cycle count, a hit rate, a
+  page-table size. `answer` is a number or numeric string; the checker accepts decimal,
+  negative, fractions (`3/8`), `1.5e9`, hex (`0x1F`), binary (`0b1011`) and octal (`0o17`),
+  with `_` or `'` separators. Use `tolerance` for rounded decimals (say in the prompt how
+  to round), `alsoAccept` for equivalent values, `unit` and `label` around the input, and
+  `answerText` to show the answer in a nicer form (e.g. `"0x7FFF_F000"`).
 
 Questions must be answerable from what the lesson (and earlier lessons) taught.
 
