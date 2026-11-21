@@ -499,7 +499,7 @@ export const lesson: Lesson = {
 },
         {
           type: 'p',
-          text: 'The bug needs no second core. On one core, a context switch at the wrong instruction is enough. On several cores it is worse, because both threads really do run the three instructions at the same time.',
+          text: 'The bug needs no second core. On one core, a [[context-switch]] at the wrong instruction is enough. On several cores it is worse, because both threads really do run the three instructions at the same time.',
         },
         {
           type: 'callout',
@@ -633,14 +633,14 @@ void unlock() { busy = false; }`,
           type: 'table',
           headers: ['Primitive', 'Does atomically', 'x86-64', 'C++'],
           rows: [
-            ['**Test-and-set** (exchange)', 'Write a new value, return the old one', '`xchg`', '`atomic_flag::test_and_set`, `atomic::exchange`'],
+            ['**[[test-and-set|Test-and-set]]** (exchange)', 'Write a new value, return the old one', '`xchg`', '`atomic_flag::test_and_set`, `atomic::exchange`'],
             ['**Compare-and-swap** ([[compare-exchange|CAS]])', 'If the value equals *expected*, write *desired*; report success and the value seen', '`lock cmpxchg`', '`compare_exchange_strong` / `_weak`'],
             ['**Fetch-and-add**', 'Add, return the old value', '`lock xadd`', '`atomic::fetch_add`'],
           ],
         },
         {
           type: 'p',
-          text: 'ARM chips build all of these from a pair called load-linked/store-conditional (`ldxr`/`stxr`): the store fails if anyone touched the location since the load, and the code retries. Newer ARM cores (ARMv8.1 and later) also have single-instruction atomics. Either way, test-and-set is enough for a lock: set the flag, and if its **old** value was clear, you got it. Step through two cores contending:',
+          text: 'ARM chips build all of these from a pair called load-linked/store-conditional (`ldxr`/`stxr`): the store fails if anyone touched the location since the load, and the code retries. Newer ARM cores (ARMv8.1 and later) also have single-instruction atomics. Either way, test-and-set is enough for a [[spinlock|lock]]: set the flag, and if its **old** value was clear, you got it. Step through two cores contending:',
         },
         {
   "type": "algo",
@@ -1301,11 +1301,11 @@ private:
       blocks: [
         {
           type: 'p',
-          text: 'The test-and-set spinlock gives mutual exclusion and progress, but not **bounded waiting**. When the lock is released, whichever core happens to win the next race gets it, and the thread that just released it, with the line still hot in its cache, often wins again. An unlucky thread can wait indefinitely.',
+          text: 'The test-and-set spinlock gives mutual exclusion and progress, but not **bounded waiting**. When the lock is released, whichever core happens to win the next race gets it, and the thread that just released it, with the line still hot in its cache, often wins again. An unlucky thread can wait indefinitely: [[starvation]].',
         },
         {
           type: 'p',
-          text: 'A **ticket lock** works like the number dispenser at a deli counter. `fetch_add` hands out tickets in order; the lock serves them in the same order:',
+          text: 'A **[[ticket-lock|ticket lock]]** works like the number dispenser at a deli counter. `fetch_add` hands out tickets in order; the lock serves them in the same order:',
         },
         {
           type: 'code',
@@ -1389,7 +1389,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'A spinning thread occupies a core doing nothing useful. That is fine if the lock will be free in a few hundred nanoseconds, and a disaster if the owner has been preempted and will not run again for a whole time slice. With *N* threads on one core, a holder that gets preempted makes each of the other *N* − 1 threads burn its entire slice spinning before the holder runs again.',
+          text: 'A spinning thread occupies a core doing nothing useful. That is fine if the lock will be free in a few hundred nanoseconds, and a disaster if the owner has been preempted and will not run again for a whole [[time-slice]]. With *N* threads on one core, a holder that gets preempted makes each of the other *N* − 1 threads burn its entire slice spinning before the holder runs again.',
         },
         {
           type: 'table',
@@ -1438,7 +1438,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'Blocking needs the kernel, but system calls cost hundreds of nanoseconds even when they do nothing. Most locks are uncontended most of the time, so a lock that entered the kernel on every `lock()` would be slow for no reason. Linux\'s answer (2002) is the **futex**, "fast user-space mutex": the lock state lives in an ordinary integer in your memory, and the kernel only provides a wait queue keyed by that integer\'s address.',
+          text: 'Blocking needs the kernel, but [[system-call|system calls]] cost hundreds of nanoseconds even when they do nothing. Most locks are uncontended most of the time, so a lock that entered the kernel on every `lock()` would be slow for no reason. Linux\'s answer (2002) is the **[[futex]]**, "fast user-space mutex": the lock state lives in an ordinary integer in your memory, and the kernel only provides a wait queue keyed by that integer\'s address.',
         },
         {
           type: 'list',

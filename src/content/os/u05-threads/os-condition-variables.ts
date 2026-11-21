@@ -49,7 +49,7 @@ void gameThread() {
         },
         {
           type: 'p',
-          text: 'What we want is for the waiting thread to **sleep**, using no CPU, and for whoever changes the state to wake it. The OS already has the machinery from the last lesson: wait queues inside the kernel. A **condition variable** packages that machinery for user code.',
+          text: 'What we want is for the waiting thread to **sleep**, using no CPU, and for whoever changes the state to wake it. The OS already has the machinery from the last lesson: wait queues inside the kernel. A [[condition-variable|condition variable]] packages that machinery for user code.',
         },
         {
           type: 'definition',
@@ -165,7 +165,7 @@ jobs.pop();`,
           type: 'callout',
           variant: 'history',
           title: 'Mesa versus Hoare semantics',
-          text: 'Tony Hoare\'s 1974 monitors handed the lock *directly* to the woken thread, so the condition was guaranteed true when it ran, and an `if` was enough. That made the signaller give up the CPU at every signal. Lampson and Redell\'s Mesa language (1980) made a signal a mere **hint**: the woken thread just becomes runnable and competes for the lock like anyone else. Mesa semantics are cheaper and simpler to implement, and every real system (pthreads, Java, C++, Windows `CONDITION_VARIABLE`) uses them. That is why the `while` is not optional.',
+          text: 'Tony Hoare\'s 1974 monitors handed the lock *directly* to the woken thread, so the condition was guaranteed true when it ran, and an `if` was enough. That made the signaller give up the CPU at every signal. Lampson and Redell\'s Mesa language (1980) made a signal a mere **hint**: the woken thread just becomes runnable and competes for the lock like anyone else. [[mesa-semantics|Mesa semantics]] are cheaper and simpler to implement, and every real system (pthreads, Java, C++, Windows `CONDITION_VARIABLE`) uses them. That is why the `while` is not optional.',
         },
       ],
     },
@@ -198,7 +198,7 @@ Job takeJob() {
       blocks: [
         {
           type: 'p',
-          text: 'The classic producer/consumer problem: producers put items into a buffer with a fixed number of slots, and consumers take them out. Producers must wait when it is full, consumers when it is empty. It is everywhere: the audio mixer filling buffers the sound card drains, the game thread queueing render commands, the streaming thread handing decompressed chunks to workers, and a pipe between two processes, which is a bounded buffer inside the kernel.',
+          text: 'The classic [[bounded-buffer|producer/consumer problem]]: producers put items into a buffer with a fixed number of slots, and consumers take them out. Producers must wait when it is full, consumers when it is empty. It is everywhere: the audio mixer filling buffers the sound card drains, the game thread queueing render commands, the streaming thread handing decompressed chunks to workers, and a pipe between two processes, which is a bounded buffer inside the kernel.',
         },
         {
           type: 'p',
@@ -1240,7 +1240,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'Edsger Dijkstra invented the **semaphore** in the early 1960s for the THE operating system, and it predates condition variables. A semaphore is an integer counter with two atomic operations:',
+          text: 'Edsger Dijkstra invented the **[[semaphore]]** in the early 1960s for the THE operating system, and it predates condition variables. A semaphore is an integer counter with two atomic operations:',
         },
         {
           type: 'list',
@@ -1467,7 +1467,7 @@ void release() {
       blocks: [
         {
           type: 'p',
-          text: 'Sometimes the condition is "everyone has reached this point". C++20 provides two primitives for it:',
+          text: 'Sometimes the condition is "everyone has reached this point". C++20 provides two primitives for it ([[thread-barrier]]):',
         },
         {
           type: 'list',
@@ -1636,7 +1636,7 @@ int main() {
           type: 'callout',
           variant: 'note',
           title: 'Under the hood',
-          text: 'On Linux all of these bottom out in the futex from the previous lesson: libstdc++\'s condition variables wrap glibc\'s `pthread_cond_t`, and its C++20 semaphores, latches and barriers use `std::atomic` waiting, which uses futexes. On Windows, Microsoft\'s STL builds them on `SRWLOCK`, `CONDITION_VARIABLE` and `WaitOnAddress`. In every case the uncontended path stays in user space.',
+          text: 'On Linux all of these bottom out in the [[futex]] from the previous lesson: libstdc++\'s condition variables wrap glibc\'s `pthread_cond_t`, and its C++20 semaphores, latches and barriers use `std::atomic` waiting, which uses futexes. On Windows, Microsoft\'s STL builds them on `SRWLOCK`, `CONDITION_VARIABLE` and `WaitOnAddress`. In every case the uncontended path stays in user space.',
         },
       ],
     },

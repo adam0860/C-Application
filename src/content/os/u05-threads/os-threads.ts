@@ -26,7 +26,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: 'A process, as the previous units built it, bundles two different things. The first is a **container of resources**: an address space, open files, a working directory and credentials. The second is an **execution state**: a program counter, a stack pointer and the other registers, saying where the program is and what it is doing. A [[thread]] separates the two. A process is the container, and each thread is one execution state running inside it.',
+          text: 'A [[process]], as the previous units built it, bundles two different things. The first is a **container of resources**: an address space, open files, a working directory and credentials. The second is an **execution state**: a program counter, a stack pointer and the other registers, saying where the program is and what it is doing. A [[thread]] separates the two. A process is the container, and each thread is one execution state running inside it.',
         },
         {
           type: 'definition',
@@ -68,7 +68,7 @@ export const lesson: Lesson = {
             ['Open file descriptors (or Windows handles)', 'Its stack (and so its local variables)'],
             ['Process ID, user and group IDs, current working directory', 'Thread ID'],
             ['Signal **handlers** (what each signal does)', 'Signal **mask** (which signals it blocks)'],
-            ['Resource limits', 'Thread-local storage, including `errno`'],
+            ['Resource limits', '[[thread-local-storage|Thread-local storage]], including [[errno]]'],
             ['Memory-mapped files and shared libraries', 'Scheduling state: priority, CPU affinity, whether it is running, ready or blocked'],
           ],
         },
@@ -150,7 +150,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'For each thread the kernel keeps a **thread control block** (TCB): the saved registers, the scheduling state and priority, and a pointer to the process it belongs to. When the scheduler switches threads, it saves the current registers into one TCB and loads them from another.',
+          text: 'For each thread the kernel keeps a [[thread-control-block|thread control block]] (TCB): the saved registers, the scheduling state and priority, and a pointer to the process it belongs to. When the scheduler switches threads (a [[context-switch]]), it saves the current registers into one TCB and loads them from another.',
         },
         {
           type: 'p',
@@ -256,7 +256,7 @@ $ ls /proc/14741/task
       blocks: [
         {
           type: 'p',
-          text: 'The threads so far are **kernel threads**: the kernel knows each one, schedules it and can run several in parallel on different cores. But a thread is only registers plus a stack, and a program can switch between register sets itself, in user mode, without telling the kernel. That gives **user-level threads**, and the question becomes how many user threads map onto how many kernel threads.',
+          text: 'The threads so far are **kernel threads**: the kernel knows each one, schedules it and can run several in parallel on different cores. But a thread is only registers plus a stack, and a program can switch between register sets itself, in user mode, without telling the kernel. That gives [[user-level-thread|user-level threads]], and the question becomes how many user threads map onto how many kernel threads.',
         },
         {
           type: 'table',
@@ -269,7 +269,7 @@ $ ls /proc/14741/task
         },
         {
           type: 'p',
-          text: 'Mainstream operating systems settled on 1:1 because the kernel needs to know about every thread that might block or run on a core. A **fiber** is the engine programmer\'s version of a user thread: a stack plus a saved register set, switched **cooperatively**. A fiber runs until it explicitly yields to another fiber; nothing preempts it. Windows has fibers built in (`ConvertThreadToFiber`, `CreateFiber`, `SwitchToFiber`), and POSIX systems have the older `ucontext` functions. Step through a fiber switch:',
+          text: 'Mainstream operating systems settled on 1:1 because the kernel needs to know about every thread that might block or run on a core. A **[[fiber]]** is the engine programmer\'s version of a user thread: a stack plus a saved register set, switched **cooperatively**. A fiber runs until it explicitly yields to another fiber; there is no [[preemption]]. Windows has fibers built in (`ConvertThreadToFiber`, `CreateFiber`, `SwitchToFiber`), and POSIX systems have the older `ucontext` functions. Step through a fiber switch:',
         },
         {
   "type": "algo",
@@ -1096,9 +1096,9 @@ ___(loader, nullptr);`,
           type: 'list',
           items: [
             '**A user stack.** glibc reserves 8 MiB of address space by default (the `ulimit -s` value at program start) plus a guard page. Only pages the thread actually touches use physical memory, so the reservation is cheap, but it is not free: the `mmap` and `mprotect` calls, and later the page faults for each touched page.',
-            '**A kernel stack and control block.** Each thread gets its own kernel stack (16 KiB on x86-64 Linux) for running system calls and interrupts, plus its `task_struct`.',
+            '**A kernel stack and control block.** Each thread gets its own [[kernel-stack]] (16 KiB on x86-64 Linux) for running system calls and interrupts, plus its `task_struct`.',
             '**A TLS block** with every `thread_local` variable in the program, initialized for the new thread.',
-            '**The system call itself** and scheduler bookkeeping, then the same again in reverse when the thread exits and is joined.',
+            '**The [[system-call]] itself** and scheduler bookkeeping, then the same again in reverse when the thread exits and is joined.',
           ],
         },
         {
@@ -1271,7 +1271,7 @@ void uploadLeaderboard(int score) {
             '**`exit()` from any thread ends every thread.** So does returning from `main`. Other threads are not unwound: their destructors do not run, and a thread in the middle of writing a save file stops mid-write. Join or stop your threads before leaving `main`; `std::jthread` makes that automatic.',
             '**A crash in any thread kills the process.** A segmentation fault in a worker thread is delivered as `SIGSEGV` to the process, and the default action terminates all threads. The crash dump then contains every thread\'s stack, which is why naming threads pays off when you read one.',
             '**Signals go to the process, and any one thread that has not blocked the signal may run the handler.** Programs that care usually block signals in every thread except one dedicated signal-handling thread.',
-            '**`fork()` copies only the calling thread.** The child gets a copy of the whole address space, including every mutex, but only one thread. A mutex that another thread held at that instant is copied in the locked state, and its owner does not exist in the child, so it will never be unlocked.',
+            '**`fork()` copies only the calling thread** ([[fork-syscall]]). The child gets a copy of the whole address space, including every mutex, but only one thread. A mutex that another thread held at that instant is copied in the locked state, and its owner does not exist in the child, so it will never be unlocked.',
           ],
         },
         {
@@ -1367,7 +1367,7 @@ SetThreadAffinityMask(workers[i].native_handle(),
           type: 'callout',
           variant: 'note',
           title: 'Embedded and military systems',
-          text: 'In a real-time OS such as VxWorks or an ARINC 653 avionics partition, threads (often called tasks) usually have fixed priorities assigned at design time, and the scheduler always runs the highest-priority ready task. That determinism is the point: you can prove a control loop meets its deadline. It also creates the priority-inversion hazard that the next unit\'s Mars Pathfinder story is about.',
+          text: 'In a [[real-time-system|real-time OS]] such as VxWorks or an ARINC 653 avionics partition, threads (often called tasks) usually have fixed priorities assigned at design time, and the scheduler always runs the highest-priority ready task. That determinism is the point: you can prove a control loop meets its deadline. It also creates the priority-inversion hazard that the next unit\'s Mars Pathfinder story is about.',
         },
       ],
     },
