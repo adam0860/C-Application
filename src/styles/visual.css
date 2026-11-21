@@ -1,0 +1,225 @@
+/*
+ * Visual blocks shared by the Computer Architecture and Operating Systems courses:
+ * SVG figures (`figure`) and step-through animations (`algo`). Ported from STEM Forge.
+ */
+.graph,
+.figure {
+  margin: 0;
+  --g-blue: #2f6bff;
+  --g-red: #e5484d;
+  --g-green: #16a34a;
+  --g-purple: #8b5cf6;
+  --g-orange: #f97316;
+  --g-teal: #0d9488;
+  --g-gray: #8a93a6;
+}
+:root[data-theme='dark'] .graph,
+:root[data-theme='midnight'] .graph,
+:root[data-theme='dark'] .figure,
+:root[data-theme='midnight'] .figure {
+  --g-blue: #6b9bff;
+  --g-red: #ff6b70;
+  --g-green: #3ddc84;
+  --g-purple: #a78bfa;
+  --g-orange: #fb923c;
+  --g-teal: #2dd4bf;
+  --g-gray: #7c859a;
+}
+.graph figcaption {
+  margin-top: 6px;
+  font-size: 0.86rem;
+  color: var(--text-2);
+  text-align: center;
+}
+.graph-readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.graph-readout {
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: var(--accent-soft);
+  font-size: 0.88rem;
+}
+.c-blue { stroke: var(--g-blue); fill: var(--g-blue); border-color: var(--g-blue); }
+.c-red { stroke: var(--g-red); fill: var(--g-red); border-color: var(--g-red); }
+.c-green { stroke: var(--g-green); fill: var(--g-green); border-color: var(--g-green); }
+.c-purple { stroke: var(--g-purple); fill: var(--g-purple); border-color: var(--g-purple); }
+.c-orange { stroke: var(--g-orange); fill: var(--g-orange); border-color: var(--g-orange); }
+.c-teal { stroke: var(--g-teal); fill: var(--g-teal); border-color: var(--g-teal); }
+.c-gray { stroke: var(--g-gray); fill: var(--g-gray); border-color: var(--g-gray); }
+
+.figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.figure-svg { width: 100%; color: var(--text); }
+.figure-svg svg { display: block; width: 100%; height: auto; overflow: visible; }
+.figure-svg text { fill: currentColor; font-family: inherit; }
+.figure-svg text:not([font-size]) { font-size: 14px; }
+.figure figcaption { color: var(--text-2); font-size: 0.92em; text-align: center; }
+.figure-svg .s-blue { stroke: var(--g-blue); } .figure-svg .f-blue { fill: var(--g-blue); } .figure-svg text.t-blue, .figure-svg .t-blue { fill: var(--g-blue); }
+.figure-svg .s-red { stroke: var(--g-red); } .figure-svg .f-red { fill: var(--g-red); } .figure-svg text.t-red, .figure-svg .t-red { fill: var(--g-red); }
+.figure-svg .s-green { stroke: var(--g-green); } .figure-svg .f-green { fill: var(--g-green); } .figure-svg text.t-green, .figure-svg .t-green { fill: var(--g-green); }
+.figure-svg .s-purple { stroke: var(--g-purple); } .figure-svg .f-purple { fill: var(--g-purple); } .figure-svg text.t-purple, .figure-svg .t-purple { fill: var(--g-purple); }
+.figure-svg .s-orange { stroke: var(--g-orange); } .figure-svg .f-orange { fill: var(--g-orange); } .figure-svg text.t-orange, .figure-svg .t-orange { fill: var(--g-orange); }
+.figure-svg .s-teal { stroke: var(--g-teal); } .figure-svg .f-teal { fill: var(--g-teal); } .figure-svg text.t-teal, .figure-svg .t-teal { fill: var(--g-teal); }
+.figure-svg .s-gray { stroke: var(--g-gray); } .figure-svg .f-gray { fill: var(--g-gray); } .figure-svg text.t-gray, .figure-svg .t-gray { fill: var(--g-gray); }
+
+/* ------------------------------------------------- algorithm step-through */
+.algo-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: Inter, system-ui, sans-serif;
+}
+.algo-cell {
+  stroke-width: 1.6;
+}
+.algo-cell:not([class*='c-']) {
+  fill: var(--surface);
+  stroke: var(--border-strong, var(--text-3));
+}
+.algo-cell[class*='c-'] {
+  fill-opacity: 0.22;
+  stroke-width: 2.6;
+}
+.algo-bar:not([class*='c-']) {
+  fill: var(--g-gray);
+  stroke: none;
+  fill-opacity: 0.35;
+}
+.algo-bar[class*='c-'] {
+  fill-opacity: 0.55;
+  stroke-width: 2;
+}
+.algo-val {
+  fill: var(--text);
+  font-weight: 700;
+  font-family: var(--font-code);
+}
+.algo-idx {
+  fill: var(--text-3);
+  font-size: 11px;
+  font-family: var(--font-code);
+}
+.algo-ptr text {
+  font-size: 13px;
+  font-weight: 750;
+  font-family: var(--font-code);
+}
+.algo-edge line {
+  stroke: var(--text-3);
+}
+.algo-edge.on line {
+  stroke: currentColor;
+}
+.algo-edge.on[class*='c-'] line {
+  stroke: inherit;
+}
+.algo-head {
+  fill: var(--text-3);
+}
+.algo-elabel {
+  font-size: 12.5px;
+  font-weight: 650;
+  fill: var(--text-2);
+}
+.algo-node {
+  stroke-width: 1.8;
+}
+.algo-node:not([class*='c-']) {
+  fill: var(--surface);
+  stroke: var(--text-2);
+}
+.algo-node[class*='c-'] {
+  fill-opacity: 0.25;
+  stroke-width: 2.8;
+}
+.algo-nlabel {
+  fill: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+.algo-note {
+  fill: var(--text-2);
+  font-size: 12px;
+  font-weight: 650;
+  font-family: var(--font-code);
+}
+.algo-note-line {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 4px 2px;
+  min-height: 3.2em;
+  line-height: 1.45;
+}
+.algo-count {
+  flex: none;
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-3);
+  min-width: 3.2em;
+}
+.algo-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+}
+.algo-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border, color-mix(in srgb, var(--text) 18%, transparent));
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  flex: none;
+}
+.algo-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.algo-btn.play.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.algo-scrub {
+  flex: 1;
+  min-width: 60px;
+  accent-color: var(--accent);
+}
+.algo-code {
+  margin-top: 6px;
+  font-size: 13px;
+  overflow-x: auto;
+}
+.algo-code .code {
+  padding: 8px 0;
+}
+.algo-line {
+  display: flex;
+  padding: 0 12px 0 0;
+  border-left: 3px solid transparent;
+}
+.algo-line.hl {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-left-color: var(--accent);
+}
+.algo-ln {
+  flex: none;
+  width: 2.6em;
+  padding-right: 0.8em;
+  text-align: right;
+  color: var(--code-ln);
+  user-select: none;
+}
+.algo-src {
+  white-space: pre;
+}

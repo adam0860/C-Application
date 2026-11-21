@@ -23,6 +23,48 @@ export function CourseGlyph({ course, size = 48, className }: { course: CourseId
       </svg>
     );
   }
+  if (course === 'arch') {
+    // A CPU die with pins.
+    return (
+      <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#22d3ee" />
+            <stop offset="0.55" stopColor="#0e7490" />
+            <stop offset="1" stopColor="#b45309" />
+          </linearGradient>
+        </defs>
+        <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#${gid})`} />
+        {[20, 28, 36, 44].map((p) => (
+          <g key={p} stroke="#fde68a" strokeWidth="2.4" strokeLinecap="round" opacity="0.9">
+            <path d={`M${p} 10v6 M${p} 48v6 M10 ${p}h6 M48 ${p}h6`} />
+          </g>
+        ))}
+        <rect x="17" y="17" width="30" height="30" rx="5" fill="#082f49" opacity="0.75" stroke="#fff" strokeOpacity="0.5" strokeWidth="1.5" />
+        <rect x="25" y="25" width="14" height="14" rx="2.5" fill="#fbbf24" />
+      </svg>
+    );
+  }
+  if (course === 'os') {
+    // Stacked windows with a terminal prompt.
+    return (
+      <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#fb7185" />
+            <stop offset="0.5" stopColor="#be123c" />
+            <stop offset="1" stopColor="#6d28d9" />
+          </linearGradient>
+        </defs>
+        <rect x="3" y="3" width="58" height="58" rx="15" fill={`url(#${gid})`} />
+        <rect x="16" y="11" width="36" height="28" rx="4" fill="#fff" opacity="0.25" />
+        <rect x="11" y="20" width="38" height="31" rx="4.5" fill="#1e0a1e" opacity="0.8" />
+        <rect x="11" y="20" width="38" height="7" rx="3.5" fill="#fff" opacity="0.3" />
+        <path d="M17 34l5 4-5 4" fill="none" stroke="#fda4af" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M26 43h11" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
   if (course === 'sfml') {
     return (
       <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">

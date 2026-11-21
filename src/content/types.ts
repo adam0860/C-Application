@@ -17,7 +17,7 @@
  * Paragraph breaks inside a single string: use "\n\n".
  */
 
-export type CourseId = 'cpp' | 'unreal' | 'sfml';
+export type CourseId = 'cpp' | 'unreal' | 'sfml' | 'arch' | 'os';
 
 export type CodeLang = 'cpp' | 'text' | 'shell' | 'csharp' | 'ini' | 'json' | 'cmake';
 
@@ -71,6 +71,78 @@ export interface CodeBlock {
   std?: 'c++17' | 'c++20' | 'c++23';
 }
 
+/** Accent colors shared by figures and animations (they adapt to light/dark themes). */
+export type GraphColor = 'blue' | 'red' | 'green' | 'purple' | 'orange' | 'teal' | 'gray';
+
+/**
+ * A hand-drawn diagram as inline SVG. Use `currentColor` for strokes/fills and the
+ * accent classes `s-<c>` (stroke), `f-<c>` (fill), `t-<c>` (text) with c in GraphColor,
+ * so the drawing follows the theme. No scripts, event handlers, images or foreignObject.
+ */
+export interface FigureBlock {
+  type: 'figure';
+  svg: string;
+  /** Short description for screen readers. */
+  alt: string;
+  /** What to notice (inline text). */
+  caption?: string;
+  /** Maximum rendered width in px (default: full card width, up to 520). */
+  maxWidth?: number;
+}
+
+/**
+ * A step-through algorithm animation: a sequence of frames the learner steps through
+ * (◀ ▶) or plays. Each frame redraws an array (boxes or bars) or a graph/tree, with
+ * colored marks, pointer labels, a note, and optionally highlighted lines of a code
+ * listing shown alongside.
+ */
+export interface AlgoBlock {
+  type: 'algo';
+  caption?: string;
+  /** 'array': boxes (or bars) with indices; 'graph': nodes and edges at fixed positions (trees too). */
+  view: 'array' | 'graph';
+  /** array view: draw values as bar heights instead of boxes (numbers only). */
+  bars?: boolean;
+  /** graph view: node positions in a width × height box (default 420 × 260). */
+  nodes?: { id: string; x: number; y: number; label?: string }[];
+  edges?: { from: string; to: string; label?: string; directed?: boolean }[];
+  width?: number;
+  height?: number;
+  /** Code or pseudocode shown beside the picture; frames highlight lines (1-based). */
+  code?: string;
+  lang?: CodeLang;
+  /** Autoplay speed in ms per frame (default 1000). */
+  interval?: number;
+  frames: AlgoFrame[];
+}
+
+export interface AlgoFrame {
+  /** What happens in this frame (inline format; no TeX in this app). */
+  note: string;
+  /** array view: the array contents in this frame. Carry it forward by repeating it. */
+  array?: (number | string)[];
+  /** array view: index → color for highlighted cells (compare, swap, pivot, sorted…). */
+  marks?: { index: number; color: GraphColor }[];
+  /** array view: labelled arrows above cells (i, j, lo, hi, mid…). */
+  pointers?: { index: number; label: string; color?: GraphColor }[];
+  /** array view: indices drawn faded (outside the active range). */
+  dim?: number[];
+  /** graph view: node colors, small notes under nodes (distances…), highlighted edges. */
+  nodeColors?: { id: string; color: GraphColor }[];
+  nodeNotes?: { id: string; text: string }[];
+  /** graph view: replace node labels in this frame (e.g. values in a heap). */
+  nodeLabels?: { id: string; label: string }[];
+  /** graph view: hide these nodes in this frame (tree growing as you insert). */
+  hidden?: string[];
+  edgeColors?: { from: string; to: string; color: GraphColor }[];
+  /** graph view: hide these edges in this frame (edges that don't exist yet). */
+  hiddenEdges?: { from: string; to: string }[];
+  /** Highlighted lines of `code` (1-based). */
+  lines?: number[];
+  /** Small key–value readouts for the frame, e.g. [["comparisons", "7"], ["queue", "B, D"]]. */
+  vars?: [string, string][];
+}
+
 export type CalloutVariant =
   | 'why' // explains the reasoning / design motivation behind something
   | 'tip' // practical advice
@@ -101,7 +173,11 @@ export type Block =
   /** A memory diagram: rows of labelled boxes (stack frames, heap blocks…). */
   | { type: 'memory'; caption?: string; regions: MemoryRegion[] }
   /** Key term definition box. */
-  | { type: 'definition'; term: string; text: string };
+  | { type: 'definition'; term: string; text: string }
+  /** Inline SVG diagram. */
+  | FigureBlock
+  /** Step-through animation (pipelines, caches, page tables, schedulers…). */
+  | AlgoBlock;
 
 export interface CompareSide {
   title: string;
@@ -215,7 +291,31 @@ export interface BugQuestion extends QuestionBase {
   bugLines: number[];
 }
 
+/**
+ * Type a number: an address, a bit count, a hit rate, a cycle count. Accepts decimal,
+ * negative, fractions (3/8), scientific notation (1.5e9), hexadecimal (0x1F) and binary
+ * (0b1011), with optional _ or ' digit separators.
+ */
+export interface NumericQuestion extends QuestionBase {
+  kind: 'numeric';
+  /** The exact answer as a number or numeric string ("0x40", "3/8", "1.5e9"). */
+  answer: number | string;
+  /** Absolute tolerance (default 0: exact, after rounding to 1e-9). */
+  tolerance?: number;
+  /** Other values that also count as correct. */
+  alsoAccept?: (number | string)[];
+  /** How the correct answer is displayed after answering (default: the answer as written). */
+  answerText?: string;
+  /** Shown before the input, e.g. "Hit rate =". Inline format. */
+  label?: string;
+  /** Shown after the input, e.g. "cycles", "%", "KiB". */
+  unit?: string;
+  /** Read bare digits in this base ("7fffe038" as hex) when the prompt asks for hex or binary. */
+  inputBase?: 2 | 16;
+}
+
 export type QuestionStep =
+  | NumericQuestion
   | McqQuestion
   | TrueFalseQuestion
   | FillQuestion

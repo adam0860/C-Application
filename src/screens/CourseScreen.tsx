@@ -55,14 +55,14 @@ export function CourseScreen({ courseId }: { courseId: string }) {
             }}
           >
             <CourseGlyph course={c.id} size={22} />
-            <span>{c.id === 'cpp' ? 'C++' : c.id === 'unreal' ? 'Unreal C++' : 'SFML'}</span>
+            <span>{{ cpp: 'C++', unreal: 'Unreal C++', sfml: 'SFML', arch: 'Architecture', os: 'OS' }[c.id]}</span>
           </button>
         ))}
       </div>
 
       <header className={`course-hero course-${course.id}`}>
         <div className="course-hero-text">
-          <div className="eyebrow">{course.id === 'cpp' ? 'Course 1' : 'Course 2'}</div>
+          <div className="eyebrow">Course {courses.findIndex((c) => c.id === course.id) + 1}</div>
           <h1>{course.title}</h1>
           <p>{course.subtitle}</p>
           <div className="hero-meta">
@@ -90,7 +90,7 @@ export function CourseScreen({ courseId }: { courseId: string }) {
         <div className="recommend">
           <Icon name="info" size={18} />
           <div>
-            <b>New to C++?</b> {course.id === 'sfml' ? 'SFML game development' : 'Unreal C++'} builds directly on standard C++. We recommend working through C++ Fundamentals first —
+            <b>New to C++?</b> {course.title} builds directly on standard C++. We recommend working through C++ Fundamentals first —
             or dive in if you already know the basics.
           </div>
           <button type="button" className="btn btn-sm btn-soft" onClick={() => navigate('/course/cpp', { replace: true })}>
@@ -155,7 +155,15 @@ export function CourseScreen({ courseId }: { courseId: string }) {
       <div className="course-end">
         <div className="course-end-icon">🏁</div>
         <p className="muted">
-          {course.id === 'cpp' ? 'Finish line: you’ll be ready for Unreal Engine C++.' : 'Finish line: you’ll be writing real gameplay code.'}
+          {
+            {
+              cpp: 'Finish line: you’ll be ready for Unreal Engine C++, SFML games and the systems courses.',
+              unreal: 'Finish line: you’ll be writing real gameplay code.',
+              sfml: 'Finish line: you’ll have built complete 2D games in C++.',
+              arch: 'Finish line: you’ll know exactly what the CPU does with your C++, and how to make it fast.',
+              os: 'Finish line: you’ll understand processes, memory, threads and files from the kernel up.',
+            }[course.id]
+          }
         </p>
       </div>
 
@@ -292,5 +300,5 @@ function LessonSheet({ loc, onClose, progress: p, freeNav }: { loc: LessonLocati
 }
 
 export function courseOf(id: string): CourseId {
-  return id === 'unreal' || id === 'sfml' ? id : 'cpp';
+  return (['unreal', 'sfml', 'arch', 'os'] as const).find((c) => c === id) ?? 'cpp';
 }

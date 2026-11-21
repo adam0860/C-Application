@@ -2,15 +2,17 @@ import type { Course, CourseId, GlossaryEntry, Lesson, Unit } from './types';
 import { cppCourse } from './cpp';
 import { unrealCourse } from './unreal';
 import { sfmlCourse } from './sfml';
+import { archCourse } from './arch';
+import { osCourse } from './os';
 import { glossary } from './glossary';
 import { cheatSheets } from './cheatsheets';
 
-export const courses: Course[] = [cppCourse, unrealCourse, sfmlCourse];
+export const courses: Course[] = [cppCourse, unrealCourse, sfmlCourse, archCourse, osCourse];
 export { glossary, cheatSheets };
 
 /** Short display name of a course, used in badges and filters. */
 export function courseLabel(id: CourseId): string {
-  return id === 'cpp' ? 'C++' : id === 'unreal' ? 'Unreal' : 'SFML';
+  return { cpp: 'C++', unreal: 'Unreal', sfml: 'SFML', arch: 'Architecture', os: 'OS' }[id];
 }
 /** Display name for a glossary entry's course (entries can also span both core courses). */
 export function glossaryCourseLabel(course: CourseId | 'both'): string {

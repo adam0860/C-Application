@@ -1,11 +1,11 @@
 # C++ Forge
 
-**Learn C++, then Unreal Engine C++ and SFML game development, with deep, interactive lessons.** C++ Forge is a
+**Learn C++, then Unreal Engine C++, SFML game development, computer architecture and operating systems, with deep, interactive lessons.** C++ Forge is a
 Windows and Android app in the spirit of Sololearn and Duolingo, with more depth: every
 lesson explains *why* the language or engine works the way it does, shows what happens
 under the hood, and checks your understanding with questions whose feedback teaches.
 
-- **Three complete courses**
+- **Five complete courses**
   - **C++ Fundamentals:** 17 units and 66 lessons, from how the compiler sees your code
     through memory, classes, templates, the STL, error handling, building real
     programs and concurrency.
@@ -18,17 +18,30 @@ under the hood, and checks your understanding with questions whose feedback teac
     audio, collision, game objects, resources and game states. It ends with complete Pong
     and top-down shooter projects and a polish-and-ship lesson. Every program in the
     course is compile-checked against the SFML 3 headers (`npm run check-sfml`).
+  - **Computer Architecture:** 10 units and 29 lessons on what your C++ turns into and how
+    the CPU runs it: bits, integers and IEEE 754 floats, logic gates up to an ALU, x86-64
+    assembly and calling conventions, compiling and linking, objects and vtables in
+    memory, pipelining, hazards and branch prediction, out-of-order execution and SIMD,
+    caches and cache-friendly code, address translation, cache coherence, false sharing
+    and memory models, performance engineering, and GPUs, I/O and console hardware.
+  - **Operating Systems:** 9 units and 26 lessons from the kernel up: system calls,
+    processes and context switches, CPU scheduling, address spaces, paging, page
+    replacement and allocators, threads, locks, condition variables and semaphores,
+    deadlock and job systems, I/O and file systems with crash-safe saving, pipes, shared
+    memory and sockets, and security and virtualization.
 - **Rich lessons:** annotated code (tap a line to see why it is there), memory diagrams
   with pointer arrows, do/don't comparisons, step-by-step processes, collapsible deep
-  dives, "Why?" boxes, and "In Unreal Engine" notes that connect the two courses.
-- **Five question types:** multiple choice (every option explains why it is right or
+  dives, "Why?" boxes, and "In Unreal Engine" notes that connect the two courses. The
+  systems courses add diagrams and step-through animations you can play or step frame by
+  frame (pipelines, cache lookups, page walks, schedulers, thread interleavings).
+- **Six question types:** multiple choice (every option explains why it is right or
   wrong), true/false, fill in the blank (tap a word bank or type), put the lines in
-  order, and find the bug. Questions you miss come back at the end of the lesson and
+  order, find the bug, and work-it-out numeric answers (decimal, hex, binary or fractions). Questions you miss come back at the end of the lesson and
   later in spaced-repetition review.
 - **Real code:** every runnable C++ example is compiled and run with GCC, and its output
   is checked, before each build. A **Run** button opens any example in Compiler Explorer.
-- **Library:** a searchable glossary of 640+ terms (tap any underlined term in a lesson
-  for an instant definition), 23 cheat sheets, bookmarks, and a "read as notes" view of
+- **Library:** a searchable glossary of 990+ terms (tap any underlined term in a lesson
+  for an instant definition), 43 cheat sheets, bookmarks, and a "read as notes" view of
   every lesson.
 - **Motivation:** XP, levels, a daily goal, streaks, an activity heatmap, achievements,
   confetti, and synthesized sound effects with haptics. Sound and haptics can each be

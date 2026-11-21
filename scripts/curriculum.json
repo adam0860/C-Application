@@ -224,5 +224,102 @@
         ["sfml-project-pong", "Project: Pong"],
         ["sfml-project-shooter", "Project: Top-Down Shooter"],
         ["sfml-polish-ship", "Polish, Performance and Shipping"] ] }
+  ],
+  "arch": [
+    {"dir": "u01-data", "id": "arch-u01-data", "icon": "🔢", "title": "Data Representation", "description": "Bits, bytes, hex and endianness; integers and two's complement with overflow in C++; and IEEE 754 floating point with its traps.",
+      "lessons": [
+        ["arch-bits-bytes", "Bits, Bytes, Hex and Endianness"],
+        ["arch-integers", "Integers, Two's Complement and Overflow"],
+        ["arch-floating-point", "Floating Point and IEEE 754"] ] },
+    {"dir": "u02-logic", "id": "arch-u02-logic", "icon": "🔌", "title": "Digital Logic", "description": "From transistors to gates and Boolean algebra, combinational circuits up to an ALU, and sequential logic with flip-flops, registers and clocks.",
+      "lessons": [
+        ["arch-gates-boolean", "Gates and Boolean Algebra"],
+        ["arch-combinational", "Adders, Multiplexers and the ALU"],
+        ["arch-sequential", "Latches, Flip-Flops, Registers and Clocks"] ] },
+    {"dir": "u03-isa", "id": "arch-u03-isa", "icon": "📜", "title": "Instruction Set Architecture", "description": "What an ISA is, reading x86-64 assembly from your own C++, and calling conventions with stack frames.",
+      "lessons": [
+        ["arch-isa-basics", "Instruction Set Architectures"],
+        ["arch-x86-assembly", "Reading x86-64 Assembly"],
+        ["arch-calling-conventions", "Calling Conventions and the Stack Frame"] ] },
+    {"dir": "u04-cpp-to-machine", "id": "arch-u04-cpp-to-machine", "icon": "⚙️", "title": "From C++ to Machine Code", "description": "The compilation pipeline and linking, how C++ control flow and functions compile, and how objects, padding and virtual functions look in memory.",
+      "lessons": [
+        ["arch-compilation-pipeline", "Compiling, Assembling and Linking"],
+        ["arch-control-flow-asm", "Control Flow and Functions in Assembly"],
+        ["arch-objects-in-memory", "Objects, Alignment and Virtual Dispatch"] ] },
+    {"dir": "u05-processor", "id": "arch-u05-processor", "icon": "🏭", "title": "Processor Design", "description": "A single-cycle datapath, pipelining, hazards with forwarding and stalls, and branch prediction.",
+      "lessons": [
+        ["arch-datapath", "The Datapath and Control"],
+        ["arch-pipelining", "Pipelining"],
+        ["arch-hazards", "Pipeline Hazards"],
+        ["arch-branch-prediction", "Branch Prediction and Branchless Code"] ] },
+    {"dir": "u06-modern-cpus", "id": "arch-u06-modern-cpus", "icon": "🚀", "title": "Modern CPUs", "description": "Superscalar, out-of-order and speculative execution, and SIMD vector instructions with intrinsics and auto-vectorization.",
+      "lessons": [
+        ["arch-out-of-order", "Superscalar and Out-of-Order Execution"],
+        ["arch-simd", "SIMD and Vectorization"] ] },
+    {"dir": "u07-memory-hierarchy", "id": "arch-u07-memory-hierarchy", "icon": "🗄️", "title": "The Memory Hierarchy", "description": "Latency from registers to SSD, how caches work, writing cache-friendly C++, and address translation with the TLB.",
+      "lessons": [
+        ["arch-memory-hierarchy", "The Memory Hierarchy"],
+        ["arch-caches", "How Caches Work"],
+        ["arch-cache-friendly-code", "Cache-Friendly Code"],
+        ["arch-address-translation", "Address Translation and the TLB"] ] },
+    {"dir": "u08-multicore", "id": "arch-u08-multicore", "icon": "🧵", "title": "Multicore Hardware", "description": "Cache coherence, false sharing, and memory consistency with C++ atomics and memory orders.",
+      "lessons": [
+        ["arch-cache-coherence", "Multicore and Cache Coherence"],
+        ["arch-false-sharing", "False Sharing"],
+        ["arch-memory-models", "Memory Models and Atomics"] ] },
+    {"dir": "u09-performance", "id": "arch-u09-performance", "icon": "⏱️", "title": "Performance Engineering", "description": "Measuring performance with profilers and counters, the iron law and Amdahl's law, and a frame-budget optimization case study.",
+      "lessons": [
+        ["arch-measuring-performance", "Measuring Performance"],
+        ["arch-optimization-case-study", "Optimizing a Game Frame"] ] },
+    {"dir": "u10-gpu-io", "id": "arch-u10-gpu-io", "icon": "🎮", "title": "GPUs, Consoles and I/O", "description": "GPU architecture and SIMT execution, and buses, interrupts, DMA, storage and the unified memory of consoles.",
+      "lessons": [
+        ["arch-gpu-architecture", "GPU Architecture"],
+        ["arch-io-systems", "Buses, I/O and Console Hardware"] ] }
+  ],
+  "os": [
+    {"dir": "u01-intro", "id": "os-u01-intro", "icon": "🖥️", "title": "What an Operating System Does", "description": "The OS as abstraction and resource manager, kernel and user mode with system calls and interrupts, and calling the OS from C++.",
+      "lessons": [
+        ["os-what-is-an-os", "What Is an Operating System?"],
+        ["os-kernel-user-mode", "Kernel Mode, Traps and System Calls"],
+        ["os-syscalls-in-cpp", "System Calls from C++"] ] },
+    {"dir": "u02-processes", "id": "os-u02-processes", "icon": "🧬", "title": "Processes", "description": "The process abstraction, creating and waiting for processes, and limited direct execution with context switches.",
+      "lessons": [
+        ["os-processes", "The Process"],
+        ["os-process-api", "Creating and Managing Processes"],
+        ["os-context-switch", "Limited Direct Execution and Context Switches"] ] },
+    {"dir": "u03-scheduling", "id": "os-u03-scheduling", "icon": "📅", "title": "CPU Scheduling", "description": "Scheduling metrics and the classic policies, MLFQ and fair-share schedulers, and multicore and real-time scheduling for games.",
+      "lessons": [
+        ["os-scheduling-basics", "Scheduling Policies"],
+        ["os-mlfq-fair-share", "MLFQ and Fair-Share Scheduling"],
+        ["os-multicore-realtime", "Multicore and Real-Time Scheduling"] ] },
+    {"dir": "u04-memory", "id": "os-u04-memory", "icon": "🧠", "title": "Memory Management", "description": "Address spaces, paging and multi-level page tables, page faults and replacement, and memory allocators from malloc to game arenas.",
+      "lessons": [
+        ["os-address-spaces", "Address Spaces"],
+        ["os-paging", "Paging and Page Tables"],
+        ["os-page-replacement", "Page Faults and Page Replacement"],
+        ["os-memory-allocation", "Memory Allocators"] ] },
+    {"dir": "u05-threads", "id": "os-u05-threads", "icon": "🔐", "title": "Threads and Synchronization", "description": "Threads, race conditions and locks built from atomics, and condition variables and semaphores.",
+      "lessons": [
+        ["os-threads", "Threads"],
+        ["os-locks", "Race Conditions and Locks"],
+        ["os-condition-variables", "Condition Variables and Semaphores"] ] },
+    {"dir": "u06-concurrency", "id": "os-u06-concurrency", "icon": "🍝", "title": "Concurrency Problems and Patterns", "description": "Deadlock, livelock and priority inversion, and readers–writers, thread pools and engine job systems.",
+      "lessons": [
+        ["os-deadlock", "Deadlock and Other Concurrency Bugs"],
+        ["os-concurrency-patterns", "Thread Pools and Job Systems"] ] },
+    {"dir": "u07-storage", "id": "os-u07-storage", "icon": "💾", "title": "I/O and File Systems", "description": "Device I/O and drivers, the file-system interface, file-system implementation and crash consistency, and I/O performance for asset streaming.",
+      "lessons": [
+        ["os-io-devices", "I/O Devices and Drivers"],
+        ["os-file-api", "Files and Directories"],
+        ["os-file-system-implementation", "File System Implementation"],
+        ["os-io-performance", "Buffering, Caching and Asynchronous I/O"] ] },
+    {"dir": "u08-ipc-networking", "id": "os-u08-ipc-networking", "icon": "📡", "title": "IPC and Networking", "description": "Pipes, signals and shared memory, and the sockets API with TCP and UDP for games.",
+      "lessons": [
+        ["os-ipc", "Inter-Process Communication"],
+        ["os-sockets", "Sockets, TCP and UDP"] ] },
+    {"dir": "u09-security-virtualization", "id": "os-u09-security-virtualization", "icon": "🛡️", "title": "Protection, Security and Virtualization", "description": "Users, permissions and exploit mitigations, and virtual machines, hypervisors and containers.",
+      "lessons": [
+        ["os-protection-security", "Protection and Security"],
+        ["os-virtualization", "Virtual Machines and Containers"] ] }
   ]
 }

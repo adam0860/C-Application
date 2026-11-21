@@ -3,6 +3,7 @@ import type {
   BugQuestion,
   FillQuestion,
   McqQuestion,
+  NumericQuestion,
   OrderQuestion,
   QuestionStep,
   TrueFalseQuestion,
@@ -15,6 +16,7 @@ import { shuffled, shuffledNotIdentity } from '../lib/random';
 import { useSettings } from '../lib/store';
 import { sfx } from '../lib/sound';
 import { haptic } from '../lib/platform';
+import { numberMatches } from '../lib/numeric';
 
 export interface QuestionHandle {
   /** Grade the current answer. */
@@ -37,6 +39,7 @@ export const KIND_LABEL: Record<QuestionStep['kind'], string> = {
   fill: 'Fill in the blanks',
   order: 'Put in order',
   bug: 'Find the bug',
+  numeric: 'Work it out',
 };
 
 export function QuestionView({
@@ -52,11 +55,11 @@ export function QuestionView({
   seed: number;
   ref?: Ref<QuestionHandle>;
 }) {
-  const showCode = q.code && (q.kind === 'mcq' || q.kind === 'truefalse' || q.kind === 'order');
+  const showCode = q.code && (q.kind === 'mcq' || q.kind === 'truefalse' || q.kind === 'order' || q.kind === 'numeric');
   return (
     <div className={`question q-${q.kind}`}>
       <div className="q-kind">
-        <Icon name={q.kind === 'bug' ? 'bug' : q.kind === 'order' ? 'list' : q.kind === 'fill' ? 'type' : 'help'} size={14} />
+        <Icon name={q.kind === 'bug' ? 'bug' : q.kind === 'order' ? 'list' : q.kind === 'fill' ? 'type' : q.kind === 'numeric' ? 'target' : 'help'} size={14} />
         {KIND_LABEL[q.kind]}
         {q.kind === 'mcq' && q.multi && <span className="q-multi">· select all that apply</span>}
       </div>
@@ -69,6 +72,7 @@ export function QuestionView({
       {q.kind === 'fill' && <Fill q={q} revealed={revealed} onReady={onReady} seed={seed} ref={ref} />}
       {q.kind === 'order' && <Order q={q} revealed={revealed} onReady={onReady} seed={seed} ref={ref} />}
       {q.kind === 'bug' && <Bug q={q} revealed={revealed} onReady={onReady} seed={seed} ref={ref} />}
+      {q.kind === 'numeric' && <Numeric q={q} revealed={revealed} onReady={onReady} seed={seed} ref={ref} />}
     </div>
   );
 }
@@ -478,6 +482,53 @@ function Bug({ q, revealed, onReady, ref }: QProps<BugQuestion>) {
         }}
       />
       {!revealed && <div className="fill-help">Tap the line that contains the bug.</div>}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+function Numeric({ q, revealed, onReady, ref }: QProps<NumericQuestion>) {
+  const [value, setValue] = useState('');
+  useEffect(() => onReady(value.trim() !== ''), [value, onReady]);
+  const check = () => numberMatches(value, [q.answer, ...(q.alsoAccept ?? [])], q.tolerance ?? 0, q.inputBase);
+  useImperativeHandle(ref, () => ({ evaluate: check }));
+  const right = revealed && check();
+  const state = revealed ? (right ? 'correct' : 'wrong') : '';
+  return (
+    <div className="numeric-q">
+      <label className="numeric-row">
+        {q.label && (
+          <span className="numeric-label">
+            <Inline text={q.label} />
+          </span>
+        )}
+        <input
+          className={`blank-input numeric-input ${state}`}
+          value={value}
+          disabled={revealed}
+          inputMode="text"
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+          autoComplete="off"
+          placeholder="Your answer"
+          aria-label="Your answer"
+          onChange={(e) => setValue(e.target.value)}
+        />
+        {q.unit && <span className="numeric-unit">{q.unit}</span>}
+      </label>
+      {revealed && !right && (
+        <div className="answer-reveal">
+          <span>Correct answer</span> <b>{q.answerText ?? String(q.answer)}</b>
+          {q.unit ? ` ${q.unit}` : ''}
+        </div>
+      )}
+      {!revealed && (
+        <div className="fill-help">
+          {q.tolerance ? 'Type a number (decimals are fine).' : 'Type the exact value.'} Hex (0x1F), binary (0b101), fractions (3/8), 1.5e9 and 1,000,000 all work.
+        </div>
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ body {
   font-family: var(--font-ui);
   font-size: 1rem;
   line-height: 1.6;
+  overflow-wrap: break-word;
   color: var(--text);
   background: var(--bg);
   background-image: var(--bg-grad);
@@ -43,6 +44,8 @@ h4 {
   line-height: 1.2;
   letter-spacing: -0.022em;
   font-weight: 750;
+  /* Titles can contain long identifiers; let them wrap on narrow screens. */
+  overflow-wrap: anywhere;
 }
 h1 {
   font-size: 1.9rem;

@@ -29,6 +29,20 @@ const courseMeta = {
     description:
       'Make real 2D games with SFML 3 and modern C++: windows and the game loop, events and input, delta time, shapes, sprites, text, cameras, animation, tilemaps, audio, collision, game states, and two complete projects.',
   },
+  arch: {
+    exportName: 'archCourse',
+    title: 'Computer Architecture',
+    subtitle: 'What your C++ turns into, and how the CPU really runs it',
+    description:
+      'How computers actually execute your code: data representation, digital logic, instruction sets and x86-64 assembly, how C++ compiles and links, pipelines and branch prediction, out-of-order and SIMD execution, caches and the memory hierarchy, multicore coherence and memory models, performance engineering, and GPUs and console hardware.',
+  },
+  os: {
+    exportName: 'osCourse',
+    title: 'Operating Systems',
+    subtitle: 'Processes, memory, threads and files, from the kernel up',
+    description:
+      'What the operating system does under your C++ program: system calls, processes and context switches, CPU scheduling, virtual memory and allocators, threads, locks and condition variables, deadlock and job systems, I/O and file systems, IPC and sockets, and security and virtualization.',
+  },
 };
 
 const q = (s) => JSON.stringify(s);

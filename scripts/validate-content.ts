@@ -10,9 +10,10 @@
  *
  * Exit code is non-zero when any ERROR is found. WARNINGS are advisory.
  */
-import type { Block, Lesson, Step, QuestionStep, GlossaryEntry, ReadingRef } from '../src/content/types';
+import type { AlgoBlock, Block, FigureBlock, Lesson, Step, QuestionStep, GlossaryEntry, ReadingRef } from '../src/content/types';
 import { CPP_GLOSSARY_IDS, UNREAL_GLOSSARY_IDS } from './glossary-master';
 import { loadContent } from './load-content';
+import { numberMatches, parseNumber } from '../src/lib/numeric';
 
 const args = process.argv.slice(2);
 const units = new Set<string>();
@@ -91,6 +92,102 @@ interface LessonStats {
   why: number;
   annotatedCode: number;
   codeBlocks: number;
+}
+
+function checkFigure(where: string, b: FigureBlock) {
+  const svg = b.svg ?? '';
+  if (!/^\s*<svg[\s>]/.test(svg)) err(where, 'figure svg must start with <svg');
+  if (!/<svg[^>]*\bviewBox=/.test(svg)) err(where, 'figure <svg> needs a viewBox so it can scale');
+  if (/<script|\son[a-z]+\s*=|javascript:|<image|<foreignObject|xlink:href="http/i.test(svg))
+    err(where, 'figure svg may not contain scripts, event handlers, external images or foreignObject');
+  // Balanced tags (a cheap well-formedness check).
+  const stack: string[] = [];
+  for (const m of svg.replace(/<!--[\s\S]*?-->/g, '').matchAll(/<(\/?)([a-zA-Z][\w:-]*)([^>]*?)(\/?)>/g)) {
+    const [, close, name, , self] = m;
+    if (self) continue;
+    if (close) {
+      if (stack.pop() !== name) {
+        err(where, `figure svg: unexpected </${name}>`);
+        return;
+      }
+    } else stack.push(name);
+  }
+  if (stack.length) err(where, `figure svg: unclosed <${stack[stack.length - 1]}>`);
+  for (const tag of svg.matchAll(/<[a-zA-Z][^>]*>/g)) {
+    const names = [...tag[0].matchAll(/\s([a-zA-Z:-]+)=/g)].map((m) => m[1]);
+    const dup = names.find((n, i) => names.indexOf(n) !== i);
+    if (dup) {
+      err(where, `figure svg: duplicate ${dup}="…" attribute (the browser keeps only the first): ${tag[0].slice(0, 80)}`);
+      break;
+    }
+  }
+  if (!b.alt?.trim()) err(where, 'figure needs alt text');
+  if (b.caption) checkInline(where + ' caption', b.caption);
+}
+
+function checkAlgo(where: string, a: AlgoBlock) {
+  if (a.caption) checkInline(where + ' caption', a.caption);
+  if (!Array.isArray(a.frames) || a.frames.length < 2) {
+    err(where, 'algo needs at least 2 frames');
+    return;
+  }
+  const codeLines = a.code ? a.code.split('\n').length : 0;
+  if (a.code && /\t/.test(a.code)) warn(where, 'algo code contains tab characters; indent with spaces');
+  const ids = new Set<string>();
+  if (a.view === 'graph') {
+    if (!a.nodes?.length) err(where, 'algo graph view needs nodes');
+    const W = a.width ?? 420, H = a.height ?? 260;
+    for (const nd of a.nodes ?? []) {
+      if (ids.has(nd.id)) err(where, `duplicate node id "${nd.id}"`);
+      ids.add(nd.id);
+      if (nd.x < 18 || nd.x > W - 18 || nd.y < 18 || nd.y > H - 30) warn(where, `node "${nd.id}" at (${nd.x}, ${nd.y}) is too close to the edge of the ${W}×${H} box`);
+    }
+    for (const e of a.edges ?? []) if (!ids.has(e.from) || !ids.has(e.to)) err(where, `edge ${e.from}→${e.to} uses an unknown node`);
+  } else if (a.view !== 'array') {
+    err(where, `algo view must be 'array' or 'graph'`);
+  }
+  let len = -1;
+  a.frames.forEach((f, i) => {
+    const w = `${where} frame ${i + 1}`;
+    if (!f.note?.trim()) err(w, 'frame needs a note');
+    else checkInline(w + ' note', f.note);
+    f.vars?.forEach(([k]) => checkInline(w + ' var', k));
+    f.lines?.forEach((l) => {
+      if (!a.code) err(w, 'lines given but the block has no code');
+      else if (!Number.isInteger(l) || l < 1 || l > codeLines) err(w, `line ${l} is outside the code (${codeLines} lines)`);
+    });
+    if (a.view === 'array') {
+      if (f.array) len = f.array.length;
+      if (i === 0 && !f.array) err(w, 'the first frame must set array');
+      if (a.bars && f.array?.some((v) => typeof v !== 'number')) err(w, 'bars need numeric values');
+      const inRange = (k: number, lab: string, allowEnd = false) => {
+        if (!Number.isInteger(k) || k < 0 || k > (allowEnd ? len : len - 1)) err(w, `${lab} index ${k} is outside the array (length ${len})`);
+      };
+      f.marks?.forEach((m) => inRange(m.index, 'mark'));
+      f.dim?.forEach((k) => inRange(k, 'dim'));
+      f.pointers?.forEach((p) => inRange(p.index, `pointer ${p.label}`, true));
+      if (f.nodeColors || f.edgeColors || f.nodeNotes) err(w, 'graph fields in an array view');
+    } else {
+      const known = (id: string, lab: string) => {
+        if (!ids.has(id)) err(w, `${lab} refers to unknown node "${id}"`);
+      };
+      f.nodeColors?.forEach((c) => known(c.id, 'nodeColors'));
+      f.nodeNotes?.forEach((c) => known(c.id, 'nodeNotes'));
+      f.nodeLabels?.forEach((c) => known(c.id, 'nodeLabels'));
+      f.hidden?.forEach((id) => known(id, 'hidden'));
+      f.edgeColors?.forEach((e) => {
+        known(e.from, 'edgeColors');
+        known(e.to, 'edgeColors');
+        if (!(a.edges ?? []).some((x) => (x.from === e.from && x.to === e.to) || (!x.directed && x.from === e.to && x.to === e.from)))
+          err(w, `edgeColors ${e.from}→${e.to} is not an edge`);
+      });
+      f.hiddenEdges?.forEach((e) => {
+        if (!(a.edges ?? []).some((x) => (x.from === e.from && x.to === e.to) || (!x.directed && x.from === e.to && x.to === e.from)))
+          err(w, `hiddenEdges ${e.from}→${e.to} is not an edge`);
+      });
+      if (f.array || f.marks || f.pointers) err(w, 'array fields in a graph view');
+    }
+  });
 }
 
 function checkBlocks(where: string, blocks: Block[], stats: LessonStats) {
@@ -172,6 +269,12 @@ function checkBlocks(where: string, blocks: Block[], stats: LessonStats) {
       case 'definition':
         checkInline(w, b.text);
         break;
+      case 'figure':
+        checkFigure(w, b);
+        break;
+      case 'algo':
+        checkAlgo(w, b);
+        break;
       default:
         err(w, `unknown block type ${(b as { type: string }).type}`);
     }
@@ -225,6 +328,18 @@ function checkQuestion(where: string, q: QuestionStep) {
         if (q.lines.includes(d)) err(where, `distractor "${d}" is also a correct line`);
       });
       break;
+    case 'numeric': {
+      const ok = (v: number | string) => Number.isFinite(parseNumber(v));
+      if (!ok(q.answer)) err(where, `numeric answer "${q.answer}" does not parse as a number`);
+      q.alsoAccept?.forEach((v) => {
+        if (!ok(v)) err(where, `alsoAccept value "${v}" does not parse as a number`);
+      });
+      if (q.tolerance !== undefined && !(q.tolerance >= 0)) err(where, 'tolerance must be >= 0');
+      if (q.label) checkInline(where + ' label', q.label);
+      if (typeof q.answer === 'string' && !numberMatches(String(q.answerText ?? q.answer).replace(/\s.*$/, ''), [q.answer, ...(q.alsoAccept ?? [])], q.tolerance ?? 0) && q.answerText === undefined)
+        err(where, 'numeric answer does not match itself');
+      break;
+    }
     case 'bug': {
       const n = lineCount(q.code);
       if (!q.bugLines.length) err(where, 'bug question has no bugLines');
@@ -309,7 +424,7 @@ function checkLesson(where: string, lesson: Lesson, coursePrefix: string) {
 if (!glossaryOnly) {
   const unitIds = new Set<string>();
   for (const course of courses) {
-    const prefix = course.id === 'cpp' ? 'cpp-' : course.id === 'sfml' ? 'sfml-' : 'ue-';
+    const prefix = { cpp: 'cpp-', unreal: 'ue-', sfml: 'sfml-', arch: 'arch-', os: 'os-' }[course.id];
     for (const unit of course.units) {
       if (unitIds.has(unit.id)) err(unit.id, 'duplicate unit id');
       unitIds.add(unit.id);

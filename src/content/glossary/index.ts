@@ -40,6 +40,25 @@ import { glossary as sfml_u03 } from '../sfml/u03-drawing/glossary';
 import { glossary as sfml_u04 } from '../sfml/u04-animation-audio/glossary';
 import { glossary as sfml_u05 } from '../sfml/u05-gameplay/glossary';
 import { glossary as sfml_u06 } from '../sfml/u06-projects/glossary';
+import { glossary as arch_u01 } from '../arch/u01-data/glossary';
+import { glossary as arch_u02 } from '../arch/u02-logic/glossary';
+import { glossary as arch_u03 } from '../arch/u03-isa/glossary';
+import { glossary as arch_u04 } from '../arch/u04-cpp-to-machine/glossary';
+import { glossary as arch_u05 } from '../arch/u05-processor/glossary';
+import { glossary as arch_u06 } from '../arch/u06-modern-cpus/glossary';
+import { glossary as arch_u07 } from '../arch/u07-memory-hierarchy/glossary';
+import { glossary as arch_u08 } from '../arch/u08-multicore/glossary';
+import { glossary as arch_u09 } from '../arch/u09-performance/glossary';
+import { glossary as arch_u10 } from '../arch/u10-gpu-io/glossary';
+import { glossary as os_u01 } from '../os/u01-intro/glossary';
+import { glossary as os_u02 } from '../os/u02-processes/glossary';
+import { glossary as os_u03 } from '../os/u03-scheduling/glossary';
+import { glossary as os_u04 } from '../os/u04-memory/glossary';
+import { glossary as os_u05 } from '../os/u05-threads/glossary';
+import { glossary as os_u06 } from '../os/u06-concurrency/glossary';
+import { glossary as os_u07 } from '../os/u07-storage/glossary';
+import { glossary as os_u08 } from '../os/u08-ipc-networking/glossary';
+import { glossary as os_u09 } from '../os/u09-security-virtualization/glossary';
 
 export const glossary: GlossaryEntry[] = [
   ...cppGlossary,
@@ -83,4 +102,23 @@ export const glossary: GlossaryEntry[] = [
   ...sfml_u04,
   ...sfml_u05,
   ...sfml_u06,
+  ...arch_u01,
+  ...arch_u02,
+  ...arch_u03,
+  ...arch_u04,
+  ...arch_u05,
+  ...arch_u06,
+  ...arch_u07,
+  ...arch_u08,
+  ...arch_u09,
+  ...arch_u10,
+  ...os_u01,
+  ...os_u02,
+  ...os_u03,
+  ...os_u04,
+  ...os_u05,
+  ...os_u06,
+  ...os_u07,
+  ...os_u08,
+  ...os_u09,
 ];
