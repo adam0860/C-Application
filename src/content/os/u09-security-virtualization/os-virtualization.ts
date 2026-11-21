@@ -1002,7 +1002,7 @@ vm`,
   reading: [
     {
       title: "Virtual Machine Monitors (OSTEP appendix)",
-      url: "https://pages.cs.wisc.edu/~remzi/OSFEP/vmm-intro.pdf",
+      url: "https://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf",
       source: 'book',
       note: "Trap-and-emulate, how a VMM virtualizes the CPU and memory, and the cost of virtualizing page tables in software.",
     },

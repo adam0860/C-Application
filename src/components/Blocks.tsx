@@ -253,7 +253,8 @@ function MemoryDiagram({ regions, caption }: { regions: MemoryRegion[]; caption?
           // Same column: loop out to the right.
           const sx = s.right - box.left;
           const tx = t.right - box.left;
-          const out = Math.max(sx, tx) + 28;
+          // Stay inside the figure so narrow screens don't scroll sideways.
+          const out = Math.min(Math.max(sx, tx) + 28, box.width - 4);
           d = `M${sx},${sy} C${out},${sy} ${out},${ty} ${tx + 2},${ty}`;
         }
         next.push({ d, key: `${src.dataset.cellKey}` });

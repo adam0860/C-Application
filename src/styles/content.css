@@ -881,12 +881,13 @@ figcaption {
 }
 .reading-title {
   font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  /* Long identifiers (std::hardware_destructive_interference_size) must wrap on phones. */
+  overflow-wrap: anywhere;
 }
 .reading-title svg {
   color: var(--text-3);
+  margin-left: 2px;
+  vertical-align: -1px;
 }
 .reading-note {
   color: var(--text-3);

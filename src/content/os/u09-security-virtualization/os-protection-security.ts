@@ -166,7 +166,7 @@ int main() {
         },
         {
           type: 'p',
-          text: "The kernel checks the classes **in order**: if you are the owner, only the owner bits count; otherwise, if you are in the group, only the group bits count; otherwise the \"others\" bits. User ID 0, **root**, skips these checks entirely. Two special bits matter for security: a **setuid** program runs with its *file owner's* identity rather than the caller's (that is how `passwd`, owned by root, can update the password database), which makes every setuid-root program a prime target for exploits.",
+          text: "The kernel checks the classes **in order**: if you are the owner, only the owner bits count; otherwise, if you are in the group, only the group bits count; otherwise the \"others\" bits. User ID 0, **root**, skips these checks entirely. One special bit matters most for security: a **setuid** program runs with its *file owner's* identity rather than the caller's (that is how `passwd`, owned by root, can update the password database), which makes every setuid-root program a prime target for exploits.",
         },
         {
           type: 'callout',
@@ -952,7 +952,7 @@ exit status: 134
 run.sh: line 5: 21424 Aborted                 ./greet_default "$A40"
 exit status: 134`,
           annotations: [
-            { lines: '7-9', text: "No protection: the function finished, then `ret` jumped to `0x4141414141414141` (the bytes of \"AAAAAAAA\"), a non-canonical address, and faulted. An attacker would have written a real address there instead." },
+            { lines: '7-9', text: "No protection: the function finished, then `ret` tried to jump to `0x4141414141414141` (the bytes of \"AAAAAAAA\"), a non-canonical address, and faulted. An attacker would have written a real address there instead." },
             { lines: '10-13', text: "With a canary: the function still ran to the end (it printed), but the epilogue noticed the changed canary and aborted before `ret`. Exit 134 = 128 + 6, `SIGABRT`." },
             { lines: '14-16', text: "Ubuntu's default build also defines `_FORTIFY_SOURCE`, which swaps `memcpy` into a fixed-size buffer for a checked `__memcpy_chk`. It caught the overflow *before* any byte was written past `name`." },
           ],
@@ -1027,7 +1027,7 @@ heap   0x5555555592a0
 stack  0x7fffffff6484`,
           annotations: [
             { lines: '2-5', text: "The program prints the address of a function, a global, a `malloc` block and a local." },
-            { lines: '7-10', text: "Every region moved. The last three hex digits did not: ASLR shifts whole pages (4 KiB = 0x1000), so the offset within a page stays the same." },
+            { lines: '7-10', text: "Every region moved. For code, globals and heap the last three hex digits did not: ASLR shifts them by whole pages (4 KiB = 0x1000), so the offset within a page stays the same. Linux also shifts the stack by a random amount within a page, so its low digits change too." },
             { lines: '7-8', text: "Code and globals moved by the *same* amount, because the executable is loaded as one unit. Leak one address inside it and you know all of them." },
             { lines: '11-15', text: "`setarch -R` disables randomization for one run (debuggers such as gdb do this by default). Every run would then be identical and predictable." },
           ],

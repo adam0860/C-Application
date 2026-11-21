@@ -396,7 +396,7 @@ std::barrier sync(4);            // reusable, per phase
             label: 'Lock ordering',
             code: `void transfer(Account& a, Account& b, int n) {
     // always lock the lower address first
-    auto [first, second] = (&a < &b) ? std::pair{&a, &b}
+    auto [first, second] = std::less<>{}(&a, &b) ? std::pair{&a, &b}
                                       : std::pair{&b, &a};
     std::lock_guard l1(first->m);
     std::lock_guard l2(second->m);

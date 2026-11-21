@@ -112,7 +112,7 @@ export const lesson: Lesson = {
           type: 'callout',
           variant: 'why',
           title: "Why networking lives in the kernel",
-          text: "The network card is shared by every process, packets arrive at any moment by [[hardware-interrupt|interrupt]] and must be routed to the right socket, and TCP must keep retransmitting even while your process is descheduled. Only the kernel sees all of that. Putting the stack behind an fd also means sockets work with the same `read`, `write`, `close` and `poll` calls as files and pipes. (High-frequency trading and some console network layers do bypass the kernel for latency; ordinary games do not need to.)",
+          text: "The network card is shared by every process, packets arrive at any moment by [[hardware-interrupt|interrupt]] and must be routed to the right socket, and TCP must keep retransmitting even while your process is descheduled. Only the kernel sees all of that. Putting the stack behind an fd also means sockets work with the same `read`, `write`, `close` and `poll` calls as files and pipes. (High-frequency trading systems and some specialized servers do bypass the kernel for latency; ordinary games do not need to.)",
         },
       ],
     },
@@ -1263,7 +1263,7 @@ int main() {
           type: 'callout',
           variant: 'unreal',
           title: "In Unreal Engine",
-          text: "Unreal's networking (the `UNetDriver` and `UIpNetDriver`) is exactly this design: everything runs over UDP, property [[replication]] is sent unreliably and simply re-sent when it changes again, and reliable [[rpc|RPCs]] are retransmitted by the engine's own ack system until confirmed. Valve's GameNetworkingSockets, ENet and yojimbo are standalone libraries built the same way.",
+          text: "Unreal's networking (the `UNetDriver` and `UIpNetDriver`) is exactly this design: everything runs over UDP, property [[replication]] travels in unreliable packets, and when one is lost the engine sends the properties' *current* values again rather than retransmitting the old packet, and reliable [[rpc|RPCs]] are retransmitted by the engine's own ack system until confirmed. Valve's GameNetworkingSockets, ENet and yojimbo are standalone libraries built the same way.",
         },
         {
           type: 'callout',
@@ -1279,6 +1279,7 @@ int main() {
       prompt: "Using the ack scheme above (bit *i* set means packet `ack − 1 − i` arrived), the client has received packets **96, 97, 99 and 100**, and nothing newer. What value does the 32-bit ack field hold? Answer in decimal, hex or binary.",
       answer: 13,
       alsoAccept: ["0b1101", "0xD"],
+      inputBase: 2,
       answerText: "13 (0b1101), with ack = 100",
       label: "bits =",
       hint: "ack = 100. Bit 0 is packet 99, bit 1 is 98, bit 2 is 97, bit 3 is 96.",
@@ -1420,6 +1421,11 @@ int main() {
     u_long nonBlocking = 1;
     ioctlsocket(s, FIONBIO, &nonBlocking);
 
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(7777);            // INADDR_ANY, port 7777
+    bind(s, reinterpret_cast<sockaddr*>(&addr), sizeof addr);
+
     char buf[1200];
     int n = recv(s, buf, sizeof buf, 0);
     if (n == SOCKET_ERROR && WSAGetLastError() == WSAEWOULDBLOCK) {
@@ -1433,8 +1439,9 @@ int main() {
             { lines: 7, text: "Winsock must be initialized before any socket call and cleaned up at the end; POSIX has no equivalent." },
             { lines: '9-10', text: "`SOCKET` is an unsigned handle type, not an `int`, so failure is `INVALID_SOCKET`, not −1." },
             { lines: '12-13', text: "Non-blocking mode is set with `ioctlsocket`, not `fcntl`." },
-            { lines: 17, text: "Errors come from `WSAGetLastError()`, not `errno`, and \"would block\" is `WSAEWOULDBLOCK`." },
-            { lines: 20, text: "`closesocket`, not `close`: a socket is not a C runtime file descriptor on Windows." },
+            { lines: '15-18', text: "Bind before receiving: on Windows, `recv` on an unbound UDP socket fails with `WSAEINVAL` instead of waiting or reporting \"would block\"." },
+            { lines: 22, text: "Errors come from `WSAGetLastError()`, not `errno`, and \"would block\" is `WSAEWOULDBLOCK`." },
+            { lines: 25, text: "`closesocket`, not `close`: a socket is not a C runtime file descriptor on Windows." },
           ],
         },
         {
