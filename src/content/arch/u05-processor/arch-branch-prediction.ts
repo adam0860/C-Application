@@ -1094,7 +1094,7 @@ v >= 128, sorted data          2     10`,
           code: `for (int v : data)
     if (v >= 128)
         sum += v;`,
-          caption: 'The same ten values, unsorted then sorted, through one 2-bit counter. Green: predicted correctly. Red: mispredicted.',
+          caption: 'The same twelve values, unsorted then sorted, through one 2-bit counter. Green: predicted correctly. Red: mispredicted.',
         },
         {
           type: 'p',

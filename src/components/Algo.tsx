@@ -85,9 +85,14 @@ function ArrayView({ frame, arr, bars, slots }: { frame: AlgoFrame; arr: (number
 function GraphView({ a, frame }: { a: AlgoBlock; frame: AlgoFrame }) {
   const W = a.width ?? 420;
   const H = a.height ?? 260;
-  const R = 18;
   const nodes = a.nodes ?? [];
+  // Circles grow to fit longer labels (e.g. "MEM", "0x1F").
+  const radius = (id: string) => {
+    const n = byIdLabel.get(id) ?? id;
+    return Math.max(18, n.length * 4.6 + 8);
+  };
   const byId = new Map(nodes.map((n) => [n.id, n]));
+  const byIdLabel = new Map(nodes.map((n) => [n.id, frame.nodeLabels?.find((l) => l.id === n.id)?.label ?? n.label ?? n.id]));
   const hidden = new Set(frame.hidden ?? []);
   const ncol = new Map((frame.nodeColors ?? []).map((c) => [c.id, c.color]));
   const notes = new Map((frame.nodeNotes ?? []).map((c) => [c.id, c.text]));
@@ -107,8 +112,9 @@ function GraphView({ a, frame }: { a: AlgoBlock; frame: AlgoFrame }) {
         const dx = q.x - p.x, dy = q.y - p.y;
         const L = Math.hypot(dx, dy) || 1;
         const ux = dx / L, uy = dy / L;
-        const x1 = p.x + ux * R, y1 = p.y + uy * R;
-        const x2 = q.x - ux * (R + (e.directed ? 2 : 0)), y2 = q.y - uy * (R + (e.directed ? 2 : 0));
+        const rp = radius(e.from), rq = radius(e.to);
+        const x1 = p.x + ux * rp, y1 = p.y + uy * rp;
+        const x2 = q.x - ux * (rq + (e.directed ? 2 : 0)), y2 = q.y - uy * (rq + (e.directed ? 2 : 0));
         const c = edgeColor(e.from, e.to, e.directed);
         const h = 9;
         return (
@@ -135,12 +141,12 @@ function GraphView({ a, frame }: { a: AlgoBlock; frame: AlgoFrame }) {
         const note = notes.get(n.id);
         return (
           <g key={n.id}>
-            <circle cx={n.x} cy={n.y} r={R} className={c ? `algo-node c-${c}` : 'algo-node'} />
+            <circle cx={n.x} cy={n.y} r={radius(n.id)} className={c ? `algo-node c-${c}` : 'algo-node'} />
             <text x={n.x} y={n.y + 5} textAnchor="middle" className="algo-nlabel">
               {labels.get(n.id) ?? n.label ?? n.id}
             </text>
             {note !== undefined && (
-              <text x={n.x} y={n.y + R + 15} textAnchor="middle" className="algo-note">
+              <text x={n.x} y={n.y + radius(n.id) + 15} textAnchor="middle" className="algo-note">
                 {note}
               </text>
             )}

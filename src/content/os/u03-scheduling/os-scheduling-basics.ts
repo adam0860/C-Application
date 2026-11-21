@@ -126,7 +126,7 @@ export const lesson: Lesson = {
         },
         {
           text: 'The average turnaround is the same as with any other order, because the total work is fixed',
-          why: 'The total work and the finish time of the *last* job are fixed, but the average turnaround depends heavily on order. Running the 20-second jobs first gives an average of about 6 minutes instead of about 45.',
+          why: 'The total work and the finish time of the *last* job are fixed, but the average turnaround depends heavily on order. Running the 20-second jobs first gives an average of under 7 minutes instead of 45.',
         },
         {
           text: 'Nothing bad: FIFO is optimal whenever jobs arrive at different times',
@@ -190,7 +190,7 @@ export const lesson: Lesson = {
       blocks: [
         {
           type: 'p',
-          text: 'Turnaround is the right metric for batch work like compiling shaders. It is the wrong metric for anything a person is interacting with. If you click a menu while a 10-second job runs, STCF lets the job finish first because it has less left than... well, it does not know, but in any case "the click takes a few seconds to register" is unacceptable. So we add a second metric:',
+          text: 'Turnaround is the right metric for batch work like compiling shaders. It is the wrong metric for anything a person is interacting with. If you click a menu while three 10-second jobs are queued, a turnaround-optimal policy happily finishes them one by one before your click is even looked at. "The click registers after 30 seconds" is unacceptable, so we add a second metric:',
         },
         {
           type: 'definition',
@@ -1288,11 +1288,11 @@ if (j.remaining == 0) {
         {
           text: 'The 6 ms job first, so one core runs it while the other core runs the seven short ones',
           correct: true,
-          why: 'Core 1 runs the 6 ms job while core 2 runs six short ones; the last short job goes to core 2 at 6 ms. The frame\'s work is done at 7 ms, the best possible split of 13 ms of work onto two cores with one 6 ms piece.',
+          why: 'Core 1 runs the 6 ms job while core 2 runs six short ones; the seventh starts at 6 ms on whichever core is free. The frame\'s work is done at 7 ms, the best possible packing of 13 ms of work with one 6 ms piece onto two cores.',
         },
         {
           text: 'The seven 1 ms jobs first (SJF), because SJF is optimal',
-          why: 'SJF optimises *average turnaround*. Here the short jobs finish around 3 to 4 ms, then the 6 ms job starts and ends near 9.5 ms while the other core idles. The goal is the last finish time, not the average.',
+          why: 'SJF optimises *average turnaround*. Here the two cores share the short jobs until 3 ms, then the 6 ms job starts and ends at 9 ms while the other core idles from 4 ms on. The goal is the last finish time, not the average.',
         },
         {
           text: 'Round robin between all eight jobs with a 1 ms slice',
@@ -1300,7 +1300,7 @@ if (j.remaining == 0) {
         },
         {
           text: 'The order does not matter; total work is 13 ms whatever you do',
-          why: 'Total work is fixed, but how it packs onto two cores is not. The finish time ranges from 7 ms to about 9.5 ms depending on order.',
+          why: 'Total work is fixed, but how it packs onto two cores is not. The finish time ranges from 7 ms to 9 ms depending on order.',
         },
       ],
       explanation:

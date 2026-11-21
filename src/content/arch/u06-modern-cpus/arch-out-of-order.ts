@@ -100,14 +100,14 @@ for (float x : values)
           width: 420,
           height: 260,
           nodes: [
-            { id: 'a0', x: 70, y: 30, label: '+0' },
-            { id: 'a1', x: 70, y: 58, label: '+1' },
-            { id: 'a2', x: 70, y: 86, label: '+2' },
-            { id: 'a3', x: 70, y: 114, label: '+3' },
-            { id: 'a4', x: 70, y: 142, label: '+4' },
-            { id: 'a5', x: 70, y: 170, label: '+5' },
-            { id: 'a6', x: 70, y: 198, label: '+6' },
-            { id: 'a7', x: 70, y: 226, label: '+7' },
+            { id: 'a0', x: 40, y: 40, label: '+0' },
+            { id: 'a1', x: 40, y: 98, label: '+1' },
+            { id: 'a2', x: 40, y: 156, label: '+2' },
+            { id: 'a3', x: 40, y: 214, label: '+3' },
+            { id: 'a4', x: 110, y: 40, label: '+4' },
+            { id: 'a5', x: 110, y: 98, label: '+5' },
+            { id: 'a6', x: 110, y: 156, label: '+6' },
+            { id: 'a7', x: 110, y: 214, label: '+7' },
             { id: 'b0', x: 220, y: 40, label: '+0' },
             { id: 'b4', x: 220, y: 100, label: '+4' },
             { id: 'b1', x: 270, y: 40, label: '+1' },
@@ -922,7 +922,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               note: 'An empty 8-entry reorder buffer. Instructions will **enter in order**, **execute when their inputs are ready**, and **retire in order** from the head.',
               array: ['·', '·', '·', '·', '·', '·', '·', '·'],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '0'],
@@ -1004,7 +1004,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               ],
               dim: [],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '4'],
@@ -1027,7 +1027,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               ],
               dim: [],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '5'],
@@ -1050,7 +1050,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               ],
               dim: [],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '6'],
@@ -1073,7 +1073,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               ],
               dim: [],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '7'],
@@ -1167,7 +1167,7 @@ add   rdx, rax         ; (4) reads the new rax`,
               marks: [],
               dim: [0, 1, 2, 3, 4, 5, 6, 7],
               pointers: [
-                { index: 0, label: 'head, tail' },
+                { index: 0, label: 'head' },
               ],
               vars: [
                 ['cycle', '12'],
@@ -1185,7 +1185,7 @@ I6: add  x13, x2, x14
 I7: and  x15, x11, x4
 I8: or   x16, x9, x9`,
           lang: 'text',
-          caption: 'A toy out-of-order core: 2 instructions enter and 2 retire per cycle. Blue = waiting for inputs, orange = executing, green = finished but not yet retired.',
+          caption: 'A toy out-of-order core: 2 instructions enter and 2 retire per cycle. Blue = waiting for inputs, orange = executing, green = finished but not yet retired. New entries go in at the tail, just after the last filled entry.',
         },
         {
           type: 'p',
