@@ -163,7 +163,7 @@ exit_group(0)                           = ?`,
       blocks: [
         {
           type: 'p',
-          text: "The second illusion is memory. Every process sees its own private [[address-space]]: a huge range of [[virtual-address|virtual addresses]] that starts near zero and belongs to it alone. With the [[mmu]] the OS translates each virtual address to wherever the data really sits in physical RAM, so two processes can use the *same* address for *different* data.",
+          text: "The second illusion is memory. Every process sees its own private **address space**: a huge range of [[virtual-address|virtual addresses]] that starts near zero and belongs to it alone. With the [[mmu]] the OS translates each virtual address to wherever the data really sits in physical RAM, so two processes can use the *same* address for *different* data.",
         },
         {
           type: 'p',

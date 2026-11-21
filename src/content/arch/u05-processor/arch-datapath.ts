@@ -381,7 +381,7 @@ export const lesson: Lesson = {
                 { id: 'P4', text: '0x10' },
               ],
               vars: [
-                ['instruction', '`lw x5, 8(x10)`'],
+                ['instruction', 'lw x5, 8(x10)'],
                 ['cycle', '1'],
               ],
             },
@@ -401,7 +401,7 @@ export const lesson: Lesson = {
                 { id: 'IMM', text: '8' },
               ],
               vars: [
-                ['instruction', '`lw x5, 8(x10)`'],
+                ['instruction', 'lw x5, 8(x10)'],
                 ['cycle', '1'],
               ],
             },
@@ -419,7 +419,7 @@ export const lesson: Lesson = {
                 { id: 'ALU', text: '0x108' },
               ],
               vars: [
-                ['instruction', '`lw x5, 8(x10)`'],
+                ['instruction', 'lw x5, 8(x10)'],
                 ['ALUSrc', '1'],
               ],
             },
@@ -436,7 +436,7 @@ export const lesson: Lesson = {
                 { id: 'DM', text: '[0x108]=42' },
               ],
               vars: [
-                ['instruction', '`lw x5, 8(x10)`'],
+                ['instruction', 'lw x5, 8(x10)'],
                 ['MemRead', '1'],
               ],
             },
@@ -459,7 +459,7 @@ export const lesson: Lesson = {
                 { id: 'PC', text: '0x10' },
               ],
               vars: [
-                ['instruction', '`lw x5, 8(x10)`'],
+                ['instruction', 'lw x5, 8(x10)'],
                 ['RegWrite', '1'],
                 ['MemtoReg', '1'],
                 ['cycle ends', '1'],
@@ -484,7 +484,7 @@ export const lesson: Lesson = {
                 { id: 'ALU', text: '49' },
               ],
               vars: [
-                ['instruction', '`add x7, x5, x6`'],
+                ['instruction', 'add x7, x5, x6'],
                 ['ALUSrc', '0'],
                 ['cycle', '2'],
               ],
@@ -508,7 +508,7 @@ export const lesson: Lesson = {
                 { id: 'PC', text: '0x14' },
               ],
               vars: [
-                ['instruction', '`add x7, x5, x6`'],
+                ['instruction', 'add x7, x5, x6'],
                 ['MemtoReg', '0'],
                 ['MemRead', '0'],
               ],
@@ -529,7 +529,7 @@ export const lesson: Lesson = {
                 { id: 'ALU', text: '49 (≠0)' },
               ],
               vars: [
-                ['instruction', '`beq x7, x0, +12`'],
+                ['instruction', 'beq x7, x0, +12'],
                 ['Branch', '1'],
                 ['Zero', '0'],
               ],
@@ -553,7 +553,7 @@ export const lesson: Lesson = {
                 { id: 'PC', text: '0x18' },
               ],
               vars: [
-                ['instruction', '`beq x7, x0, +12`'],
+                ['instruction', 'beq x7, x0, +12'],
                 ['RegWrite', '0'],
                 ['next PC', '0x18'],
               ],

@@ -10,7 +10,7 @@ export const glossary: GlossaryEntry[] = [
     category: 'Basics',
     short: "The software between programs and hardware: it turns shared hardware into private abstractions (processes, address spaces, files, sockets) and decides who may use which resource and when.",
     long: "An OS plays two roles. As an **illusionist** it virtualizes the CPU (time sharing) and memory (private address spaces) and hides device details behind files and sockets. As a **referee** it protects programs from each other, shares resources fairly and efficiently, and stops misbehaving programs.\n\nOnly its core, the kernel, runs privileged; libraries, shells and desktop components are ordinary user-mode programs.",
-    see: ['os-kernel', 'kernel-mode', 'system-call', 'address-space'],
+    see: ['os-kernel', 'kernel-mode', 'system-call'],
     reading: [
       { title: 'OSTEP chapter 2: Introduction', url: 'https://pages.cs.wisc.edu/~remzi/OSTEP/intro.pdf', source: 'book', note: 'Virtualization, concurrency and persistence in one chapter.' },
     ],
