@@ -36,7 +36,7 @@ export const lesson: Lesson = {
 objdump -d -M intel damage.o`,
           annotations: [
             { lines: 1, text: '`-S` stops after compiling and writes assembly. `-masm=intel` picks Intel syntax (the default on Linux is AT&T).' },
-            { lines: 2, text: 'These two flags only remove noise: `.cfi_*` unwind directives and the `endbr64` landing-pad instructions of Intel CET. The code is otherwise identical.' },
+            { lines: 2, text: 'Noise removal only. `-fcf-protection=none` drops the `endbr64` landing-pad instructions of Intel CET, which Ubuntu\'s GCC adds by default. `-fno-asynchronous-unwind-tables` drops the `.cfi_*` unwind directives in C code, but C++ keeps them for exception handling, so the listings in this course also delete those directive lines. The instructions are otherwise identical.' },
             { lines: 5, text: '`objdump` shows the same code with addresses and the raw bytes of each instruction.' },
           ],
         },
@@ -441,7 +441,7 @@ _Z5maxOfii:
           "code": "_Z11applyDamageiii:\n    sub     esi, edx\n    mov     eax, 0\n    cmovs   esi, eax\n    mov     eax, 0\n    sub     edi, esi\n    cmovns  eax, edi\n    ret",
           "lang": "text",
           "interval": 1300,
-          "caption": "Real `g++ -O2` output, traced in gdb for two calls. Each box is a register; orange marks the register an instruction just wrote. SF and ZF are flag bits set by `sub`.",
+          "caption": "Real `g++ -O2` output, traced in gdb for two calls. Each box is a register; orange marks a register whose value the instruction just changed. SF and ZF are flag bits set by `sub`.",
           "frames": [
             {
               "note": "Call `applyDamage(10, 8, 12)`. The arguments arrive in `edi`, `esi` and `edx`; `eax` holds a leftover value.",

@@ -2577,7 +2577,7 @@ int main() {
           type: 'callout',
           variant: 'why',
           title: 'Why omit the frame pointer, and why some put it back',
-          text: 'Omitting it saves two instructions per call and frees `rbp` as a 16th general-purpose register, which mattered a lot on register-starved 32-bit x86. Debuggers then unwind the stack using DWARF unwind tables (Windows: `.pdata`/`.xdata`). The cost lands on **sampling profilers**, which must unwind thousands of stacks per second; walking `rbp` chains is far cheaper and more robust. Fedora 38 and Ubuntu 24.04 therefore rebuilt their packages with `-fno-omit-frame-pointer`, accepting a cost usually measured at around 1% or less in exchange for much better profiles.',
+          text: 'Omitting it saves two instructions per call and frees `rbp` for general use, one more register, which mattered a lot on register-starved 32-bit x86. Debuggers then unwind the stack using DWARF unwind tables (Windows: `.pdata`/`.xdata`). The cost lands on **sampling profilers**, which must unwind thousands of stacks per second; walking `rbp` chains is far cheaper and more robust. Fedora 38 and Ubuntu 24.04 therefore rebuilt their packages with `-fno-omit-frame-pointer`, accepting a cost usually measured at around 1% or less in exchange for much better profiles.',
         },
         {
           type: 'callout',
@@ -2887,7 +2887,7 @@ _Z9makeStatsl:
     ret`,
           annotations: [
             { lines: '2-4', text: 'Microsoft x64 passes an 8-byte struct in an **integer** register (`rcx`), whatever its members are. The callee unpacks the floats into SSE registers with shifts and moves…' },
-            { lines: '10-13', text: '…and packs the result back into `rax`. Thirteen instructions instead of one.' },
+            { lines: '10-13', text: '…and packs the result back into `rax`. Thirteen instructions instead of two.' },
           ],
         },
         {
@@ -2897,7 +2897,7 @@ _Z9makeStatsl:
             ['≤ 16 bytes, trivially copyable', 'split into 8-byte chunks; each goes in a general or SSE register by its contents', 'only sizes 1, 2, 4 or 8 go in a general register; anything else by pointer to a copy'],
             ['Larger', 'copied onto the stack', 'by pointer to a caller-made copy'],
             ['Returned, too large for registers', 'hidden pointer in `rdi`, returned in `rax`', 'hidden pointer in `rcx`, returned in `rax`'],
-            ['Non-trivial copy constructor or destructor', 'by invisible reference (pointer)', 'by invisible reference (pointer)'],
+            ['Non-trivial copy constructor or destructor', 'by invisible reference (pointer)', 'by pointer if the copy constructor is non-trivial; a destructor alone does not change how it is passed'],
           ],
         },
         {
@@ -2915,7 +2915,7 @@ _Z9makeStatsl:
 struct Vec2   { float x, y; };
 struct Vec3   { float x, y, z; };
 struct Stats  { long long hp, mana, xp; };
-struct Handle { int id; ~Handle() {} };   // user-provided dtor
+struct Handle { int id; Handle(const Handle& h) : id(h.id) {} };
 
 template <typename T>
 void report(const char* name) {

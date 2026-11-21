@@ -489,7 +489,7 @@ v >= 128, sorted data          2     10`,
         },
         {
           type: 'p',
-          text: 'The plain 2-bit table misses every loop exit (25%) and **every** outcome of the alternating branch (it never stays in one half of the state machine long enough). With 8 bits of history, gshare learns both patterns almost perfectly; its few misses are warm-up. On random data, nothing helps: about 50% misses for both. On sorted data, both predictors miss only around the single switch point.',
+          text: 'The plain 2-bit table misses every loop exit (25%) and **every taken** outcome of the alternating branch, half of all its outcomes (it just bounces between SN and WN, so it always predicts not taken). With 8 bits of history, gshare learns both patterns almost perfectly; its few misses are warm-up. On random data, nothing helps: about 50% misses for both. On sorted data, both predictors miss only around the single switch point.',
         },
         { type: 'heading', text: 'What real cores do' },
         {

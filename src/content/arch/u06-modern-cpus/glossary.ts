@@ -181,7 +181,7 @@ export const glossary: GlossaryEntry[] = [
     course: 'arch',
     category: 'Build',
     short: 'A compiler optimization that turns scalar loops into SIMD code automatically, processing several iterations per instruction.',
-    long: 'GCC and Clang vectorize at `-O3` (GCC 12 and later also at `-O2` with a cheaper cost model), MSVC at `/O2`. Vectorization is blocked or made costlier by possible aliasing between pointers (solved by run-time checks or `__restrict`), loop-carried dependences, floating-point reductions without fast-math, calls that are not inlined, complex control flow and strided or indirect access. Compilers can report what they did: GCC `-fopt-info-vec`, Clang `-Rpass=loop-vectorize`, MSVC `/Qvec-report:2`.',
+    long: 'GCC vectorizes at `-O3` (GCC 12 and later also at `-O2` with a much cheaper cost model), Clang at `-O2` and above, MSVC at `/O2`. Vectorization is blocked or made costlier by possible aliasing between pointers (solved by run-time checks or `__restrict`), loop-carried dependences, floating-point reductions without fast-math, calls that are not inlined, complex control flow and strided or indirect access. Compilers can report what they did: GCC `-fopt-info-vec`, Clang `-Rpass=loop-vectorize`, MSVC `/Qvec-report:2`.',
     see: ['simd', 'simd-intrinsic', 'structure-of-arrays'],
     reading: [
       {

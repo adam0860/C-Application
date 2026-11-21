@@ -629,7 +629,7 @@ void addFixed() {
         },
         {
           type: 'p',
-          text: 'Now write the same loop as a function taking pointers, `void add(float* out, const float* a, const float* b, int n)`. At `-O2` GCC 13 leaves it scalar (its cheap `-O2` cost model avoids loops that need run-time checks); at `-O3` it vectorizes, but look at what it must add:',
+          text: 'Now write the same loop as a function taking pointers, `void add(float* out, const float* a, const float* b, int n)`. At `-O2` GCC 13 leaves it scalar (its very cheap `-O2` cost model vectorizes only when the vector loop can replace the scalar loop outright: no run-time alias checks and no leftover iterations); at `-O3` it vectorizes, but look at what it must add:',
         },
         {
           type: 'code',
@@ -663,12 +663,12 @@ void addFixed() {
               text: 'A run-time **alias check**: is `out` too close to `a + 1`? If the arrays could overlap, writing `out[i]` might change an `a[i + 1]` that a 4-wide load already read, so GCC jumps to the scalar loop at `.L3`.',
             },
             {
-              lines: '9-15',
+              lines: '9-16',
               text: 'The vector loop, with unaligned `movups` because nothing is known about the pointers\' alignment.',
             },
             {
-              lines: '17-20',
-              text: 'A scalar loop for overlapping arrays and for leftover elements.',
+              lines: '18-21',
+              text: 'A scalar loop for arrays that may overlap (leftover elements get a similar scalar tail, not shown).',
             },
           ],
         },
@@ -728,7 +728,7 @@ void addFixed() {
         },
         {
           text: '`for (i...) hp[i] = std::max(hp[i] - dmg, 0.0f);` on a plain array',
-          why: 'Independent iterations, contiguous access, and `max` has a SIMD instruction (`maxps`): a textbook vectorizable loop (at `-O3`, or `-O2` when no run-time checks are needed).',
+          why: 'Independent iterations, contiguous access, and `max` has a SIMD instruction (`maxps`): a textbook vectorizable loop (at `-O3`, or at `-O2` when the trip count is a known multiple of the vector width and no run-time checks are needed).',
         },
         {
           text: '`for (i...) out[i] = in[i] * scale;` with `out` and `in` as plain `float*` parameters',

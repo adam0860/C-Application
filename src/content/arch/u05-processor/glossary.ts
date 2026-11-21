@@ -118,7 +118,7 @@ export const glossary: GlossaryEntry[] = [
     course: 'arch',
     category: 'Pipeline',
     short: 'A hazard in which an instruction needs a result that an earlier, still-unfinished instruction has not yet written. In an in-order pipeline these are read-after-write (RAW) dependences.',
-    long: 'In the five-stage pipeline a value is written in WB but needed in EX by the next instruction, three stages earlier. Forwarding (bypassing) routes the value from a pipeline register straight to the ALU input, which removes most stalls; a load followed immediately by a use still needs one stall. Out-of-order processors also face write-after-read (WAR) and write-after-write (WAW) name dependences, which register renaming removes.',
+    long: 'In the five-stage pipeline a value is written in WB, but the next instruction needs it in EX, two stages earlier. Forwarding (bypassing) routes the value from a pipeline register straight to the ALU input, which removes most stalls; a load followed immediately by a use still needs one stall. Out-of-order processors also face write-after-read (WAR) and write-after-write (WAW) name dependences, which register renaming removes.',
     see: ['forwarding', 'load-use-hazard', 'pipeline-stall', 'register-renaming'],
   },
   {

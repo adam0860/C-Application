@@ -158,7 +158,7 @@ lea eax, [rdi+rdi*4]             ; eax = x * 5, no memory access`,
     course: 'arch',
     category: 'ISA',
     short: 'A register (`rbp` on x86-64) set at function entry to a fixed point in the current stack frame, so locals have constant offsets and the chain of saved frame pointers links every frame together.',
-    long: 'Optimized builds usually omit it (`-fomit-frame-pointer` is on at `-O1` and above for GCC on x86-64), which frees `rbp` as a 16th general register. Debuggers and profilers then walk the stack using unwind tables instead. Because walking frame-pointer chains is so much cheaper, Fedora (38) and Ubuntu (24.04) switched their packages back to keeping frame pointers.',
+    long: 'Optimized builds usually omit it (`-fomit-frame-pointer` is on at `-O1` and above for GCC on x86-64), which frees `rbp` for general use. Debuggers and profilers then walk the stack using unwind tables instead. Because walking frame-pointer chains is so much cheaper, Fedora (38) and Ubuntu (24.04) switched their packages back to keeping frame pointers.',
     see: ['stack-pointer', 'function-prologue', 'stack-frame'],
   },
   {

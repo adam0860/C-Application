@@ -117,7 +117,7 @@ void writeSector(DeviceRegs* dev, const std::uint32_t* words,
       blocks: [
         {
           type: 'p',
-          text: "Here is what really happens when your loader thread calls `read` on a file whose data is not in memory. The key move is step 4: the kernel does not wait. It marks the thread **blocked**, puts it on a wait queue attached to the request, and lets the scheduler run something else. The interrupt later turns the blocked thread back into a ready one.",
+          text: "Here is what really happens when your loader thread calls `read` on a file whose data is not in memory. The key move is step 4: the kernel does not wait. It marks the thread **blocked**, puts it on a wait queue attached to the request, and lets the scheduler run something else through an ordinary [[context-switch]]. The interrupt later turns the blocked thread back into a ready one.",
         },
         {
           "type": "algo",

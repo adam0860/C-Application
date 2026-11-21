@@ -1030,7 +1030,6 @@ else
           ],
           edges: [
             { from: 'n0_4', to: 'n1_5', directed: true },
-            { from: 'n0_5', to: 'n2_6', directed: true },
           ],
           code: `lw   x1, 0(x2)
 sub  x4, x1, x5
@@ -1276,7 +1275,7 @@ or   x8, x2, x9`,
               ],
             },
             {
-              note: '**Forward.** I3 also gets `x1` forwarded. I4 does not use `x1`, so it flows normally.',
+              note: 'I3 needs no forwarding: it read `x1` from the register file in ID (cycle 5), after I1 wrote it in the first half of that cycle. I4 does not use `x1`, so it flows normally.',
               hidden: ['c7', 'c8', 'c9', 'n1_7', 'n2_7', 'n2_8', 'n3_7', 'n3_8', 'n3_9'],
               nodeColors: [
                 { id: 'c6', color: 'orange' },
@@ -1291,9 +1290,6 @@ or   x8, x2, x9`,
                 ['cycle', '6'],
                 ['finished', '1'],
                 ['stall cycles', '1'],
-              ],
-              edgeColors: [
-                { from: 'n0_5', to: 'n2_6', color: 'blue' },
               ],
             },
             {
