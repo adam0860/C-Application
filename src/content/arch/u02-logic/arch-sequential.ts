@@ -177,7 +177,7 @@ S=1 R=0 (set  ) -> Q=1  Qbar=0`,
         },
         {
           type: 'figure',
-          svg: `<svg viewBox="0 0 520 212" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          svg: `<svg viewBox="-16 0 536 212" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <rect x="30" y="70" width="56" height="70" rx="4" class="f-blue" fill-opacity="0.12" stroke="none"/>
 <rect x="30" y="70" width="56" height="70" rx="4"/>
 <text x="38" y="94" font-size="12" text-anchor="start" stroke="none" font-weight="bold">D</text>
