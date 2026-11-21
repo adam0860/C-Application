@@ -70,7 +70,7 @@ int main() {
           type: 'callout',
           variant: 'perf',
           title: 'Not every miss costs the full 300 cycles',
-          text: 'The out-of-order cores from the Modern CPUs unit keep working past a missing load and can have a dozen or more misses in flight at once (each core has a limited number of miss buffers). Independent misses, like loads from `a[i]` and `a[i + 8]`, overlap and share the wait: that is **[[memory-level-parallelism]]**. Dependent misses, like `p = p->next`, cannot overlap, because the next address is not known until the previous load returns. Keep that distinction in mind; it decides how bad a miss really is.',
+          text: 'The [[out-of-order-execution|out-of-order]] cores from the Modern CPUs unit keep working past a missing load and can have a dozen or more misses in flight at once (each core has a limited number of miss buffers). Independent misses, like loads from `a[i]` and `a[i + 8]`, overlap and share the wait: that is **[[memory-level-parallelism]]**. Dependent misses, like `p = p->next`, cannot overlap, because the next address is not known until the previous load returns. Keep that distinction in mind; it decides how bad a miss really is.',
         },
       ],
     },

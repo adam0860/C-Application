@@ -279,7 +279,7 @@ int main() {
         },
         {
           "id": "L4",
-          "text": "PML4[255]"
+          "text": "[255]"
         }
       ],
       "edgeColors": [
@@ -327,11 +327,11 @@ int main() {
         },
         {
           "id": "L4",
-          "text": "PML4[255]"
+          "text": "[255]"
         },
         {
           "id": "L3",
-          "text": "PDPT[502]"
+          "text": "[502]"
         }
       ],
       "edgeColors": [
@@ -383,15 +383,15 @@ int main() {
         },
         {
           "id": "L4",
-          "text": "PML4[255]"
+          "text": "[255]"
         },
         {
           "id": "L3",
-          "text": "PDPT[502]"
+          "text": "[502]"
         },
         {
           "id": "L2",
-          "text": "PD[85]"
+          "text": "[85]"
         }
       ],
       "edgeColors": [
@@ -447,19 +447,19 @@ int main() {
         },
         {
           "id": "L4",
-          "text": "PML4[255]"
+          "text": "[255]"
         },
         {
           "id": "L3",
-          "text": "PDPT[502]"
+          "text": "[502]"
         },
         {
           "id": "L2",
-          "text": "PD[85]"
+          "text": "[85]"
         },
         {
           "id": "L1",
-          "text": "PT[451]"
+          "text": "[451]"
         }
       ],
       "edgeColors": [
@@ -519,19 +519,19 @@ int main() {
         },
         {
           "id": "L4",
-          "text": "PML4[255]"
+          "text": "[255]"
         },
         {
           "id": "L3",
-          "text": "PDPT[502]"
+          "text": "[502]"
         },
         {
           "id": "L2",
-          "text": "PD[85]"
+          "text": "[85]"
         },
         {
           "id": "L1",
-          "text": "PT[451]"
+          "text": "[451]"
         },
         {
           "id": "PA",
@@ -629,7 +629,7 @@ int main() {
       ]
     }
   ],
-  "caption": "A 4-level x86-64 page walk. L4…L1 are the PML4, PDPT, PD and PT tables; the note under each shows the entry read. Orange = the step in progress, green = done."
+  "caption": "A 4-level x86-64 page walk. L4…L1 are the PML4, PDPT, PD and PT tables; the note under each shows the index used. Orange = the step in progress, green = done."
 },
         {
           type: 'p',

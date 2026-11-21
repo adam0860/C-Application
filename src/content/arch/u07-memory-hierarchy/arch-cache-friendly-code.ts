@@ -2144,7 +2144,7 @@ int main() {
           type: 'callout',
           variant: 'why',
           title: 'Why engines moved to data-oriented layouts',
-          text: 'A frame runs a handful of systems over thousands of entities, each touching a few fields. AoS makes every system pay for every field; SoA lets each system stream exactly the data it needs. SoA also suits SIMD: `x[i..i+7]` loads straight into one AVX register, as the SIMD lesson showed. This is the core of **[[data-oriented-design]]**, and of the **[[entity-component-system]]** architectures (Unity DOTS, Unreal\'s Mass, EnTT, flecs) that group each component type into contiguous arrays. The trade-off: code that needs *many* fields of *one* entity, such as a detailed AI decision, now touches many arrays. Some engines use **AoSoA**, small SoA blocks of 4–16 entities, to get both.',
+          text: 'A frame runs a handful of systems over thousands of entities, each touching a few fields. AoS makes every system pay for every field; SoA lets each system stream exactly the data it needs. SoA also suits [[simd|SIMD]]: `x[i..i+7]` loads straight into one AVX register, as the SIMD lesson showed. This is the core of **[[data-oriented-design]]**, and of the **[[entity-component-system]]** architectures (Unity DOTS, Unreal\'s Mass, EnTT, flecs) that group each component type into contiguous arrays. The trade-off: code that needs *many* fields of *one* entity, such as a detailed AI decision, now touches many arrays. Some engines use **AoSoA**, small SoA blocks of 4–16 entities, to get both.',
         },
         {
           type: 'callout',
@@ -2658,7 +2658,7 @@ int main() {
         },
         {
           type: 'p',
-          text: 'Field order matters within the hot struct too: grouping fields used together keeps them in the same line, and ordering fields from largest to smallest alignment avoids padding, as the Objects in Memory lesson showed. Compilers apply the same idea to code: functions or branches marked cold (`[[unlikely]]`, GCC\'s `__attribute__((cold))`, or profile-guided optimization) are moved away from hot code, so the instruction cache holds only what runs every frame.',
+          text: 'Field order matters within the hot struct too: grouping fields used together keeps them in the same line, and ordering fields from largest to smallest alignment avoids [[struct-padding|padding]], as the Objects in Memory lesson showed. Compilers apply the same idea to code: functions or branches marked cold (`[[unlikely]]`, GCC\'s `__attribute__((cold))`, or profile-guided optimization) are moved away from hot code, so the instruction cache holds only what runs every frame.',
         },
         {
           type: 'callout',
@@ -2692,7 +2692,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'Simulators give exact, repeatable counts for a model. To see what real hardware does, use the CPU\'s **performance monitoring counters**: hardware registers that count events such as cycles, instructions retired, L1 misses, last-level cache misses and TLB misses, with almost no overhead.',
+          text: 'Simulators give exact, repeatable counts for a model. To see what real hardware does, use the CPU\'s **[[hardware-performance-counter|performance monitoring counters]]**: hardware registers that count events such as cycles, instructions retired, L1 misses, last-level cache misses and TLB misses, with almost no overhead.',
         },
         {
           type: 'code',
