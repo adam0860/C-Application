@@ -79,7 +79,7 @@ int wavesPlayed() {
         },
         {
           type: 'p',
-          text: '`spawn.cpp` defines `int spawnCount(int wave) { return 4 + wave * 2; }`, and `main.cpp` calls `nextWave(3)` and prints `gScore`. The build is `g++ -std=c++20 -O2 -c world.cpp spawn.cpp main.cpp`, then `g++ main.o world.o spawn.o -o game`.',
+          text: '`spawn.cpp` defines `int spawnCount(int wave) { return 4 + wave * 2; }`, and `main.cpp` calls `nextWave(3)` and prints `gScore`. The build is `g++ -std=c++20 -O2 -fcf-protection=none -c world.cpp spawn.cpp main.cpp` (the course\'s usual flag, which keeps `endbr64` out of the listings), then `g++ main.o world.o spawn.o -o game`.',
         },
       ],
     },
@@ -162,6 +162,7 @@ Total             262357`,
 0000000000000000 D gScore
 
 main.o:
+0000000000000000 r .LC0
                  U _Z8nextWavei
                  U __printf_chk
                  U gScore
@@ -175,7 +176,8 @@ spawn.o:
             { lines: 5, text: 'Lowercase `r`: read-only data with **local** binding. `const` at namespace scope gives internal linkage, so other files cannot see `kXp` (`_ZL` marks it as a local name).' },
             { lines: 6, text: 'Lowercase `b`: `static int sWaves` lives in `.bss`, visible only inside `world.cpp`.' },
             { lines: '7-8', text: 'Uppercase `B` and `D`: global symbols in `.bss` and `.data` that other files may use. `gScore` is not mangled because variable names need no type encoding.' },
-            { lines: '11-13', text: '`main.o` needs three symbols. `__printf_chk` is the fortified `printf` that Ubuntu\'s default `_FORTIFY_SOURCE` substitutes; it will come from the C library.' },
+            { lines: 11, text: '`.LC0` is GCC\'s local label for the `printf` format string in `.rodata`.' },
+            { lines: '12-14', text: '`main.o` needs three symbols. `__printf_chk` is the fortified `printf` that Ubuntu\'s default `_FORTIFY_SOURCE` substitutes; it will come from the C library.' },
           ],
         },
         {

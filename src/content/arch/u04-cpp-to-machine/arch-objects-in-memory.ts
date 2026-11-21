@@ -108,7 +108,7 @@ int main() {
       unit: 'bytes',
       hint: 'Place each member at the next multiple of its alignment, then round the total up to a multiple of the largest alignment.',
       explanation:
-        '`type` at 0; `x` needs a multiple of 8, so 7 padding bytes and `x` at 8–15; `dmg` at 16–19; `team` at 20. The data ends at 21, and the struct\'s alignment is 8 (from `double`), so the size rounds up to **24**: 11 of the 24 bytes are padding. Ordered `double`, `int`, `char`, `char`, the same members need only 16.',
+        '`type` at 0; `x` needs a multiple of 8, so 7 padding bytes and `x` at 8–15; `dmg` at 16–19; `team` at 20. The data ends at 21, and the struct\'s alignment is 8 (from `double`), so the size rounds up to **24**: 10 of the 24 bytes are padding. Ordered `double`, `int`, `char`, `char`, the same members need only 16.',
     },
     // ------------------------------------------------------------------ 3
     {
@@ -286,7 +286,7 @@ _ZN5Enemy5maxHpEv:
         },
         {
           type: 'p',
-          text: 'So `goblin.takeDamage(40)` compiles to exactly what `Enemy_takeDamage(&goblin, 40)` would in C. On Windows x64, `this` arrives in `rcx` and `dmg` in `edx`. (32-bit MSVC used a separate `thiscall` convention with `this` in `ecx`; on x64 there is just one convention.) And because the body is visible, the call is usually inlined: a caller `hitGoblin(Enemy& g) { return g.takeDamage(40); }` compiles to the same arithmetic with the constant 40 folded in, and no call at all.',
+          text: 'So `goblin.takeDamage(40)` compiles to exactly what `Enemy_takeDamage(&goblin, 40)` would in C. On Windows x64, `this` arrives in `rcx` and `dmg` in `edx`. (32-bit MSVC used a separate `thiscall` convention with `this` in `ecx`; on x64 member functions use the ordinary convention.) And because the body is visible, the call is usually inlined: a caller `hitGoblin(Enemy& g) { return g.takeDamage(40); }` compiles to the same arithmetic with the constant 40 folded in, and no call at all.',
         },
         {
           type: 'callout',
@@ -335,7 +335,7 @@ Shape* makeCircle() { return new Circle; }
 float doubledArea(const Shape& s) { return s.area() * 2.0f; }`,
           annotations: [
             { lines: 2, text: 'A virtual destructor, so `delete` through a `Shape*` works. It occupies two vtable slots, as you will see.' },
-            { lines: 12, text: 'Compiled where the dynamic type of `s` is unknown.' },
+            { lines: 12, text: 'The listing below shows this function compiled in a file that sees only `Shape`, so the dynamic type of `s` is unknown. In this same file, where `Circle::area` is visible, GCC would add a speculative guess for `Circle` (see devirtualization below).' },
           ],
         },
         {

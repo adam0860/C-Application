@@ -2577,7 +2577,7 @@ int main() {
           type: 'callout',
           variant: 'why',
           title: 'Why omit the frame pointer, and why some put it back',
-          text: 'Omitting it saves two instructions per call and frees `rbp` for general use, one more register, which mattered a lot on register-starved 32-bit x86. Debuggers then unwind the stack using DWARF unwind tables (Windows: `.pdata`/`.xdata`). The cost lands on **sampling profilers**, which must unwind thousands of stacks per second; walking `rbp` chains is far cheaper and more robust. Fedora 38 and Ubuntu 24.04 therefore rebuilt their packages with `-fno-omit-frame-pointer`, accepting a cost usually measured at around 1% or less in exchange for much better profiles.',
+          text: 'Omitting it saves two instructions per call and frees `rbp` as one more general-purpose register, which mattered a lot on register-starved 32-bit x86. Debuggers then unwind the stack using DWARF unwind tables (Windows: `.pdata`/`.xdata`). The cost lands on **sampling profilers**, which must unwind thousands of stacks per second; walking `rbp` chains is far cheaper and more robust. Fedora 38 and Ubuntu 24.04 therefore rebuilt their packages with `-fno-omit-frame-pointer`, accepting a cost usually measured at around 1% or less in exchange for much better profiles.',
         },
         {
           type: 'callout',
@@ -2939,7 +2939,7 @@ int main() {
 }`,
           output: 'Vec2          8 bytes  SysV:registers Win:register\nVec3         12 bytes  SysV:registers Win:memory\nStats        24 bytes  SysV:memory    Win:memory\nHandle        4 bytes  SysV:memory    Win:memory\nstd::string  32 bytes  SysV:memory    Win:memory',
           annotations: [
-            { lines: 8, text: 'A user-provided destructor makes `Handle` non-trivially copyable, even though it holds a single `int`.' },
+            { lines: 8, text: 'A user-provided copy constructor makes `Handle` non-trivially copyable, even though it holds a single `int`, so both platforms pass it by pointer. (A user-provided destructor alone would do the same on Linux but not on Windows; see the note below.)' },
             { lines: 14, text: 'The real System V algorithm also classifies each 8-byte chunk as integer or SSE (and has rules for `long double` and unaligned fields); size and triviality decide the common cases.' },
             { lines: '16-17', text: 'Microsoft x64: only power-of-two sizes up to 8 bytes fit in a register.' },
             { lines: 28, text: '`std::string` is 32 bytes in libstdc++ and has a non-trivial copy constructor, so it always goes through memory. That is one more reason to pass strings by `const&` or `std::string_view`.' },
@@ -2955,7 +2955,7 @@ int main() {
           type: 'callout',
           variant: 'note',
           title: 'Why non-trivial types go by reference',
-          text: 'If a type has a user-provided destructor or copy constructor, the object must have a real address so that constructor and destructor can run on it. The ABI therefore passes a pointer to a temporary the caller created, even if the struct is one `int`: GCC compiles `int idOf(Handle h)` to `mov eax, DWORD PTR [rdi]` when `Handle` has a destructor, but to `mov eax, edi` when it does not.',
+          text: 'If a type has a user-provided destructor or copy constructor, the object must have a real address so that constructor and destructor can run on it. The Itanium C++ ABI used on Linux therefore passes a pointer to a temporary the caller created, even if the struct is one `int`: GCC compiles `int idOf(Handle h)` to `mov eax, DWORD PTR [rdi]` when `Handle` has a destructor or copy constructor, but to `mov eax, edi` when it has neither. Microsoft x64 looks only at the copy constructor: there the callee destroys its own arguments, so a one-`int` struct with just a destructor still arrives in `ecx`.',
         },
       ],
     },
