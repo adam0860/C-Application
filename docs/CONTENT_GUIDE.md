@@ -155,7 +155,7 @@ items, table cells, option text unless `codeOptions`, takeaways, objectives…):
         // graph view:
         nodeColors: [{ id: 'A', color: 'green' }], nodeNotes: [{ id: 'A', text: 'd=0' }],
         nodeLabels: [{ id: 'A', label: '42' }], hidden: ['E'],
-        edgeColors: [{ from: 'A', to: 'B', color: 'blue' }] },
+        edgeColors: [{ from: 'A', to: 'B', color: 'blue' }], hiddenEdges: [{ from: 'B', to: 'C' }] },
     ],
   }
   ```

@@ -59,7 +59,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: 'Switching is free because nothing is saved or restored: every resident thread keeps its own registers in a huge on-chip **register file**, 256 KB per multiprocessor on NVIDIA\'s Ampere, many times larger than its L1 cache. Compare an operating-system context switch on a CPU, which saves and restores a thread\'s registers and typically costs microseconds.',
+          text: 'Switching is free because nothing is saved or restored: every resident thread keeps its own registers in a huge on-chip **register file**, 256 KB per multiprocessor on NVIDIA\'s Ampere, twice the size of its combined 128 KB L1 cache and shared memory. Compare an operating-system context switch on a CPU, which saves and restores a thread\'s registers and typically costs microseconds.',
         },
         {
           type: 'definition',
@@ -1016,7 +1016,7 @@ pipeline changes, sorted:      12`,
           annotations: [
             { lines: '8-9', text: 'Real command buffers are packed binary formats defined by the driver, but the idea is the same: a list of small records in memory.' },
             { lines: '17-20', text: 'Only emit a state change when the material actually changes. Pipeline changes are among the more expensive commands for both the CPU and the GPU.' },
-            { lines: '38-41', text: 'Sorting draws by material (real engines sort by a packed key: render pass, pipeline, material, depth) turns 1,807 state changes into 12.' },
+            { lines: '39-43', text: 'Sorting draws by material (real engines sort by a packed key: render pass, pipeline, material, depth) turns 1,807 state changes into 12.' },
           ],
         },
         {

@@ -90,7 +90,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: 'Idle balancing is a form of **work stealing**, the technique at the heart of every modern job system (Cilk, Intel TBB, .NET\'s thread pool and most game engines). Each worker owns a double-ended queue of jobs. It pushes and pops at one end, newest first; when it runs dry it steals from the *other* end of a random victim\'s deque:',
+          text: 'Idle balancing is a form of **[[work-stealing|work stealing]]**, the technique at the heart of every modern job system (Cilk, Intel TBB, .NET\'s thread pool and most game engines). Each worker owns a double-ended queue of jobs. It pushes and pops at one end, newest first; when it runs dry it steals from the *other* end of a random victim\'s deque:',
         },
         {
   "type": "algo",
@@ -305,7 +305,7 @@ export const lesson: Lesson = {
           type: 'callout',
           variant: 'unreal',
           title: 'Job systems in engines',
-          text: 'Unreal\'s [[task-graph]] and the job systems of Frostbite and Naughty Dog\'s engine all run roughly one worker [[thread]] per core, each draining queues of small jobs, with idle workers stealing. Naughty Dog went further (GDC 2015): jobs run on **fibers**, user-mode stacks that a worker can switch between without the kernel, so a job that waits on another simply parks its fiber and the worker picks up something else. The Threads and Concurrency units build one of these.',
+          text: 'Unreal\'s [[task-graph]] and the job systems of Frostbite and Naughty Dog\'s engine all run roughly one worker [[thread]] per core, each draining queues of small jobs, with idle workers stealing. Naughty Dog went further (GDC 2015): jobs run on **[[fiber|fibers]]**, user-mode stacks that a worker can switch between without the kernel, so a job that waits on another simply parks its fiber and the worker picks up something else. The Threads and Concurrency units build one of these.',
         },
       ],
     },
@@ -1203,7 +1203,7 @@ int main() {
       ]
     }
   ],
-  "caption": "Earliest Deadline First on two periodic tasks. Orange cells are T1, blue cells are T2."
+  "caption": "Earliest Deadline First on two periodic tasks. The cell just run is orange for T1 and blue for T2."
 },
         {
           type: 'callout',
@@ -1264,7 +1264,7 @@ int main() {
         },
         {
           type: 'p',
-          text: 'Priorities raise a classic hazard: **priority inversion**, where a high-priority thread waits for a lock held by a low-priority one that a medium-priority thread keeps preempting. It famously reset NASA\'s Mars Pathfinder lander in 1997, and the Deadlock lesson covers it and its fix, priority inheritance.',
+          text: 'Priorities raise a classic hazard: **[[priority-inversion|priority inversion]]**, where a high-priority thread waits for a lock held by a low-priority one that a medium-priority thread keeps preempting. It famously reset NASA\'s Mars Pathfinder lander in 1997, and the Deadlock lesson covers it and its fix, [[priority-inheritance|priority inheritance]].',
         },
         {
           type: 'callout',

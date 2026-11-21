@@ -109,7 +109,7 @@ fewer cache misses    30.0M instr  CPI 0.75  ->  7.50 ms
 SIMD (fewer instrs)   12.0M instr  CPI 1.00  ->  4.00 ms`,
           annotations: [
             { lines: 6, text: '*Dynamic* instruction count: how many instructions actually execute, loop iterations included. It is not the number of lines of assembly in the binary.' },
-            { lines: '14-16', text: 'Three versions of the same frame. The second keeps every instruction but halves CPI (fewer stalls on memory). The third executes fewer, wider instructions, and its CPI went *up* because each SIMD instruction does more work.' },
+            { lines: '14-16', text: 'Three versions of the same frame. The second keeps every instruction but halves CPI (fewer stalls on memory). The third executes fewer, wider instructions, and its CPI is *higher* than the second build\'s because each SIMD instruction does more work.' },
             { lines: '19-20', text: 'cycles = instructions × CPI; milliseconds = cycles × ns per cycle / 10⁶.' },
           ],
         },
@@ -1040,7 +1040,7 @@ perf stat -e cycles,instructions,cache-misses,branch-misses \\
       blocks: [
         {
           type: 'p',
-          text: 'Timers tell you *how long*. To learn *why*, ask the CPU itself. Every modern core has a performance monitoring unit with a handful of programmable [[hardware-performance-counter|hardware performance counters]]: registers that count microarchitectural events as they happen, at essentially no cost. `perf stat`, VTune and Superluminal read them for you.',
+          text: 'Timers tell you *how long*. To learn *why*, ask the CPU itself. Every modern core has a performance monitoring unit with a handful of programmable [[hardware-performance-counter|hardware performance counters]]: registers that count microarchitectural events as they happen, at essentially no cost. `perf stat`, VTune and AMD uProf read them for you.',
         },
         {
           type: 'table',

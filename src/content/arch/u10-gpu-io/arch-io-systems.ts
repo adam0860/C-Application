@@ -856,7 +856,7 @@ int main() {
 SATA SSD       level   7.3 s, random    2.0 s
 NVMe Gen4 SSD  level   0.6 s, random    1.0 s`,
           annotations: [
-            { lines: '12-14', text: 'Round, typical figures. Real drives vary, but the orders of magnitude are right.' },
+            { lines: '13-15', text: 'Round, typical figures. Real drives vary, but the orders of magnitude are right.' },
             { lines: 19, text: 'This models one request at a time. An HDD cannot do better (one head), but an NVMe drive with dozens of requests in flight serves hundreds of thousands of random reads per second, so its 20,000 reads finish in a small fraction of a second.' },
           ],
         },
@@ -964,7 +964,7 @@ NVMe Gen4 SSD  level   0.6 s, random    1.0 s`,
           type: 'list',
           items: [
             '**No upload step.** On a PC, a texture lives in RAM and then gets copied over PCIe into VRAM. On a console, the CPU (or the SSD\'s DMA) writes it once, where the GPU will read it. Engines on consoles stream assets straight into their final location.',
-            '**One budget.** The CPU and GPU share the same 13–16 GB. There is no separate "VRAM budget": a bigger texture pool means less memory for gameplay, audio and animation, and console teams negotiate one memory budget for everything.',
+            '**One budget.** The CPU and GPU share the same 16 GB, minus what the OS reserves (13.5 GB is left for Series X games). There is no separate "VRAM budget": a bigger texture pool means less memory for gameplay, audio and animation, and console teams negotiate one memory budget for everything.',
             '**Shared bandwidth.** CPU memory traffic takes bandwidth from the GPU. Cache-unfriendly CPU code on a console does not only slow the CPU: it can cost rendering time too.',
             '**Explicit coherence.** Sharing memory does not mean sharing caches. When the CPU writes data the GPU will read, or the reverse, the engine must flush or invalidate caches at the right moments with barriers and fences, just as with DMA.',
           ],

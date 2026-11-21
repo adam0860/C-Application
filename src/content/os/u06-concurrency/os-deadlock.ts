@@ -164,20 +164,6 @@ export const lesson: Lesson = {
       ],
       "edgeColors": [],
       "nodeColors": [],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "running"
-        },
-        {
-          "id": "T2",
-          "text": "running"
-        },
-        {
-          "id": "T3",
-          "text": "running"
-        }
-      ],
       "vars": [
         [
           "held",
@@ -205,20 +191,6 @@ export const lesson: Lesson = {
         {
           "id": "A",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "holds A"
-        },
-        {
-          "id": "T2",
-          "text": "running"
-        },
-        {
-          "id": "T3",
-          "text": "running"
         }
       ],
       "vars": [
@@ -257,20 +229,6 @@ export const lesson: Lesson = {
         {
           "id": "B",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "holds A"
-        },
-        {
-          "id": "T2",
-          "text": "holds B"
-        },
-        {
-          "id": "T3",
-          "text": "running"
         }
       ],
       "vars": [
@@ -318,20 +276,6 @@ export const lesson: Lesson = {
         {
           "id": "C",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "holds A"
-        },
-        {
-          "id": "T2",
-          "text": "holds B"
-        },
-        {
-          "id": "T3",
-          "text": "holds C"
         }
       ],
       "vars": [
@@ -388,20 +332,6 @@ export const lesson: Lesson = {
         {
           "id": "T1",
           "color": "orange"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "blocked"
-        },
-        {
-          "id": "T2",
-          "text": "holds B"
-        },
-        {
-          "id": "T3",
-          "text": "holds C"
         }
       ],
       "vars": [
@@ -467,20 +397,6 @@ export const lesson: Lesson = {
         {
           "id": "T2",
           "color": "orange"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "blocked"
-        },
-        {
-          "id": "T2",
-          "text": "blocked"
-        },
-        {
-          "id": "T3",
-          "text": "holds C"
         }
       ],
       "vars": [
@@ -557,20 +473,6 @@ export const lesson: Lesson = {
           "color": "red"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "blocked"
-        },
-        {
-          "id": "T2",
-          "text": "blocked"
-        },
-        {
-          "id": "T3",
-          "text": "blocked"
-        }
-      ],
       "vars": [
         [
           "held",
@@ -643,20 +545,6 @@ export const lesson: Lesson = {
         {
           "id": "A",
           "color": "red"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "T1",
-          "text": "blocked"
-        },
-        {
-          "id": "T2",
-          "text": "blocked"
-        },
-        {
-          "id": "T3",
-          "text": "blocked"
         }
       ],
       "vars": [
@@ -815,34 +703,12 @@ export const lesson: Lesson = {
   "width": 420,
   "height": 290,
   "interval": 1300,
-  "caption": "Dining philosophers. Green edge: holds that fork. Red edge: waiting for it.",
+  "caption": "Dining philosophers. Green edge: holds that fork; red edge: waiting for it. Philosophers turn orange when holding one fork, red when waiting, green when eating.",
   "frames": [
     {
       "note": "Five philosophers, five forks. To eat, a philosopher needs both neighbouring forks. Naive rule: pick up the left fork, then the right.",
       "edgeColors": [],
       "nodeColors": [],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "thinking"
-        },
-        {
-          "id": "P1",
-          "text": "thinking"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -865,30 +731,12 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "thinking"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -918,34 +766,20 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -980,6 +814,18 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -990,28 +836,6 @@ export const lesson: Lesson = {
         {
           "id": "F1",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -1051,6 +875,22 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1065,28 +905,6 @@ export const lesson: Lesson = {
         {
           "id": "F2",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -1131,6 +949,26 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1149,28 +987,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -1224,6 +1040,22 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1242,28 +1074,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -1326,6 +1136,18 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1344,28 +1166,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -1437,6 +1237,14 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1455,28 +1263,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -1557,6 +1343,10 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F4",
           "color": "purple"
         },
@@ -1575,28 +1365,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -1704,28 +1472,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "waiting"
         }
       ],
       "vars": [
@@ -1835,28 +1581,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "waiting"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "waiting"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -1872,28 +1596,6 @@ export const lesson: Lesson = {
       "note": "**Fixed:** every philosopher picks up the **lower-numbered** fork first. For P0 that is F0 (its right fork), not F4.",
       "edgeColors": [],
       "nodeColors": [],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "thinking"
-        },
-        {
-          "id": "P1",
-          "text": "thinking"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -1916,30 +1618,12 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "thinking"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -1969,34 +1653,16 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "P1",
           "color": "red"
         },
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "thinking"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -2031,8 +1697,16 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "P1",
           "color": "red"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
         },
         {
           "id": "F0",
@@ -2041,28 +1715,6 @@ export const lesson: Lesson = {
         {
           "id": "F1",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "thinking"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -2102,8 +1754,20 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "P1",
           "color": "red"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
         },
         {
           "id": "F0",
@@ -2116,28 +1780,6 @@ export const lesson: Lesson = {
         {
           "id": "F2",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "thinking"
         }
       ],
       "vars": [
@@ -2182,8 +1824,24 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P0",
+          "color": "orange"
+        },
+        {
           "id": "P1",
           "color": "red"
+        },
+        {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
         },
         {
           "id": "F0",
@@ -2200,28 +1858,6 @@ export const lesson: Lesson = {
         {
           "id": "F3",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "hungry"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -2279,6 +1915,18 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P2",
+          "color": "orange"
+        },
+        {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F0",
           "color": "purple"
         },
@@ -2297,28 +1945,6 @@ export const lesson: Lesson = {
         {
           "id": "F4",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "eating"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "hungry"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -2385,6 +2011,14 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P3",
+          "color": "orange"
+        },
+        {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F0",
           "color": "purple"
         },
@@ -2403,28 +2037,6 @@ export const lesson: Lesson = {
         {
           "id": "F4",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "eating"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "hungry"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -2500,6 +2112,10 @@ export const lesson: Lesson = {
           "color": "red"
         },
         {
+          "id": "P4",
+          "color": "orange"
+        },
+        {
           "id": "F0",
           "color": "purple"
         },
@@ -2518,28 +2134,6 @@ export const lesson: Lesson = {
         {
           "id": "F4",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "eating"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "hungry"
         }
       ],
       "vars": [
@@ -2644,28 +2238,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "eating"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "waiting"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -2746,28 +2318,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "waiting"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -2820,6 +2370,10 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
           "id": "P2",
           "color": "red"
         },
@@ -2846,28 +2400,6 @@ export const lesson: Lesson = {
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "waiting"
         }
       ],
       "vars": [
@@ -2922,6 +2454,10 @@ export const lesson: Lesson = {
       ],
       "nodeColors": [
         {
+          "id": "P1",
+          "color": "orange"
+        },
+        {
           "id": "P2",
           "color": "red"
         },
@@ -2952,28 +2488,6 @@ export const lesson: Lesson = {
         {
           "id": "F4",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "hungry"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "eating"
         }
       ],
       "vars": [
@@ -3069,28 +2583,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "eating"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3160,28 +2652,6 @@ export const lesson: Lesson = {
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "waiting"
-        },
-        {
-          "id": "P4",
-          "text": "done"
         }
       ],
       "vars": [
@@ -3259,28 +2729,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "eating"
-        },
-        {
-          "id": "P4",
-          "text": "done"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3332,28 +2780,6 @@ export const lesson: Lesson = {
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "waiting"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
         }
       ],
       "vars": [
@@ -3413,28 +2839,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "eating"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3468,28 +2872,6 @@ export const lesson: Lesson = {
         {
           "id": "F0",
           "color": "purple"
-        }
-      ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "waiting"
-        },
-        {
-          "id": "P2",
-          "text": "done"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
         }
       ],
       "vars": [
@@ -3531,28 +2913,6 @@ export const lesson: Lesson = {
           "color": "purple"
         }
       ],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "eating"
-        },
-        {
-          "id": "P2",
-          "text": "done"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3568,28 +2928,6 @@ export const lesson: Lesson = {
       "note": "P1 finishes eating and puts both forks down.",
       "edgeColors": [],
       "nodeColors": [],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "done"
-        },
-        {
-          "id": "P2",
-          "text": "done"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3605,28 +2943,6 @@ export const lesson: Lesson = {
       "note": "Everyone ate. With a global fork order a cycle is impossible: each philosopher waits only for a fork numbered higher than the one it holds, and numbers cannot keep increasing all the way around a circle.",
       "edgeColors": [],
       "nodeColors": [],
-      "nodeNotes": [
-        {
-          "id": "P0",
-          "text": "done"
-        },
-        {
-          "id": "P1",
-          "text": "done"
-        },
-        {
-          "id": "P2",
-          "text": "done"
-        },
-        {
-          "id": "P3",
-          "text": "done"
-        },
-        {
-          "id": "P4",
-          "text": "done"
-        }
-      ],
       "vars": [
         [
           "rule",
@@ -3785,7 +3101,7 @@ int main() {
             { lines: '9-11', text: 'The check happens **before** blocking, so a wrong order is reported every time the code runs, even in a single-threaded test, instead of deadlocking once in a thousand runs.' },
             { lines: '13-14', text: 'Remember the level this thread held before (safe to store in the mutex, because only the owner touches it), then record the new, lower level.' },
             { lines: 24, text: 'Each thread has its own "lowest level I currently hold", starting above every real level.' },
-            { lines: 40, text: 'Throws while `actorLock` is held. Stack unwinding destroys `a`, which unlocks `actorLock` and restores the thread\'s level.' },
+            { lines: 39, text: 'Throws while `actorLock` is held. Stack unwinding destroys `a`, which unlocks `actorLock` and restores the thread\'s level.' },
           ],
         },
         {
@@ -3895,7 +3211,7 @@ int main() {
           annotations: [
             { lines: '17-20', text: 'Each process\'s declared maximum and what it holds now. The totals held are (7, 2, 5), so (3, 3, 2) of the (10, 5, 7) instances are free.' },
             { lines: '29-31', text: 'Need = maximum − allocated: what the process may still ask for. P1 needs (1, 2, 2), which fits in (3, 3, 2).' },
-            { lines: '32-37', text: 'If its whole remaining need fits, the process could run to completion and release everything, so add its allocation back to `work`.' },
+            { lines: '33-38', text: 'If its whole remaining need fits, the process could run to completion and release everything, so add its allocation back to `work`.' },
             { lines: 41, text: 'If every process could finish in some order, the state is safe. Any other state is *unsafe*: not necessarily deadlocked yet, but a sequence of requests exists that would deadlock it.' },
           ],
         },
@@ -3977,7 +3293,7 @@ int main() {
           annotations: [
             { lines: '7-12', text: 'A snapshot of who waits for whom. A real detector builds this from lock-owner records, for example a debug mutex wrapper that remembers its owner thread.' },
             { lines: '17-26', text: 'Follow the single outgoing edge until the chain ends (someone who is not blocked) or revisits a thread. Revisiting means a cycle.' },
-            { lines: 37, text: '`physics` is blocked forever too, but it is a victim, not part of the cycle: breaking the cycle will free it.' },
+            { lines: '37-38', text: '`physics` is blocked forever too, but it is a victim, not part of the cycle: breaking the cycle will free it.' },
           ],
         },
         {
@@ -4039,12 +3355,12 @@ int main() {
           annotations: [
             { lines: 4, text: '`try_to_lock` attempts the lock without blocking. If the other thread holds it, `b` simply does not own it.' },
             { lines: 9, text: 'Releasing what we hold removes hold-and-wait: no deadlock is possible.' },
-            { lines: 10, text: 'Without this line, two threads running the mirror-image transfer can collide on every retry. A **random** delay desynchronizes them, which is the same trick Ethernet uses after a collision. Better still: use `std::scoped_lock{from.m, to.m}`, which does this dance for you.' },
+            { lines: 10, text: 'Without this line, two threads running the mirror-image transfer can collide on every retry. A **random** delay desynchronizes them, which is the same trick Ethernet uses after a collision. Better still: use `std::scoped_lock lock{from.m, to.m};`, which does this dance for you.' },
           ],
         },
         {
           type: 'p',
-          text: '**[[starvation|Starvation]]** is the milder cousin: the system as a whole makes progress, but one thread never gets what it needs. Examples you have seen: an unfair spinlock that the same thread keeps winning, a reader-preferring readers–writer lock where a steady stream of readers keeps a writer out forever (next lesson), and a low-priority thread that never runs because higher-priority threads are always ready. Fair queuing (ticket locks, FIFO wait queues) and aging (raising the priority of threads that have waited long) are the standard cures; the scheduling unit\'s MLFQ priority boost is aging.',
+          text: '**[[starvation|Starvation]]** is the milder cousin: the system as a whole makes progress, but one thread never gets what it needs. Examples: an unfair spinlock that the same thread keeps winning, a reader-preferring readers–writer lock where a steady stream of readers keeps a writer out forever (next lesson), and a low-priority thread that never runs because higher-priority threads are always ready. Fair queuing (ticket locks, FIFO wait queues) and aging (raising the priority of threads that have waited long) are the standard cures; the scheduling unit\'s MLFQ priority boost is aging.',
         },
         {
           type: 'table',
@@ -4099,7 +3415,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "vars": [
@@ -4113,7 +3428,6 @@ int main() {
       "note": "t = 0: L runs.",
       "array": [
         "L",
-        "·",
         "·",
         "·",
         "·",
@@ -4158,7 +3472,6 @@ int main() {
       "array": [
         "L",
         "L*",
-        "·",
         "·",
         "·",
         "·",
@@ -4215,7 +3528,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -4260,7 +3572,6 @@ int main() {
         "L*",
         "H",
         "M",
-        "·",
         "·",
         "·",
         "·",
@@ -4323,7 +3634,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -4378,7 +3688,6 @@ int main() {
         "M",
         "M",
         "M",
-        "·",
         "·",
         "·",
         "·",
@@ -4447,7 +3756,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -4512,7 +3820,6 @@ int main() {
         "M",
         "M",
         "L*",
-        "·",
         "·",
         "·",
         "·",
@@ -4585,7 +3892,6 @@ int main() {
         "M",
         "L*",
         "L*",
-        "·",
         "·",
         "·",
         "·"
@@ -4662,7 +3968,6 @@ int main() {
         "L*",
         "L*",
         "H*",
-        "·",
         "·",
         "·"
       ],
@@ -4743,7 +4048,6 @@ int main() {
         "L*",
         "H*",
         "H",
-        "·",
         "·"
       ],
       "marks": [
@@ -4827,8 +4131,7 @@ int main() {
         "L*",
         "H*",
         "H",
-        "L",
-        "·"
+        "L"
       ],
       "marks": [
         {
@@ -4915,8 +4218,7 @@ int main() {
         "L*",
         "H*",
         "H",
-        "L",
-        "·"
+        "L"
       ],
       "marks": [
         {
@@ -5001,7 +4303,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "vars": [
@@ -5015,7 +4316,6 @@ int main() {
       "note": "t = 0: L runs.",
       "array": [
         "L",
-        "·",
         "·",
         "·",
         "·",
@@ -5060,7 +4360,6 @@ int main() {
       "array": [
         "L",
         "L*",
-        "·",
         "·",
         "·",
         "·",
@@ -5117,7 +4416,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -5162,7 +4460,6 @@ int main() {
         "L*",
         "H",
         "L*",
-        "·",
         "·",
         "·",
         "·",
@@ -5225,7 +4522,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -5280,7 +4576,6 @@ int main() {
         "L*",
         "L*",
         "H*",
-        "·",
         "·",
         "·",
         "·",
@@ -5349,7 +4644,6 @@ int main() {
         "·",
         "·",
         "·",
-        "·",
         "·"
       ],
       "marks": [
@@ -5414,7 +4708,6 @@ int main() {
         "H*",
         "H",
         "M",
-        "·",
         "·",
         "·",
         "·",
@@ -5487,7 +4780,6 @@ int main() {
         "H",
         "M",
         "M",
-        "·",
         "·",
         "·",
         "·"
@@ -5564,7 +4856,6 @@ int main() {
         "M",
         "M",
         "M",
-        "·",
         "·",
         "·"
       ],
@@ -5645,7 +4936,6 @@ int main() {
         "M",
         "M",
         "M",
-        "·",
         "·"
       ],
       "marks": [
@@ -5729,8 +5019,7 @@ int main() {
         "M",
         "M",
         "M",
-        "L",
-        "·"
+        "L"
       ],
       "marks": [
         {
@@ -5817,8 +5106,7 @@ int main() {
         "M",
         "M",
         "M",
-        "L",
-        "·"
+        "L"
       ],
       "marks": [
         {

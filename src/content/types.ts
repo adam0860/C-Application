@@ -135,6 +135,8 @@ export interface AlgoFrame {
   /** graph view: hide these nodes in this frame (tree growing as you insert). */
   hidden?: string[];
   edgeColors?: { from: string; to: string; color: GraphColor }[];
+  /** graph view: hide these edges in this frame (edges that don't exist yet). */
+  hiddenEdges?: { from: string; to: string }[];
   /** Highlighted lines of `code` (1-based). */
   lines?: number[];
   /** Small key–value readouts for the frame, e.g. [["comparisons", "7"], ["queue", "B, D"]]. */

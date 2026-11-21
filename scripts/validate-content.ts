@@ -181,6 +181,10 @@ function checkAlgo(where: string, a: AlgoBlock) {
         if (!(a.edges ?? []).some((x) => (x.from === e.from && x.to === e.to) || (!x.directed && x.from === e.to && x.to === e.from)))
           err(w, `edgeColors ${e.from}→${e.to} is not an edge`);
       });
+      f.hiddenEdges?.forEach((e) => {
+        if (!(a.edges ?? []).some((x) => (x.from === e.from && x.to === e.to) || (!x.directed && x.from === e.to && x.to === e.from)))
+          err(w, `hiddenEdges ${e.from}→${e.to} is not an edge`);
+      });
       if (f.array || f.marks || f.pointers) err(w, 'array fields in a graph view');
     }
   });

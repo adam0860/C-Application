@@ -86,10 +86,6 @@ export const lesson: Lesson = {
         [
           "increments done",
           "0"
-        ],
-        [
-          "counter should be",
-          "0"
         ]
       ]
     },
@@ -130,10 +126,6 @@ export const lesson: Lesson = {
         ],
         [
           "increments done",
-          "0"
-        ],
-        [
-          "counter should be",
           "0"
         ]
       ],
@@ -179,10 +171,6 @@ export const lesson: Lesson = {
         [
           "increments done",
           "0"
-        ],
-        [
-          "counter should be",
-          "0"
         ]
       ],
       "lines": [
@@ -226,10 +214,6 @@ export const lesson: Lesson = {
         ],
         [
           "increments done",
-          "0"
-        ],
-        [
-          "counter should be",
           "0"
         ],
         [
@@ -278,10 +262,6 @@ export const lesson: Lesson = {
           "0"
         ],
         [
-          "counter should be",
-          "0"
-        ],
-        [
           "T1 TCB",
           "eax = 1 (saved)"
         ]
@@ -327,10 +307,6 @@ export const lesson: Lesson = {
         ],
         [
           "increments done",
-          "0"
-        ],
-        [
-          "counter should be",
           "0"
         ],
         [
@@ -386,10 +362,6 @@ export const lesson: Lesson = {
           "1"
         ],
         [
-          "counter should be",
-          "1"
-        ],
-        [
           "T1 TCB",
           "eax = 1 (saved)"
         ]
@@ -436,10 +408,6 @@ export const lesson: Lesson = {
         [
           "increments done",
           "1"
-        ],
-        [
-          "counter should be",
-          "1"
         ]
       ]
     },
@@ -484,10 +452,6 @@ export const lesson: Lesson = {
         ],
         [
           "increments done",
-          "2"
-        ],
-        [
-          "counter should be",
           "2"
         ]
       ],
@@ -1261,7 +1225,7 @@ int main() {
             { lines: '10-12', text: '**Test-and-test-and-set**: while the lock is busy, only *read* the flag (`test`, C++20). Reads are served from this core\'s cache. Retrying `test_and_set` in a tight loop would write the line on every attempt, bouncing it between cores and slowing down the owner too.' },
             { lines: 16, text: '`clear` with `release` ordering publishes everything written inside the critical section before the lock appears free.' },
             { lines: 19, text: 'Since C++20 a default-constructed `atomic_flag` is clear; before that you needed `ATOMIC_FLAG_INIT`.' },
-            { lines: '22-23', text: '`Spinlock` has `lock` and `unlock`, so it satisfies the *BasicLockable* requirements and works with `std::lock_guard` too.' },
+            { lines: 6, text: '`Spinlock` has `lock` and `unlock`, so it satisfies the *BasicLockable* requirements and works with `std::lock_guard` too.' },
           ],
         },
         {

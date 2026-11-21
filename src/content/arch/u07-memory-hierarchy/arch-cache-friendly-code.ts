@@ -2653,7 +2653,7 @@ int main() {
             { lines: '29-35', text: '28 hot bytes, then 104 cold bytes. `spawnTime` needs 8-byte alignment, so 4 padding bytes come before it: 136 bytes in total.' },
             { lines: '37-41', text: 'The hot part with a 4-byte index to its cold data: exactly 32 bytes, two monsters per line.' },
             { lines: '51-59', text: 'An update that reads the 28 hot bytes of each monster, `stride` bytes apart.' },
-            { lines: '68-71', text: '13,750 misses mixed (some hot regions straddle two lines) vs 5,000 split: 2.75× fewer, and the cache now holds four times as many monsters\' hot data.' },
+            { lines: '68-71', text: '13,750 misses mixed (some hot regions straddle two lines) vs 5,000 split: 2.75× fewer, and the same cache now holds the hot data of 2.75 times as many monsters.' },
           ],
         },
         {

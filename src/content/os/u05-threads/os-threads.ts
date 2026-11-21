@@ -276,13 +276,13 @@ $ ls /proc/14741/task
   "view": "array",
   "code": "void fiber() {\n  print(\"fiber: load chunk A\");\n  swapcontext(&fiberCtx, &mainCtx);\n  print(\"fiber: load chunk B\");\n  swapcontext(&fiberCtx, &mainCtx);\n  print(\"fiber: done\");\n}   // returns to uc_link (mainCtx)\n\nint main() {\n  makecontext(&fiberCtx, fiber, 0);\n  for (int f = 1; f <= 3; ++f) {\n    print(\"main: frame\", f);\n    swapcontext(&mainCtx, &fiberCtx);\n  }\n}",
   "interval": 1300,
-  "caption": "Two execution contexts, one thread: `swapcontext` saves one set of registers and loads the other.",
+  "caption": "Two execution contexts, one thread. Each cell is one stack: runs, saved (registers parked in its context), new or done. `swapcontext` saves one register set and loads the other.",
   "frames": [
     {
       "note": "`makecontext` points `fiberCtx` at `fiber()` and at its own 64 KiB stack. Nothing runs on it yet.",
       "array": [
-        "running",
-        "not started"
+        "runs",
+        "new"
       ],
       "marks": [
         {
@@ -293,12 +293,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -327,8 +327,8 @@ $ ls /proc/14741/task
     {
       "note": "Main prints frame 1. Only one thread exists; it is running on the main stack.",
       "array": [
-        "running",
-        "not started"
+        "runs",
+        "new"
       ],
       "marks": [
         {
@@ -339,12 +339,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -374,7 +374,7 @@ $ ls /proc/14741/task
       "note": "`swapcontext` stores main's registers in `mainCtx`, loads `fiberCtx` and jumps. Same thread, different stack: no kernel scheduler involved.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -385,12 +385,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -420,7 +420,7 @@ $ ls /proc/14741/task
       "note": "The fiber runs its first chunk of work on its own stack.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -431,12 +431,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -465,7 +465,7 @@ $ ls /proc/14741/task
     {
       "note": "The fiber **yields**: its registers go into `fiberCtx`, main's come back. Main continues after its `swapcontext` call.",
       "array": [
-        "running",
+        "runs",
         "saved"
       ],
       "marks": [
@@ -477,12 +477,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -511,7 +511,7 @@ $ ls /proc/14741/task
     {
       "note": "Main prints frame 2. Only one thread exists; it is running on the main stack.",
       "array": [
-        "running",
+        "runs",
         "saved"
       ],
       "marks": [
@@ -523,12 +523,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -558,7 +558,7 @@ $ ls /proc/14741/task
       "note": "Main resumes the fiber. It continues exactly where it stopped, with its locals intact on its stack.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -569,12 +569,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -604,7 +604,7 @@ $ ls /proc/14741/task
       "note": "Second chunk of work.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -615,12 +615,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -649,7 +649,7 @@ $ ls /proc/14741/task
     {
       "note": "Yield again. A fiber switches only when it **chooses** to: cooperative scheduling.",
       "array": [
-        "running",
+        "runs",
         "saved"
       ],
       "marks": [
@@ -661,12 +661,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -695,7 +695,7 @@ $ ls /proc/14741/task
     {
       "note": "Main prints frame 3. Only one thread exists; it is running on the main stack.",
       "array": [
-        "running",
+        "runs",
         "saved"
       ],
       "marks": [
@@ -707,12 +707,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -742,7 +742,7 @@ $ ls /proc/14741/task
       "note": "Third resume.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -753,12 +753,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -788,7 +788,7 @@ $ ls /proc/14741/task
       "note": "The fiber prints its last line and returns from `fiber()`.",
       "array": [
         "saved",
-        "running"
+        "runs"
       ],
       "marks": [
         {
@@ -799,12 +799,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],
@@ -833,8 +833,8 @@ $ ls /proc/14741/task
     {
       "note": "Returning from a context's function jumps to its `uc_link`, so control lands back in main. The program prints \"main: fiber finished\".",
       "array": [
-        "running",
-        "finished"
+        "runs",
+        "done"
       ],
       "marks": [
         {
@@ -849,12 +849,12 @@ $ ls /proc/14741/task
       "pointers": [
         {
           "index": 0,
-          "label": "main stack",
+          "label": "main",
           "color": "blue"
         },
         {
           "index": 1,
-          "label": "fiber stack",
+          "label": "fiber",
           "color": "purple"
         }
       ],

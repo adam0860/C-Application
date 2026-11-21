@@ -722,48 +722,48 @@ PageAddr split(std::uint64_t va) {
   "type": "algo",
   "view": "graph",
   "width": 430,
-  "height": 230,
+  "height": 260,
   "nodes": [
     {
       "id": "VA",
-      "x": 40,
-      "y": 60,
+      "x": 36,
+      "y": 110,
       "label": "VA"
     },
     {
       "id": "TLB",
-      "x": 40,
-      "y": 170,
+      "x": 36,
+      "y": 215,
       "label": "TLB"
     },
     {
       "id": "CR3",
-      "x": 130,
-      "y": 60,
+      "x": 120,
+      "y": 110,
       "label": "CR3"
     },
     {
       "id": "PD",
-      "x": 220,
-      "y": 60,
+      "x": 205,
+      "y": 110,
       "label": "PD"
     },
     {
       "id": "PT",
-      "x": 310,
-      "y": 60,
+      "x": 295,
+      "y": 110,
       "label": "PT"
     },
     {
       "id": "PG",
-      "x": 390,
-      "y": 60,
+      "x": 388,
+      "y": 110,
       "label": "page"
     },
     {
       "id": "K",
-      "x": 260,
-      "y": 170,
+      "x": 250,
+      "y": 30,
       "label": "OS"
     }
   ],
@@ -794,11 +794,6 @@ PageAddr split(std::uint64_t va) {
       "directed": true
     },
     {
-      "from": "TLB",
-      "to": "PG",
-      "directed": true
-    },
-    {
       "from": "PD",
       "to": "K",
       "directed": true
@@ -820,12 +815,7 @@ PageAddr split(std::uint64_t va) {
         }
       ],
       "edgeColors": [],
-      "nodeNotes": [
-        {
-          "id": "VA",
-          "text": "0x00403abc"
-        }
-      ]
+      "nodeNotes": []
     },
     {
       "note": "Split it: directory index 1, table index 3, offset 0xabc. First check the TLB: no entry for virtual page 0x403, a **TLB miss**.",
@@ -847,10 +837,6 @@ PageAddr split(std::uint64_t va) {
         }
       ],
       "nodeNotes": [
-        {
-          "id": "VA",
-          "text": "dir 1, tbl 3"
-        },
         {
           "id": "TLB",
           "text": "miss"
@@ -986,18 +972,9 @@ PageAddr split(std::uint64_t va) {
           "from": "VA",
           "to": "TLB",
           "color": "green"
-        },
-        {
-          "from": "TLB",
-          "to": "PG",
-          "color": "green"
         }
       ],
       "nodeNotes": [
-        {
-          "id": "VA",
-          "text": "0x00403f00"
-        },
         {
           "id": "TLB",
           "text": "hit"
@@ -1038,10 +1015,6 @@ PageAddr split(std::uint64_t va) {
       ],
       "nodeNotes": [
         {
-          "id": "VA",
-          "text": "dir 32, tbl 1"
-        },
-        {
           "id": "TLB",
           "text": "miss"
         }
@@ -1075,10 +1048,6 @@ PageAddr split(std::uint64_t va) {
         {
           "id": "PD",
           "text": "PDE[32]: not present"
-        },
-        {
-          "id": "K",
-          "text": "page fault"
         }
       ]
     },
@@ -1102,10 +1071,6 @@ PageAddr split(std::uint64_t va) {
         }
       ],
       "nodeNotes": [
-        {
-          "id": "K",
-          "text": "alloc PT + frame"
-        },
         {
           "id": "PT",
           "text": "PTE[1] → 0x3F0"

@@ -84,7 +84,7 @@ export const glossary: GlossaryEntry[] = [
     course: 'arch',
     category: 'Performance',
     short: 'A register in the CPU\'s performance monitoring unit that counts microarchitectural events (cycles, retired instructions, cache misses, branch mispredictions) as they happen.',
-    long: 'Tools such as `perf stat`, VTune and Superluminal program and read these counters. Ratios built from them explain slowness: IPC (instructions / cycles), misses per thousand instructions, branch-miss rate. Event names and exact meanings vary between CPU vendors and generations, so compare runs on the same machine.',
+    long: 'Tools such as `perf stat`, VTune and AMD uProf program and read these counters. Ratios built from them explain slowness: IPC (instructions / cycles), misses per thousand instructions, branch-miss rate. Event names and exact meanings vary between CPU vendors and generations, so compare runs on the same machine.',
     example: `perf stat -e cycles,instructions,cache-misses,branch-misses ./game`,
     exampleLang: 'shell',
     see: ['iron-law-of-performance', 'sampling-profiler'],

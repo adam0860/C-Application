@@ -167,7 +167,7 @@ export const lesson: Lesson = {
           type: 'callout',
           variant: 'warning',
           title: 'Two catches',
-          text: '**Starvation:** if short jobs keep arriving, a long job may never run. **The oracle:** both policies need to know how long each job will run. A real kernel has no idea whether a new thread is about to compute for an hour or exit after a millisecond. Assumption 5 is the hardest one to drop, and the next lesson is about how real schedulers fake it.',
+          text: '**[[starvation|Starvation]]:** if short jobs keep arriving, a long job may never run. **The oracle:** both policies need to know how long each job will run. A real kernel has no idea whether a new thread is about to compute for an hour or exit after a millisecond. Assumption 5 is the hardest one to drop, and the next lesson is about how real schedulers fake it.',
         },
       ],
     },

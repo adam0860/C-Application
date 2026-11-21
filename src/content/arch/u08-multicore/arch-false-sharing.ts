@@ -804,7 +804,7 @@ for (std::size_t i = begin; i < end; ++i) {
         {
           text: 'Thread t writes the contiguous range `[t * 250000, (t + 1) * 250000)`',
           correct: true,
-          why: 'Each thread owns 250,000 consecutive floats. At most the three lines at the range boundaries could be touched by two threads, and here even they are not, because 250,000 × 4 bytes is a multiple of 64.',
+          why: 'Each thread owns 250,000 consecutive floats. At most the three lines at the range boundaries could be touched by two threads, and if the buffer starts on a line boundary, not even those are, because 250,000 × 4 bytes is a multiple of 64.',
         },
         {
           text: 'Each thread writes one element at a time, chosen from a shared atomic index with `fetch_add(1)`',

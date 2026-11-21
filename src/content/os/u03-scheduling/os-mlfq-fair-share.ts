@@ -1446,9 +1446,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1481,9 +1481,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1516,9 +1516,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1551,9 +1551,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1586,9 +1586,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1621,9 +1621,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1656,9 +1656,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1691,9 +1691,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1726,9 +1726,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1761,9 +1761,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1796,9 +1796,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -1831,9 +1831,9 @@ int main() {
         }
       ],
       "lines": [
+        1,
         2,
-        3,
-        4
+        3
       ],
       "vars": [
         [
@@ -2414,7 +2414,7 @@ int main() {
       ]
     }
   ],
-  "caption": "EEVDF with two equal-weight tasks. V is the average vruntime; a task is eligible when it has not run ahead of it. Orange cells are A, blue cells are B."
+  "caption": "EEVDF with two equal-weight tasks. V is the average vruntime; a task is eligible when it has not run ahead of it. The slice just run is orange for A and blue for B."
 },
         {
           type: 'p',

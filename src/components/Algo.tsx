@@ -109,6 +109,7 @@ function GraphView({ a, frame }: { a: AlgoBlock; frame: AlgoFrame }) {
         const p = byId.get(e.from);
         const q = byId.get(e.to);
         if (!p || !q || hidden.has(e.from) || hidden.has(e.to)) return null;
+        if (frame.hiddenEdges?.some((h) => (h.from === e.from && h.to === e.to) || (!e.directed && h.from === e.to && h.to === e.from))) return null;
         const dx = q.x - p.x, dy = q.y - p.y;
         const L = Math.hypot(dx, dy) || 1;
         const ux = dx / L, uy = dy / L;

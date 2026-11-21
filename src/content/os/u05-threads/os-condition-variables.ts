@@ -43,7 +43,7 @@ void gameThread() {
     startLevel();
 }`,
           annotations: [
-            { lines: 2, text: 'An atomic, so there is no data race; the last unit\'s broken plain `bool` is fixed.' },
+            { lines: 1, text: 'An atomic, so there is no data race (unlike the plain `bool` lock in the previous lesson).' },
             { lines: '9-11', text: 'Correct, but loading may take seconds, and this loop keeps a core at 100% the whole time, competing with the very thread it is waiting for. On a laptop it also drains the battery.' },
           ],
         },
@@ -1207,7 +1207,7 @@ int main() {
             { lines: 29, text: 'Woke up with nothing to take: the buffer must be closed and drained. Returning an empty optional ends the consumer\'s loop.' },
             { lines: 32, text: 'We just freed a slot. `notify_one` is enough: one free slot can help at most one producer.' },
             { lines: 39, text: 'Closing changes the condition for **every** consumer, so wake them all. `notify_one` here would leave the other consumer asleep forever.' },
-            { lines: '68-70', text: 'Each consumer writes only its own element of `sums` and `counts`; `main` reads them after the `jthread`s have joined at the end of the block.' },
+            { lines: '55-60', text: 'Each consumer writes only its own element of `sums` and `counts`; `main` reads them after the `jthread`s have joined at the end of the block.' },
           ],
         },
         {
@@ -1413,7 +1413,7 @@ int main() {
             { lines: 13, text: 'Sleep while there are no permits. The predicate overload hides the `while` loop, but it is still there.' },
             { lines: 14, text: 'Take a permit while still holding the lock, so two threads can never take the last permit twice.' },
             { lines: '17-21', text: 'Return a permit under the lock, then wake one sleeper. One permit can satisfy at most one waiter, so `notify_one` is right.' },
-            { lines: 36, text: '`peak` records the largest number of threads ever inside at once. Six threads compete, but the semaphore never lets more than two in.' },
+            { lines: 37, text: '`peak` records the largest number of threads ever inside at once. Six threads compete, but the semaphore never lets more than two in.' },
           ],
         },
         {

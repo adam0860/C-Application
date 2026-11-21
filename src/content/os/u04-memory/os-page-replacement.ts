@@ -938,7 +938,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: 'Demand paging works for files too. `mmap` with a file descriptor ([[memory-mapped-file|memory-mapped file]]) makes a region of your address space *be* the file: reading the memory reads the file, page by page through faults, and the pages come from the kernel\'s **page cache**, the same cache `read()` uses, without copying them into a buffer of yours.',
+          text: 'Demand paging works for files too. `mmap` with a file descriptor ([[memory-mapped-file|memory-mapped file]]) makes a region of your address space *be* the file: reading the memory reads the file, page by page through faults, and the pages come from the kernel\'s **[[page-cache]]**, the same cache `read()` uses, without copying them into a buffer of yours.',
         },
         {
           type: 'code',
@@ -1007,7 +1007,7 @@ int main() {
           type: 'callout',
           variant: 'unreal',
           title: 'Pak files and streaming',
-          text: 'Engines pack assets into large archive files (Unreal\'s `.pak` and IoStore containers). Mapping an archive is attractive for read-only lookups, but a game cannot afford a surprise major fault on the game thread, so modern streaming uses explicit asynchronous reads instead (and DirectStorage on Windows), keeping control of when I/O happens. The Storage unit covers asynchronous I/O. On Windows, `CreateFileMapping` plus `MapViewOfFile` is the equivalent of `mmap`.',
+          text: 'Engines pack assets into large archive files ([[pak-file|pak files]]; Unreal also has IoStore containers). Mapping an archive is attractive for read-only lookups, but a game cannot afford a surprise major fault on the game thread, so modern streaming uses explicit asynchronous reads instead (and DirectStorage on Windows), keeping control of when I/O happens. The Storage unit covers asynchronous I/O. On Windows, `CreateFileMapping` plus `MapViewOfFile` is the equivalent of `mmap`.',
         },
       ],
     },
