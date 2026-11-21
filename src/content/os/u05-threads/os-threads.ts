@@ -274,12 +274,12 @@ $ ls /proc/14741/task
         {
   "type": "algo",
   "view": "array",
-  "code": "void fiberBody() {\n    print(\"fiber: load chunk A\");\n    swapcontext(&fiberCtx, &mainCtx);\n    print(\"fiber: load chunk B\");\n    swapcontext(&fiberCtx, &mainCtx);\n    print(\"fiber: done\");\n}   // returns to uc_link (mainCtx)\n\nint main() {\n    makecontext(&fiberCtx, fiberBody, 0);\n    for (int frame = 1; frame <= 3; ++frame) {\n        print(\"main: frame\", frame);\n        swapcontext(&mainCtx, &fiberCtx);\n    }\n}",
+  "code": "void fiber() {\n  print(\"fiber: load chunk A\");\n  swapcontext(&fiberCtx, &mainCtx);\n  print(\"fiber: load chunk B\");\n  swapcontext(&fiberCtx, &mainCtx);\n  print(\"fiber: done\");\n}   // returns to uc_link (mainCtx)\n\nint main() {\n  makecontext(&fiberCtx, fiber, 0);\n  for (int f = 1; f <= 3; ++f) {\n    print(\"main: frame\", f);\n    swapcontext(&mainCtx, &fiberCtx);\n  }\n}",
   "interval": 1300,
   "caption": "Two execution contexts, one thread: `swapcontext` saves one set of registers and loads the other.",
   "frames": [
     {
-      "note": "`makecontext` points `fiberCtx` at `fiberBody` and at its own 64 KiB stack. Nothing runs on it yet.",
+      "note": "`makecontext` points `fiberCtx` at `fiber()` and at its own 64 KiB stack. Nothing runs on it yet.",
       "array": [
         "running",
         "not started"
@@ -785,7 +785,7 @@ $ ls /proc/14741/task
       ]
     },
     {
-      "note": "The fiber prints its last line and returns from `fiberBody`.",
+      "note": "The fiber prints its last line and returns from `fiber()`.",
       "array": [
         "saved",
         "running"

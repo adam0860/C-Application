@@ -207,7 +207,7 @@ Job takeJob() {
         {
   "type": "algo",
   "view": "array",
-  "code": "void put(T item) {\n    std::unique_lock lock{m_};\n    while (count == N)\n        notFull_.wait(lock);\n    buf[in] = item; in = (in + 1) % N; ++count;\n    notEmpty_.notify_one();\n}\nT get() {\n    std::unique_lock lock{m_};\n    while (count == 0)\n        notEmpty_.wait(lock);\n    T item = buf[out]; out = (out + 1) % N; --count;\n    notFull_.notify_one();\n    return item;\n}",
+  "code": "void put(T item) {\n  std::unique_lock lk{m};\n  while (count == N)\n    notFull.wait(lk);\n  buf[in] = item;\n  in = (in + 1) % N; ++count;\n  notEmpty.notify_one();\n}\nT get() {\n  std::unique_lock lk{m};\n  while (count == 0)\n    notEmpty.wait(lk);\n  T item = buf[out];\n  out = (out + 1) % N; --count;\n  notFull.notify_one();\n  return item;\n}",
   "interval": 1500,
   "caption": "A bounded buffer with one mutex and two condition variables. Blue = holds an item.",
   "frames": [
@@ -280,8 +280,8 @@ Job takeJob() {
         }
       ],
       "lines": [
-        10,
-        11
+        11,
+        12
       ],
       "vars": [
         [
@@ -341,7 +341,8 @@ Job takeJob() {
       ],
       "lines": [
         5,
-        6
+        6,
+        7
       ],
       "vars": [
         [
@@ -396,7 +397,7 @@ Job takeJob() {
         }
       ],
       "lines": [
-        10
+        11
       ],
       "vars": [
         [
@@ -451,8 +452,9 @@ Job takeJob() {
         }
       ],
       "lines": [
-        12,
-        13
+        13,
+        14,
+        15
       ],
       "vars": [
         [
@@ -512,7 +514,8 @@ Job takeJob() {
       ],
       "lines": [
         5,
-        6
+        6,
+        7
       ],
       "vars": [
         [
@@ -576,7 +579,8 @@ Job takeJob() {
       ],
       "lines": [
         5,
-        6
+        6,
+        7
       ],
       "vars": [
         [
@@ -644,7 +648,8 @@ Job takeJob() {
       ],
       "lines": [
         5,
-        6
+        6,
+        7
       ],
       "vars": [
         [
@@ -771,8 +776,9 @@ Job takeJob() {
         }
       ],
       "lines": [
-        12,
-        13
+        13,
+        14,
+        15
       ],
       "vars": [
         [
@@ -899,7 +905,8 @@ Job takeJob() {
       ],
       "lines": [
         5,
-        6
+        6,
+        7
       ],
       "vars": [
         [
@@ -962,8 +969,9 @@ Job takeJob() {
         }
       ],
       "lines": [
-        12,
-        13
+        13,
+        14,
+        15
       ],
       "vars": [
         [
@@ -1022,8 +1030,9 @@ Job takeJob() {
         }
       ],
       "lines": [
-        12,
-        13
+        13,
+        14,
+        15
       ],
       "vars": [
         [
@@ -1078,8 +1087,9 @@ Job takeJob() {
         }
       ],
       "lines": [
-        12,
-        13
+        13,
+        14,
+        15
       ],
       "vars": [
         [

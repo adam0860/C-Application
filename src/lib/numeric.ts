@@ -7,6 +7,8 @@
 export function parseNumber(input: string | number): number {
   if (typeof input === 'number') return input;
   let s = input.trim().replace(/[_'\s]/g, '').replace(/−/g, '-');
+  // Thousands separators: "16,777,217" is one number.
+  if (/^[-+]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s = s.replace(/,/g, '');
   if (!s) return NaN;
   let sign = 1;
   if (s[0] === '-' || s[0] === '+') {

@@ -526,7 +526,7 @@ function Numeric({ q, revealed, onReady, ref }: QProps<NumericQuestion>) {
       )}
       {!revealed && (
         <div className="fill-help">
-          {q.tolerance ? 'Type a number (decimals are fine).' : 'Type the exact value.'} Hex (0x1F), binary (0b101), fractions (3/8) and 1.5e9 all work.
+          {q.tolerance ? 'Type a number (decimals are fine).' : 'Type the exact value.'} Hex (0x1F), binary (0b101), fractions (3/8), 1.5e9 and 1,000,000 all work.
         </div>
       )}
     </div>

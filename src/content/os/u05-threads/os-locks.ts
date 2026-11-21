@@ -49,7 +49,7 @@ export const lesson: Lesson = {
         {
   "type": "algo",
   "view": "array",
-  "code": "mov eax, DWORD PTR counter[rip]   ; load\nadd eax, 1                         ; modify\nmov DWORD PTR counter[rip], eax    ; store",
+  "code": "mov eax, [counter]   ; load\nadd eax, 1          ; modify\nmov [counter], eax  ; store",
   "interval": 1400,
   "caption": "`++counter` compiled without optimization is three instructions. A context switch between them loses an update.",
   "frames": [
@@ -688,9 +688,9 @@ void unlock() { busy = false; }`,
   ],
   "width": 440,
   "height": 260,
-  "code": "std::atomic_flag locked;      // clear = free\n\nvoid worker() {\n    while (locked.test_and_set(std::memory_order_acquire)) {\n        // spin: someone else holds it\n    }\n    ++counter;                    // critical section\n    locked.clear(std::memory_order_release);\n}",
+  "code": "std::atomic_flag locked; // clear=free\n\nvoid worker() {\n  while (locked.test_and_set(acq))\n    ;  // spin: someone holds it\n  ++counter;  // critical section\n  locked.clear(rel);\n}",
   "interval": 1300,
-  "caption": "A test-and-set spinlock. Green = holds the lock, orange = acting, red flag = locked.",
+  "caption": "A test-and-set spinlock (`acq`/`rel` are short for `std::memory_order_acquire`/`release`). Green = holds the lock, orange = acting, red flag = locked.",
   "frames": [
     {
       "note": "The lock is free (`flag` clear). Both threads, on different cores, want the critical section.",
@@ -865,7 +865,7 @@ void unlock() { busy = false; }`,
     {
       "note": "T1 runs the critical section while T2 burns its core retrying.",
       "lines": [
-        7
+        6
       ],
       "nodeLabels": [
         {
@@ -993,7 +993,7 @@ void unlock() { busy = false; }`,
     {
       "note": "T1 calls `clear` (a release store). The lock is free again.",
       "lines": [
-        8
+        7
       ],
       "nodeLabels": [
         {
@@ -1101,7 +1101,7 @@ void unlock() { busy = false; }`,
     {
       "note": "T2 increments. Exactly one thread was ever inside the critical section.",
       "lines": [
-        7
+        6
       ],
       "nodeLabels": [
         {
@@ -1163,7 +1163,7 @@ void unlock() { busy = false; }`,
     {
       "note": "T2 releases. Two increments, `counter` = 2. T2 spun 2 times while waiting.",
       "lines": [
-        8
+        7
       ],
       "nodeLabels": [
         {
