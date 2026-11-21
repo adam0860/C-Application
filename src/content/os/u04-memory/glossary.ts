@@ -107,6 +107,16 @@ export const glossary: GlossaryEntry[] = [
     ],
   },
   {
+    id: 'copy-on-write',
+    term: 'Copy-on-Write (COW)',
+    aliases: ['COW', 'copy on write', 'MAP_PRIVATE'],
+    course: 'os',
+    category: 'Memory',
+    short: 'Sharing a page between address spaces read-only and copying it only when one of them writes to it. It is what makes `fork` cheap and `MAP_PRIVATE` file mappings private.',
+    long: 'After `fork`, parent and child point at the same physical frames, with every writable page marked read-only in both page tables. The first write by either process causes a [[page-fault]]; the kernel sees the page is copy-on-write, copies the frame, maps the copy writable for the writer, and restarts the instruction. Pages that are never written are never copied, so forking a process with gigabytes of memory takes microseconds, and `fork` followed by `exec` copies almost nothing.',
+    see: ['page-fault', 'address-space', 'demand-paging'],
+  },
+  {
     id: 'demand-paging',
     term: 'Demand Paging',
     aliases: ['lazy allocation', 'lazy loading', 'first touch'],
