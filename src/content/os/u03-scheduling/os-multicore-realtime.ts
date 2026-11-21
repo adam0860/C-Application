@@ -464,7 +464,7 @@ int main() {
         },
         {
           type: 'p',
-          text: 'Under RMS, T1 always wins. In the first 7 time units T1 takes 4 of them (its jobs at 0 and 5), leaving only 3 for T2\'s 4-unit job, so T2 misses at t = 7. EDF instead lets T2 finish at t = 5 because its deadline (7) is earlier than T1\'s new one (10):',
+          text: 'Under RMS, T1 always wins. In the first 7 time units T1 takes 4 of them (its jobs at 0 and 5), leaving only 3 for T2\'s 4-unit job, so T2 misses at t = 7. EDF instead lets T2 keep the CPU at t = 5 and finish at t = 6, because its deadline (7) is earlier than T1\'s new one (10):',
         },
         {
   "type": "algo",

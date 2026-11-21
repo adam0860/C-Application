@@ -622,7 +622,7 @@ export const lesson: Lesson = {
           headers: ['Aspect', 'FAT32 / exFAT', 'ext4', 'NTFS'],
           rows: [
             ['Where file metadata lives', 'In the directory entry (name, size, first cluster)', 'Inodes in an inode table', 'One record per file in the Master File Table (MFT), usually 1 KiB'],
-            ['How data is found', 'A linked list: the File Allocation Table gives the next cluster of each cluster', 'Extents (a tree for large files)', 'Data *runs* (extents); files of a few hundred bytes live inside the MFT record itself'],
+            ['How data is found', 'A linked list: the File Allocation Table gives the next cluster of each cluster (exFAT can skip it for contiguous files)', 'Extents (a tree for large files)', 'Data *runs* (extents); files of a few hundred bytes live inside the MFT record itself'],
             ['Directories', 'Unsorted list of entries', 'Hashed B-tree (*htree*) for large directories', 'B+ tree index'],
             ['Crash safety', 'None built in (run a repair tool)', 'Journal (metadata by default)', 'Journal of metadata (`$LogFile`)'],
             ['Permissions, links', 'None', 'Unix owner, mode bits, hard and symbolic links', 'ACLs, hard links, symlinks, junctions'],
@@ -1665,7 +1665,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: "Recovery is fast because it reads only the journal, typically a few hundred MiB at most, not the whole disk. To amortise the cost of commits, ext4 groups many updates into one transaction and commits every 5 seconds by default (or when `fsync` forces it). NTFS journals metadata in its `$LogFile`; XFS, JFS and Apple's HFS+ journal too.",
+          text: "Recovery is fast because it reads only the journal (by default at most 1 GiB on ext4), not the whole disk. To amortise the cost of commits, ext4 groups many updates into one transaction and commits every 5 seconds by default (or when `fsync` forces it). NTFS journals metadata in its `$LogFile`; XFS, JFS and Apple's HFS+ journal too.",
         },
       ],
     },
@@ -1696,7 +1696,7 @@ export const lesson: Lesson = {
           type: 'list',
           items: [
             '**Snapshots are nearly free.** Keep a pointer to an old root and you have a frozen, consistent copy of the entire file system; unchanged blocks are shared between versions. Btrfs, ZFS, APFS and Windows\' ReFS all build snapshots this way.',
-            '**Checksums fit naturally.** Since every pointer is rewritten anyway, ZFS and Btrfs store a checksum of each child next to the pointer, so silently corrupted blocks are detected on read.',
+            '**Checksums fit naturally.** Since every pointer is rewritten anyway, ZFS stores a checksum of each child next to the pointer to it (Btrfs keeps checksums in block headers and a checksum tree), so silently corrupted blocks are detected on read.',
             '**The cost is fragmentation and write amplification.** A small overwrite in the middle of a big file moves that block elsewhere, so files that are rewritten in place (databases, VM disk images) scatter over time.',
           ],
         },
@@ -1725,7 +1725,7 @@ export const lesson: Lesson = {
       prompt: 'A server crashes. Which approach brings its 20 TB ext4 volume back to a consistent state fastest, and why?',
       options: [
         { text: 'A full fsck, because it checks every structure', why: 'fsck must read every inode, directory and bitmap: time proportional to the volume, potentially hours for 20 TB.' },
-        { text: 'Journal replay, because it reads only the journal and redoes committed transactions', correct: true, why: 'Recovery time depends on the size of the journal (at most a few hundred MiB), not on the size of the disk.' },
+        { text: 'Journal replay, because it reads only the journal and redoes committed transactions', correct: true, why: 'Recovery time depends on the size of the journal (by default at most 1 GiB), not on the size of the disk.' },
         { text: 'Neither: ext4 cannot become inconsistent', why: 'Without the journal, an ext4 crash could leave exactly the inconsistencies in the table above. The journal is what prevents them.' },
         { text: 'Reformatting and restoring from a snapshot', why: 'ext4 has no built-in snapshots, and restoring 20 TB would take far longer than either repair method.' },
       ],

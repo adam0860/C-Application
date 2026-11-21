@@ -1207,8 +1207,8 @@ int main() {
 public:
     void* allocate(std::size_t bytes, std::size_t align) {
         void* p = base_ + used_;
+        if (used_ + bytes > size_) throw std::bad_alloc{};
         used_ += bytes;
-        if (used_ > size_) throw std::bad_alloc{};
         return p;
     }
 private:
@@ -1218,7 +1218,7 @@ private:
 };`,
       bugLines: [4],
       explanation:
-        'Line 4 ignores `align`: the returned pointer is wherever the previous allocation ended. After a 6-byte allocation, a 16-byte-aligned vector lands at offset 6. Using a misaligned object is undefined behaviour; aligned SIMD loads such as `_mm_load_ps` fault on x86, and some console and ARM instructions do too. Round up first: `used_ = (used_ + align - 1) & ~(align - 1);` (alignments are powers of two). As a second bug, the bounds check happens after `used_` is already advanced; it should check `start + bytes > size_` before committing.',
+        'Line 4 ignores `align`: the returned pointer is wherever the previous allocation ended. After a 6-byte allocation, a 16-byte-aligned vector lands at offset 6. Using a misaligned object is undefined behaviour; aligned SIMD loads such as `_mm_load_ps` fault on x86, and some console and ARM instructions do too. Round up first: `used_ = (used_ + align - 1) & ~(align - 1);` (alignments are powers of two), and do the bounds check against the rounded-up offset.',
     },
     // ------------------------------------------------------------------ 14
     {

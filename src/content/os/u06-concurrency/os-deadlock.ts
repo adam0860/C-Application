@@ -158,7 +158,8 @@ export const lesson: Lesson = {
   "caption": "A resource allocation graph forming a cycle. Green: lock → owner. Orange: thread → lock it waits for. Red: the deadlock cycle.",
   "frames": [
     {
-      "note": "Three mutexes (A, B, C) and three threads. Thin arrows are edges that do not exist yet.",
+      "note": "Three mutexes (A, B, C) and three threads. No edges yet: nobody holds or wants a lock.",
+      "hiddenEdges": [{ "from": "A", "to": "T1" }, { "from": "B", "to": "T2" }, { "from": "C", "to": "T3" }, { "from": "T1", "to": "B" }, { "from": "T2", "to": "C" }, { "from": "T3", "to": "A" }],
       "lines": [
         1
       ],
@@ -177,6 +178,7 @@ export const lesson: Lesson = {
     },
     {
       "note": "T1 locks A: an **assignment edge** A → T1.",
+      "hiddenEdges": [{ "from": "B", "to": "T2" }, { "from": "C", "to": "T3" }, { "from": "T1", "to": "B" }, { "from": "T2", "to": "C" }, { "from": "T3", "to": "A" }],
       "lines": [
         2
       ],
@@ -206,6 +208,7 @@ export const lesson: Lesson = {
     },
     {
       "note": "T2 locks B: an **assignment edge** B → T2.",
+      "hiddenEdges": [{ "from": "C", "to": "T3" }, { "from": "T1", "to": "B" }, { "from": "T2", "to": "C" }, { "from": "T3", "to": "A" }],
       "lines": [
         2
       ],
@@ -244,6 +247,7 @@ export const lesson: Lesson = {
     },
     {
       "note": "T3 locks C: an **assignment edge** C → T3.",
+      "hiddenEdges": [{ "from": "T1", "to": "B" }, { "from": "T2", "to": "C" }, { "from": "T3", "to": "A" }],
       "lines": [
         2
       ],
@@ -291,6 +295,7 @@ export const lesson: Lesson = {
     },
     {
       "note": "T1 requests B, which T2 holds: a **request edge** T1 → B. T1 blocks. No cycle yet, so T2 could still finish and free it.",
+      "hiddenEdges": [{ "from": "T2", "to": "C" }, { "from": "T3", "to": "A" }],
       "lines": [
         3
       ],
@@ -347,6 +352,7 @@ export const lesson: Lesson = {
     },
     {
       "note": "T2 requests C, which T3 holds: a **request edge** T2 → C. T2 blocks. No cycle yet, so T3 could still finish and free it.",
+      "hiddenEdges": [{ "from": "T3", "to": "A" }],
       "lines": [
         3
       ],
@@ -5193,7 +5199,7 @@ int main() {
           type: 'list',
           items: [
             'POSIX: create the mutex with `pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT)` (or `PTHREAD_PRIO_PROTECT` for a ceiling). Linux implements this with priority-inheritance futexes.',
-            'Windows does not do priority inheritance for its locks. Instead, its scheduler periodically gives threads that have been ready but starved for about four seconds a temporary boost, which eventually lets a starved lock holder run.',
+            'Windows user-mode locks (critical sections, SRW locks) do not do priority inheritance; the kernel\'s AutoBoost covers only some of its own internal locks. Instead, the scheduler\'s balance set manager gives threads that have been ready but not run for about four seconds a temporary boost, which eventually lets a starved lock holder run.',
             'Games: the audio mixer thread usually runs at raised priority with a hard deadline every few milliseconds. If it takes a lock that a normal-priority thread holds, a priority inversion becomes an audible glitch. Audio code therefore avoids locks entirely and talks to the game through lock-free queues (next lesson).',
           ],
         },

@@ -1370,8 +1370,8 @@ int main() {
             ["`poll`", "POSIX (Windows: `WSAPoll`)", "Pass an array of fds; no size limit", "Hundreds of fds; still O(n) per call"],
             ["`epoll`", "Linux", "The kernel keeps an interest list and returns only the ready fds", "Tens of thousands; O(ready) per call"],
             ["`kqueue`", "macOS, BSD", "Like epoll, also covers timers and files", "Tens of thousands"],
-            ["IOCP", "Windows", "Completion-based: start an operation, get notified when it *finished*", "Tens of thousands; used by most Windows servers"],
-            ["`io_uring`", "Linux 5.1+", "Completion-based, shared submission and completion rings", "Very high rates with few system calls"],
+            ["[[iocp|IOCP]]", "Windows", "Completion-based: start an operation, get notified when it *finished*", "Tens of thousands; used by most Windows servers"],
+            ["[[io-uring|io_uring]]", "Linux 5.1+", "Completion-based, shared submission and completion rings", "Very high rates with few system calls"],
           ],
         },
         {
@@ -1389,7 +1389,7 @@ int main() {
       options: [
         { text: "A blocking `recv` at the start of each tick, waiting for the next packet", why: "If no packet arrives, the whole simulation stalls; if many arrive, it reads only one per tick." },
         { text: "Each tick, drain the socket with non-blocking `recv` (or `recvmmsg`) until it reports `EWOULDBLOCK`, then simulate", correct: true, why: "Right. One socket, so there is nothing to multiplex: just empty the queue each tick without ever waiting, then run the simulation on everything that arrived." },
-        { text: "One thread per player, each blocking in `recv` on the shared socket", why: "With one UDP socket every thread would receive whichever datagram comes next, from any player, so per-player threads buy nothing but contention and context switches." },
+        { text: "One thread per player, each blocking in `recv` on the shared socket", why: "With one UDP socket every thread would receive whichever datagram comes next, from any player, so per-player threads buy nothing but contention and [[context-switch|context switches]]." },
         { text: "`select` over 100 sockets, one per player", why: "UDP needs no per-player sockets; `recvfrom` tells you which address each datagram came from. And select-style scanning is the slow option." },
       ],
       explanation: "UDP servers usually read one socket and identify players by source address (plus a connection ID in the payload). Readiness APIs like epoll matter when you have many sockets, for example a TCP lobby service with thousands of connections. For the tick-based simulation, \"drain without blocking, then simulate\" keeps frame timing under your control. Linux's `recvmmsg` even reads many datagrams in one system call.",

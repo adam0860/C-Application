@@ -297,7 +297,7 @@ int main() {
             { lines: '11-24', text: "The [[rule-of-five]] in miniature: copying is implicitly deleted (a user-declared move constructor suppresses the copy operations), moving transfers ownership and leaves `-1` behind, and the destructor closes. Two owners of one fd would mean a double close, which can close an *unrelated* file that reused the number." },
             { lines: 22, text: "We ignore `close`'s own result here. For files you have written, `close` (or better `fsync` before it) can report a late write error; unit 7 covers crash-safe saves properly." },
             { lines: '37-46', text: "`writeAll` keeps calling `write` until every byte is out, advancing past what was written. Regular files on a local disk almost always take everything at once; pipes and sockets often do not." },
-            { lines: 42, text: "`EINTR` is not a real failure: a signal handler ran while the call was blocked. Retrying is the standard response." },
+            { lines: 41, text: "`EINTR` is not a real failure: a signal handler ran while the call was blocked. Retrying is the standard response." },
             { lines: 54, text: "The scope ends, `out` is destroyed, the file is closed, on every path." },
           ],
         },
@@ -524,7 +524,7 @@ $ strace -c -e trace=write ./lines endl > out.txt
         {
           type: 'list',
           items: [
-            "`strace ./prog` traces everything, including the dozens of calls the dynamic loader makes before `main` (a hello-world makes about 30 system calls in total; only one is its own `write`).",
+            "`strace ./prog` traces everything, including the dozens of calls the dynamic loader makes before `main` (a C++ hello-world with `std::cout` makes about 60 system calls in total; only one is its own `write`).",
             "`-e trace=openat,read,write,close` filters; `-f` follows threads and child processes; `-o trace.txt` keeps the trace apart from the program's output.",
             "Failures are shown decoded, e.g. `openat(AT_FDCWD, \"/tmp/forge_save.txt\", O_RDONLY) = -1 ENOENT (No such file or directory)`.",
           ],

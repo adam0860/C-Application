@@ -2418,13 +2418,13 @@ int main() {
 },
         {
           type: 'p',
-          text: 'The default slice (the *base slice*) is 0.75 ms scaled by `1 + log₂(CPUs)`, so 3 ms on a machine with 8 or more CPUs. A latency-sensitive thread can request a shorter one with the `sched_setattr()` system call. A thread that sleeps does not simply reset its lag either: the kernel keeps a negative lag around for a while (a "deferred dequeue"), so a task cannot erase its debt by napping briefly.',
+          text: 'The default slice (the *base slice*) is 0.75 ms scaled by `1 + log₂(CPUs)`, so 3 ms on a machine with 8 or more CPUs. Since Linux 6.12, a latency-sensitive thread can request a shorter one with the `sched_setattr()` system call. Since the same release, a thread that sleeps does not simply reset its lag either: the kernel keeps a negative lag around for a while (a "deferred dequeue"), so a task cannot erase its debt by napping briefly.',
         },
         {
           type: 'callout',
           variant: 'note',
           title: 'Versions matter',
-          text: 'Articles and Stack Overflow answers written before 2024 describe CFS. If you are on a kernel 6.6 or newer (any current desktop distribution, SteamOS 3 builds and most cloud images), the fair class is EEVDF. Check with `uname -r`.',
+          text: 'Articles and Stack Overflow answers written before 2024 describe CFS. If you are on a kernel 6.6 or newer (any current desktop distribution, recent SteamOS releases and most cloud images), the fair class is EEVDF. Check with `uname -r`.',
         },
       ],
     },
@@ -2529,7 +2529,7 @@ int main() {
           output: "now running at nice 19",
           annotations: [
             { lines: '9', text: '`PRIO_PROCESS, 0` means "this process". On Linux, nice is really a per-thread attribute, and this call affects the calling thread.' },
-            { lines: '15-17', text: '`getpriority` can legitimately return −1, so the only reliable way to detect failure is to clear `errno` first and check it afterwards. Many POSIX calls have this quirk.' },
+            { lines: '14-16', text: '`getpriority` can legitimately return −1, so the only reliable way to detect failure is to clear `errno` first and check it afterwards. Many POSIX calls have this quirk.' },
           ],
         },
         {

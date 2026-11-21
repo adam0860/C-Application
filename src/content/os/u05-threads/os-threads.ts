@@ -1206,16 +1206,14 @@ int main() {
           lang: 'text',
           title: 'objdump -d -M intel (g++ -O2), real output',
           code: `<bumpTls()>:
-    mov    eax,DWORD PTR fs:0xfffffffffffffffc
-    add    eax,0x1
-    mov    DWORD PTR fs:0xfffffffffffffffc,eax
+    add    DWORD PTR fs:0xfffffffffffffffc,0x1
+    ret
 <bumpGlobal()>:
-    mov    eax,DWORD PTR [rip+0x2e9a]   # <global_hits>
-    add    eax,0x1
-    mov    DWORD PTR [rip+0x2e91],eax   # <global_hits>`,
+    add    DWORD PTR [rip+0x2e99],0x1   # <global_hits>
+    ret`,
           annotations: [
-            { lines: '2-4', text: 'TLS: the address is "4 bytes below wherever `fs` points". Same instruction count as a global, just a segment prefix.' },
-            { lines: '6-8', text: 'A global: one fixed address relative to the instruction pointer, the same for every thread.' },
+            { lines: 2, text: 'TLS: the address is "4 bytes below wherever `fs` points". The same single instruction as for a global, just with a segment prefix.' },
+            { lines: 5, text: 'A global: one fixed address relative to the instruction pointer, the same for every thread.' },
           ],
         },
         {

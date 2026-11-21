@@ -62,7 +62,7 @@ export function CourseScreen({ courseId }: { courseId: string }) {
 
       <header className={`course-hero course-${course.id}`}>
         <div className="course-hero-text">
-          <div className="eyebrow">{course.id === 'cpp' ? 'Course 1' : 'Course 2'}</div>
+          <div className="eyebrow">Course {courses.findIndex((c) => c.id === course.id) + 1}</div>
           <h1>{course.title}</h1>
           <p>{course.subtitle}</p>
           <div className="hero-meta">
@@ -155,7 +155,15 @@ export function CourseScreen({ courseId }: { courseId: string }) {
       <div className="course-end">
         <div className="course-end-icon">🏁</div>
         <p className="muted">
-          {course.id === 'cpp' ? 'Finish line: you’ll be ready for Unreal Engine C++.' : 'Finish line: you’ll be writing real gameplay code.'}
+          {
+            {
+              cpp: 'Finish line: you’ll be ready for Unreal Engine C++, SFML games and the systems courses.',
+              unreal: 'Finish line: you’ll be writing real gameplay code.',
+              sfml: 'Finish line: you’ll have built complete 2D games in C++.',
+              arch: 'Finish line: you’ll know exactly what the CPU does with your C++, and how to make it fast.',
+              os: 'Finish line: you’ll understand processes, memory, threads and files from the kernel up.',
+            }[course.id]
+          }
         </p>
       </div>
 

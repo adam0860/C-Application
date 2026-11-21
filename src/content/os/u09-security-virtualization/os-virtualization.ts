@@ -159,7 +159,7 @@ export const lesson: Lesson = {
       blocks: [
         {
           type: 'p',
-          text: "Intel VT-x (AMD-V is analogous) adds two CPU modes. The hypervisor runs in **VMX root mode**; guests run in **VMX non-root mode**, where the guest kernel gets its *own* ring 0 and the guest apps their ring 3, so system calls and page faults inside the guest stay inside the guest. A per-vCPU control structure, the **VMCS**, holds the guest's saved state, the host's state, and the rules for which events must leave the guest. When one happens, the CPU performs a **[[vm-exit|VM exit]]**: it saves the guest state, loads the host state and jumps to the hypervisor, recording an *exit reason*.",
+          text: "Intel VT-x (AMD-V is analogous) adds two CPU modes. The hypervisor runs in **VMX root mode**; guests run in **VMX non-root mode**, where the guest kernel gets its *own* ring 0 and the guest apps their ring 3, so system calls and [[page-fault|page faults]] inside the guest stay inside the guest. A per-vCPU control structure, the **VMCS**, holds the guest's saved state, the host's state, and the rules for which events must leave the guest. When one happens, the CPU performs a **[[vm-exit|VM exit]]**: it saves the guest state, loads the host state and jumps to the hypervisor, recording an *exit reason*.",
         },
         {
   "type": "algo",
@@ -684,7 +684,7 @@ hypervisor vendor:  "KVMKVMKVM"`,
         },
         {
           type: 'p',
-          text: "Nested paging moves the cost into TLB misses. Every entry the guest's page walk reads lives at a *guest-physical* address, which must itself be translated through the hypervisor's tables before it can be read. With four levels on each side, one miss can take up to 24 memory reads instead of 4. Two fixes keep this cheap in practice: the [[tlb|TLB]] caches the final guest-virtual to host-physical result (tagged with a per-VM ID, VPID or ASID, so switching VMs need not flush it), and [[huge-pages|huge pages]] in the hypervisor's tables remove levels from the walk.",
+          text: "Nested paging moves the cost into TLB misses. Every entry the guest's page walk reads lives at a *guest-physical* address, which must itself be translated through the hypervisor's tables before it can be read. With four levels on each side, one miss can take up to 24 memory reads instead of 4. Two fixes keep this cheap in practice: the [[tlb|TLB]] caches the final guest-virtual to host-physical result (tagged with a per-VM ID, VPID or [[asid|ASID]], so switching VMs need not flush it), and [[huge-pages|huge pages]] in the hypervisor's tables remove levels from the walk.",
         },
         {
           type: 'callout',

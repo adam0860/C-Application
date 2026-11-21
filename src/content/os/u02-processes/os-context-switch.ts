@@ -964,7 +964,7 @@ int main() {
           output: "frame 1: main loop\n  loader: decoded chunk 1\nframe 2: main loop\n  loader: decoded chunk 2\nframe 3: main loop\n  loader: decoded chunk 3\nframe 4: main loop\n  loader: done",
           annotations: [
             { lines: '5-6', text: "A `ucontext_t` is a little PCB in user space: saved registers, a stack, and where to continue." },
-            { lines: 11, text: "`swapcontext` saves the current registers into the first argument and loads the second: a context switch that never enters the scheduler. The loader resumes right here next time." },
+            { lines: 11, text: "`swapcontext` saves the current registers into the first argument and loads the second: a context switch that never enters the scheduler. (glibc's version does make one quick `rt_sigprocmask` system call per switch, to save and restore the signal mask; engine fiber libraries skip even that.) The loader resumes right here next time." },
             { lines: 17, text: "Every fiber needs its own stack, because it must keep its call chain while suspended. Here it lives in an ordinary vector." },
             { lines: 26, text: "One OS thread, two execution contexts, interleaved at exactly the points the code chose: cooperative multitasking inside one thread." },
           ],

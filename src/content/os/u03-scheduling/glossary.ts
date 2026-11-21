@@ -133,7 +133,7 @@ export const glossary: GlossaryEntry[] = [
     course: 'os',
     category: 'Scheduling',
     short: 'Linux\'s default scheduler for normal tasks since kernel 6.6 (2023). Among tasks that are *eligible* (lag ≥ 0, not ahead of their fair share), it runs the one with the earliest *virtual deadline*.',
-    long: 'EEVDF comes from a 1995 paper by Stoica and Abdel-Wahab and was brought to Linux by Peter Zijlstra. Each task\'s lag is the CPU time it is owed compared with an ideal fair share. A task\'s virtual deadline is its eligible time plus its requested slice divided by its weight, so a task asking for short slices gets an earlier deadline and runs sooner without getting more total CPU. That separates latency from bandwidth, which CFS mixed together through heuristics. Tasks can request a slice length with `sched_setattr()`.',
+    long: 'EEVDF comes from a 1995 paper by Stoica and Abdel-Wahab and was brought to Linux by Peter Zijlstra. Each task\'s lag is the CPU time it is owed compared with an ideal fair share. A task\'s virtual deadline is its eligible time plus its requested slice divided by its weight, so a task asking for short slices gets an earlier deadline and runs sooner without getting more total CPU. That separates latency from bandwidth, which CFS mixed together through heuristics. Since Linux 6.12, tasks can request a slice length with `sched_setattr()`.',
     see: ['cfs', 'nice-value', 'response-time'],
     reading: [
       {

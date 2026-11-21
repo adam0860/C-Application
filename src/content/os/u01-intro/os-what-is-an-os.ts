@@ -77,17 +77,17 @@ int main() {
               type: 'code',
               lang: 'text',
               title: "strace -f ./services (excerpt)",
-              code: `brk(0x55d56050c000)                     = 0x55d56050c000
+              code: `mmap(NULL, 4001792, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fd15342f000
 openat(AT_FDCWD, "/tmp/forge_slot1.sav", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
 write(3, "level 3\\n", 8)                 = 8
 close(3)                                = 0
-mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f357dbff000
-clone3({flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|…}, 88) = 13301
-futex(0x7f357e3ff990, FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, 13301, …) = 0
+mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7fd152c2e000
+clone3({flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|…}, 88) = 28514
+futex(0x7fd15342e990, FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, 28514, …) = 0
 write(1, "saved, loader finished\\n", 23)  = 23
 exit_group(0)                           = ?`,
               annotations: [
-                { lines: 1, text: "`brk` grows the heap: this is the vector's 4 MB." },
+                { lines: 1, text: "This is the vector's 4 MB. glibc's `malloc` serves big requests (128 KiB and up, by default) with their own `mmap` of fresh zero-filled pages; smaller ones come from the heap, which it grows with `brk`." },
                 { lines: '2-4', text: "Open, write, close: the file appears as descriptor 3, because 0, 1 and 2 are already taken by standard input, output and error." },
                 { lines: '5-6', text: "Reserve the new thread's stack, then `clone3` creates the thread. Flags such as `CLONE_VM` say \"share my memory\"." },
                 { lines: 7, text: "`join()` sleeps in the kernel (a futex wait) until the thread exits." },

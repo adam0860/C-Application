@@ -1010,7 +1010,7 @@ export const lesson: Lesson = {
           headers: ['System', 'Typical slice', 'Notes'],
           rows: [
             ['Classic Unix', '10 to 100 ms', 'A fixed quantum per priority level'],
-            ['Linux 6.6+ (EEVDF)', '0.75 ms × (1 + log₂ CPUs), up to 3 ms', 'A *base slice*; tasks may request their own with `sched_setattr()`'],
+            ['Linux 6.6+ (EEVDF)', '0.75 ms × (1 + log₂ CPUs), up to 3 ms', 'A *base slice*; since 6.12, tasks may request their own with `sched_setattr()`'],
             ['Windows client', '2 clock ticks', 'Stretched for threads of the foreground process'],
             ['Windows Server', '12 clock ticks', 'Longer, fixed quanta favour throughput'],
           ],
@@ -1030,7 +1030,7 @@ export const lesson: Lesson = {
       prompt: 'Each context switch effectively costs 0.5 ms once you include refilling caches, and the time slice is 4 ms. What percentage of CPU time is lost to switching? Round to one decimal place.',
       answer: 11.1,
       tolerance: 0.1,
-      alsoAccept: ['1/9'],
+      alsoAccept: ['100/9'],
       unit: '%',
       explanation:
         'Each cycle is 4 ms of useful work plus 0.5 ms of switching, so the lost fraction is 0.5 / 4.5 = 1/9 ≈ **11.1%**. Doubling the slice to 8 ms cuts it to 0.5 / 8.5 ≈ 5.9%. This is why slices are not made arbitrarily small even though response time would love it.',

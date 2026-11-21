@@ -227,11 +227,11 @@ int main() {
     // ------------------------------------------------------------------ 4
     {
       kind: 'numeric',
-      prompt: "A program on x86-64 Linux gains a new global `int g_grid[1'000'000];` with **no initializer**. By how many bytes does the size of the executable *file* grow? (We measured it with `ls -l` and `size`.)",
+      prompt: "A program on x86-64 Linux gains a new global `int g_grid[1'000'000];` with **no initializer**. By how many bytes does the size of the stripped executable *file* (built with `g++ -O2 -s`) grow? (We measured it with `ls -l` and `size`.)",
       answer: 0,
       unit: "bytes",
       hint: "Which section does a zero-initialized global go into, and what does that section store in the file?",
-      explanation: "It grows by 0 bytes: the array goes into `.bss`, which `size` showed growing by 4,000,024 bytes while the file stayed at exactly 16,000 bytes. Only the section's length is recorded. Writing `= {1}` instead moved it into `.data`, and the file jumped to 4,016,016 bytes, because now the initial contents must be stored. Large zeroed tables are free on disk and cost RAM only for the pages you touch.",
+      explanation: "It grows by 0 bytes: the array goes into `.bss`, which `size` showed growing by 4,000,024 bytes while the stripped file stayed at exactly 14,336 bytes. Only the section's length is recorded. (Without `-s` the file keeps a symbol table, and the new name adds a few dozen bytes there, but still nothing for the array itself.) Writing `= {1}` instead moved it into `.data`, and the stripped file jumped to 4,014,352 bytes, because now the initial contents must be stored. Large zeroed tables are free on disk and cost RAM only for the pages you touch.",
     },
     // ------------------------------------------------------------------ 5
     {

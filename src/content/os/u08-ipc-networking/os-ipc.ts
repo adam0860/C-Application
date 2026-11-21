@@ -20,7 +20,7 @@ export const lesson: Lesson = {
       blocks: [
         {
           type: 'p',
-          text: "Earlier units built a wall around every process: its own [[virtual-address|virtual address space]], its own [[file-descriptor|file descriptors]], its own threads. That wall is why a crashing tool cannot scribble over your game, and why a browser tab cannot read your password manager. But real software is rarely one process. Your editor launches the game, a crash reporter watches it, shader compilers run beside it, and a profiler streams data out of it.",
+          text: "Earlier units built a wall around every process: its own [[virtual-address|virtual address space]], its own [[file-descriptor|file descriptors]], its own threads. That wall is why a crashing tool cannot scribble over your game, and why a browser tab cannot read your password manager. But real software is rarely one [[process]]. Your editor launches the game, a crash reporter watches it, shader compilers run beside it, and a profiler streams data out of it.",
         },
         {
           type: 'p',
@@ -60,7 +60,7 @@ export const lesson: Lesson = {
       blocks: [
         {
           type: 'p',
-          text: "`pipe(fds)` asks the kernel for a small buffer and returns two file descriptors: `fds[0]` is the **read end** and `fds[1]` is the **write end**. Bytes written to one end come out of the other, in order. Because they are ordinary descriptors, `fork` copies them into the child, and that is how two related processes end up holding opposite ends of the same [[pipe]].",
+          text: "`pipe(fds)` asks the kernel for a small buffer and returns two file descriptors: `fds[0]` is the **read end** and `fds[1]` is the **write end**. Bytes written to one end come out of the other, in order. Because they are ordinary descriptors, [[fork-syscall|fork]] copies them into the child, and that is how two related processes end up holding opposite ends of the same [[pipe]].",
         },
         {
           type: 'figure',
@@ -184,7 +184,7 @@ int main() {
             { lines: '26-27', text: "`_exit` skips `atexit` handlers and stdio flushing, which avoids running the parent's cleanup code twice in a forked child. So flush our own output explicitly first." },
             { lines: 34, text: "`write` returns how many bytes it wrote, or −1. Checking the return value is not optional for system calls." },
             { lines: 37, text: "Closing the last write end is what turns into end of file on the other side." },
-            { lines: 40, text: "Reap the child (no zombie), and get its exit status." },
+            { lines: 40, text: "Reap the child (no [[zombie-process|zombie]]), and get its exit status." },
           ],
         },
         {
@@ -1327,7 +1327,7 @@ int main() {
           output: "hits: 200000 (expected 200000)",
           annotations: [
             { lines: 15, text: "The name must start with `/`. `0600` lets only our user open it. With glibc older than 2.34, link with `-lrt`." },
-            { lines: '22-23', text: "`MAP_SHARED` is the whole point: stores go to the shared object. With `MAP_PRIVATE` each process would get a copy-on-write private copy." },
+            { lines: '22-23', text: "`MAP_SHARED` is the whole point: stores go to the shared object. With `MAP_PRIVATE` each process would get a private [[copy-on-write]] copy." },
             { lines: 26, text: "Unlinking removes the name only. The memory lives until the last mapping is gone, so nothing leaks in `/dev/shm` if we crash later." },
             { lines: 28, text: "Cross-process atomics are only guaranteed to work when they are lock-free, because a lock-based fallback might use a lock inside one process's private memory." },
             { lines: 29, text: "Placement `new` starts the object's lifetime inside the mapped bytes instead of allocating new memory." },
@@ -1425,7 +1425,7 @@ CloseHandle(map);`,
           type: 'callout',
           variant: 'perf',
           title: "Copies versus synchronization",
-          text: "Pipes and sockets cost a system call and a copy per transfer but give you blocking, ordering and EOF for free. Shared memory costs nothing per byte but makes *you* responsible for synchronization and for waking the other side (a futex, a semaphore, or polling). Engines pick shared memory only when the data rate forces them to.",
+          text: "Pipes and sockets cost a system call and a copy per transfer but give you blocking, ordering and EOF for free. Shared memory costs nothing per byte but makes *you* responsible for synchronization and for waking the other side (a [[futex]], a [[semaphore]], or polling). Engines pick shared memory only when the data rate forces them to.",
         },
       ],
     },

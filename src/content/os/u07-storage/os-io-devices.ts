@@ -691,7 +691,7 @@ static const struct file_operations pad_fops = {
           type: 'callout',
           variant: 'why',
           title: 'Containing drivers',
-          text: "Systems fight back in several ways. A [[microkernel]] runs drivers as ordinary user processes, so a crashing driver is restarted instead of crashing the system; QNX and seL4 do this, and it is one reason microkernels dominate safety-critical and military embedded systems. Windows moves many drivers into user mode with the User-Mode Driver Framework, requires kernel drivers to be signed, and ships *Driver Verifier* to stress-test them. Linux has accepted Rust as a second language for drivers (since 6.1) to rule out whole classes of memory bugs. All of these trade some performance or flexibility for isolation.",
+          text: "Systems fight back in several ways. A [[microkernel]] runs drivers as ordinary user processes, so a crashing driver is restarted instead of crashing the system; QNX and seL4 do this, and it is one reason microkernels are popular in safety-critical and military embedded systems. Windows moves many drivers into user mode with the User-Mode Driver Framework, requires kernel drivers to be signed, and ships *Driver Verifier* to stress-test them. Linux has accepted Rust as a second kernel language, with drivers as the first users (initial support merged in 6.1, late 2022), to rule out whole classes of memory bugs. All of these trade some performance or flexibility for isolation.",
         },
       ],
     },
@@ -834,7 +834,7 @@ crw-rw-rw- 1 root root   5, 0 Nov 19 21:47 /dev/tty`,
           "type": "algo",
           "view": "array",
           "caption": "The elevator (LOOK) disk scheduler on a queue of track numbers.",
-          "code": "sort(pending)\nfor t in pending where t >= head:   // sweep up\n    moved += t - head; head = t\nfor t in pending where t < head, descending:\n    moved += head - t; head = t",
+          "code": "sort(pending); start = head\nfor t in pending where t >= start:  // sweep up\n    moved += t - head; head = t\nfor t in pending where t < start, descending:\n    moved += head - t; head = t",
           "interval": 1100,
           "frames": [
             {

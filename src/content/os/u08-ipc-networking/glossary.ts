@@ -189,7 +189,7 @@ close(fds[1]);              // child sees EOF`,
     category: 'Networking',
     short: 'Waiting on many file descriptors at once and learning which are ready, so one thread can serve many sockets. `select` and `poll` scan every fd on each call; Linux `epoll` and BSD `kqueue` return only the ready ones.',
     long: 'Readiness APIs (`select`, `poll`, `epoll`, `kqueue`) say "this fd can be read now without blocking". Completion APIs (Windows IOCP, Linux `io_uring`) instead let you start operations and tell you when they have finished. `select` is limited to fd numbers below `FD_SETSIZE` (1,024 on Linux).',
-    see: ['nonblocking-socket', 'socket'],
+    see: ['nonblocking-socket', 'socket', 'iocp', 'io-uring'],
     reading: [
       { title: 'epoll(7) — Linux manual page', url: 'https://man7.org/linux/man-pages/man7/epoll.7.html', source: 'other', note: 'How epoll works and its edge- and level-triggered modes.' },
     ],

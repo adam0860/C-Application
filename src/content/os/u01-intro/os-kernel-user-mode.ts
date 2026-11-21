@@ -253,6 +253,7 @@ cmp    rax, 0xfffffffffffff000    ; -4095 .. -1 means error
 ja     error                      ; unsigned compare
 ret                               ; success: rax = bytes written
 error:
+mov    rdx, QWORD PTR [rip+...]   ; errno's offset in TLS
 neg    eax                        ; -EBADF -> EBADF
 mov    DWORD PTR fs:[rdx], eax    ; errno (thread-local)
 mov    rax, 0xffffffffffffffff    ; return -1
@@ -261,7 +262,7 @@ ret`,
             { lines: 1, text: "Your three arguments are already in `rdi`, `rsi`, `rdx`, because that is also where the normal calling convention puts a function's first three arguments. The wrapper only adds the number." },
             { lines: 2, text: "`syscall` saves the return address in `rcx` and the flags in `r11`, switches to ring 0 and jumps to the kernel's registered entry point. That is why the fourth argument uses `r10` instead of `rcx`." },
             { lines: '3-4', text: "The kernel returns errors as small negative numbers. Read as unsigned, they are the top 4095 values, so a single comparison spots them." },
-            { lines: '7-9', text: "The C convention is different: return −1 and store the positive error code in `errno`, which lives in thread-local storage (the `fs` segment) so threads do not overwrite each other's errors." },
+            { lines: '7-10', text: "The C convention is different: return −1 and store the positive error code in `errno`, which lives in thread-local storage (the `fs` segment) so threads do not overwrite each other's errors." },
           ],
         },
         {

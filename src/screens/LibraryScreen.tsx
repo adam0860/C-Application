@@ -318,7 +318,7 @@ export function GlossaryEntryScreen({ id }: { id: string }) {
                   <span className="result-text">
                     <b>{m.lesson.title}</b>
                     <span className="muted">
-                      {m.course.id === 'cpp' ? 'C++' : 'Unreal'} · Unit {m.unitIndex + 1}: {m.unit.title}
+                      {courseLabel(m.course.id)} · Unit {m.unitIndex + 1}: {m.unit.title}
                     </span>
                   </span>
                   <Icon name="chevron-right" size={16} />
@@ -347,7 +347,7 @@ export function CheatSheetScreen({ id }: { id: string }) {
         <BookmarkButton bookmarkKey={`sheet:${s.id}`} />
       </BackBar>
       <div className="detail-badges">
-        <span className={`course-badge ${s.course}`}>{s.course === 'cpp' ? 'C++' : 'Unreal'}</span>
+        <span className={`course-badge ${s.course}`}>{courseLabel(s.course)}</span>
         <span className="cat-badge">Cheat sheet</span>
       </div>
       <h1 className="detail-title">

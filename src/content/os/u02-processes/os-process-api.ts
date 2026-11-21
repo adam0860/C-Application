@@ -608,7 +608,7 @@ int main() {
       blocks: [
         {
           type: 'p',
-          text: "When a process exits, the kernel frees its memory and descriptors at once, but it cannot throw away the PCB yet: the parent may still want the exit status. Until the parent calls `wait`/`waitpid`, the dead child remains a [[zombie-process|zombie]]: state `Z`, holding a PID and a few hundred bytes of kernel memory. This program catches its child in that state by waiting with `WNOWAIT`, which reports the exit without reaping:",
+          text: "When a process exits, the kernel frees its memory and descriptors at once, but it cannot throw away the PCB yet: the parent may still want the exit status. Until the parent calls `wait`/`waitpid`, the dead child remains a [[zombie-process|zombie]]: state `Z`, holding a PID and its process record (a few kilobytes of kernel memory). This program catches its child in that state by waiting with `WNOWAIT`, which reports the exit without reaping:",
         },
         {
           type: 'code',
