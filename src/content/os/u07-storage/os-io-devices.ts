@@ -834,7 +834,7 @@ crw-rw-rw- 1 root root   5, 0 Nov 19 21:47 /dev/tty`,
           "type": "algo",
           "view": "array",
           "caption": "The elevator (LOOK) disk scheduler on a queue of track numbers.",
-          "code": "sort(pending); start = head\nfor t in pending where t >= start:  // sweep up\n    moved += t - head; head = t\nfor t in pending where t < start, descending:\n    moved += head - t; head = t",
+          "code": "sort(pending); start = head\nfor t in pending where t >= start:   // up\n    moved += t - head; head = t\nfor t in pending where t < start (descending):\n    moved += head - t; head = t",
           "interval": 1100,
           "frames": [
             {
