@@ -43,7 +43,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: 'So Linux, Windows and FreeBSD all keep **one run queue per CPU**. A thread usually stays on the same core, which gives **cache affinity** for free and needs no global lock. The new problem is **load imbalance**: one core may have four runnable threads while another idles.',
+          text: 'So Linux and FreeBSD keep **one run queue per CPU** (Windows 10 and later share ready queues among small groups of cores, the same idea at a coarser grain). A thread usually stays on the same core, which gives **cache affinity** for free and needs no global lock. The new problem is **load imbalance**: one core may have four runnable threads while another idles.',
         },
         {
           type: 'callout',

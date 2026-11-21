@@ -281,11 +281,11 @@ int main() {
           type: 'code',
           lang: 'text',
           title: '/proc/self/maps (real run, trimmed)',
-          code: `56089cf85000-56089cf87000 r--p /home/adam/game
-56089cf87000-56089cf89000 r-xp /home/adam/game
-56089cf89000-56089cf8a000 r--p /home/adam/game
-56089cf8a000-56089cf8b000 r--p /home/adam/game
-56089cf8b000-56089cf8c000 rw-p /home/adam/game
+          code: `56089cf85000-56089cf87000 r--p /home/dev/game
+56089cf87000-56089cf89000 r-xp /home/dev/game
+56089cf89000-56089cf8a000 r--p /home/dev/game
+56089cf8a000-56089cf8b000 r--p /home/dev/game
+56089cf8b000-56089cf8c000 rw-p /home/dev/game
 5608d31e5000-5608d3206000 rw-p [heap]
 7f21eb800000-7f21eb828000 r--p .../libc.so.6
 7f21eb828000-7f21eb9b1000 r-xp .../libc.so.6

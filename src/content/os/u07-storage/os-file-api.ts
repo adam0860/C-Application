@@ -31,7 +31,7 @@ export const lesson: Lesson = {
         {
           type: 'definition',
           term: 'Directory',
-          text: 'A special file whose contents are a list of entries, each mapping a human-readable **name** to a low-level name (an inode number). Because a directory can contain other directories, names form a tree, and a path like `/home/adam/saves/slot1.sav` walks it from the root.',
+          text: 'A special file whose contents are a list of entries, each mapping a human-readable **name** to a low-level name (an inode number). Because a directory can contain other directories, names form a tree, and a path like `/home/dev/saves/slot1.sav` walks it from the root.',
         },
         {
           type: 'p',

@@ -1162,7 +1162,7 @@ export const lesson: Lesson = {
     // ------------------------------------------------------------------ 9
     {
       kind: 'numeric',
-      prompt: "With completely cold caches, how many disk reads does `open(\"/home/adam/saves/slot1.sav\", O_RDONLY)` need? Assume every directory fits in one data block, and count the read of the file's own inode but none of its data.",
+      prompt: "With completely cold caches, how many disk reads does `open(\"/home/dev/saves/slot1.sav\", O_RDONLY)` need? Assume every directory fits in one data block, and count the read of the file's own inode but none of its data.",
       hint: 'Root inode, root data, then an inode and a data block for each directory on the path, then the file\'s inode.',
       answer: 9,
       unit: 'reads',
