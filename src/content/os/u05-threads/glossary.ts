@@ -121,7 +121,7 @@ void job() {
     course: 'os',
     category: 'Concurrency',
     short: 'The rule, used by every real condition-variable implementation, that a notification is only a **hint**: the woken thread competes for the mutex like any other, so the condition may be false again by the time it runs. Hence waits go in a `while` loop.',
-    long: 'Hoare\'s original monitors (1974) handed the lock straight to the signalled thread, guaranteeing the condition held. Lampson and Redell\'s Mesa (1980) made signalling cheaper by just making the waiter runnable. Combined with permitted spurious wakeups, this means `if (!ready) cv.wait(lock);` is a bug and `while (!ready) cv.wait(lock);` (or the predicate overload) is required.',
+    long: 'Hoare\'s original monitors (1974) handed the lock straight to the signalled thread, guaranteeing the condition held. Xerox\'s Mesa language, as Lampson and Redell described it in 1980, made signalling cheaper by just making the waiter runnable. Combined with permitted spurious wakeups, this means `if (!ready) cv.wait(lock);` is a bug and `while (!ready) cv.wait(lock);` (or the predicate overload) is required.',
     see: ['condition-variable', 'bounded-buffer'],
   },
   {

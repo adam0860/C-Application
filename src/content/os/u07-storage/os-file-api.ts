@@ -410,12 +410,12 @@ bool replaceSave(const wchar_t* tmp, const wchar_t* final,
           type: 'code',
           lang: 'shell',
           title: 'Real strace of the first save',
-          code: `openat(AT_FDCWD, "/tmp/forge_atomic.sav.tmp", O_WRONLY|O_CREAT|O_TRUNC, 0644) = 3
+          code: `openat(AT_FDCWD, "/tmp/forge_save_dLZgwB/slot1.sav.tmp", O_WRONLY|O_CREAT|O_TRUNC, 0644) = 3
 write(3, "LVL=7", 5)                    = 5
 fsync(3)                                = 0
 close(3)                                = 0
-rename("/tmp/forge_atomic.sav.tmp", "/tmp/forge_atomic.sav") = 0
-openat(AT_FDCWD, "/tmp", O_RDONLY|O_DIRECTORY) = 3
+rename("/tmp/forge_save_dLZgwB/slot1.sav.tmp", "/tmp/forge_save_dLZgwB/slot1.sav") = 0
+openat(AT_FDCWD, "/tmp/forge_save_dLZgwB", O_RDONLY|O_DIRECTORY) = 3
 fsync(3)                                = 0
 close(3)                                = 0`,
           annotations: [

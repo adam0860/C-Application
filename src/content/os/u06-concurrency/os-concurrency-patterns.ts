@@ -209,7 +209,7 @@ int main() {
           annotations: [
             { lines: '18-24', text: 'Shutdown: set the flag under the lock, wake everyone, and let the member destructors join the workers. Each worker drains the queue before exiting.' },
             { lines: '29-31', text: '`std::packaged_task` wraps the callable and connects it to a `std::future`. It is move-only, but `std::function` requires copyable callables, so we share it through a `shared_ptr` (C++23\'s `std::move_only_function` removes this workaround).' },
-            { lines: '45-47', text: 'The bounded-buffer wait: sleep until there is a job or the pool is shutting down.' },
+            { lines: '45-48', text: 'The bounded-buffer wait: sleep until there is a job or the pool is shutting down.' },
             { lines: 53, text: 'Run the job **without** the lock, so other workers can take jobs meanwhile. Holding the queue lock while running jobs would turn the pool into a single thread.' },
             { lines: 61, text: 'Declared last, so it is destroyed first: the workers are joined while the mutex, condition variable and queue they use still exist.' },
             { lines: 77, text: '`get()` blocks until that chunk has run. Collecting the futures in submission order makes the result deterministic even though the chunks ran in any order.' },
@@ -1335,7 +1335,7 @@ int main() {
       ]
     },
     {
-      "note": "t = 3: anim finished; each dependent's counter drops by one; now ready: particles.",
+      "note": "t = 3: anim finished; physics's counter drops to 1. particles is still waiting in the ready queue.",
       "nodeColors": [
         {
           "id": "input",
@@ -2593,7 +2593,8 @@ int main() {
   "caption": "The ABA problem: T1's compare-and-swap succeeds even though the stack changed underneath it.",
   "frames": [
     {
-      "note": "A lock-free stack: `top` → A → B → C. Thin arrows are links that do not exist yet.",
+      "note": "A lock-free stack: `top` → A → B → C.",
+      "hiddenEdges": [{ "from": "top", "to": "B" }, { "from": "top", "to": "C" }, { "from": "A", "to": "C" }],
       "lines": [],
       "edgeColors": [
         {
@@ -2631,6 +2632,7 @@ int main() {
     },
     {
       "note": "T1 starts `pop`: it reads `old = A` and `nxt = A->next = B`. Then it is preempted before its compare-and-swap.",
+      "hiddenEdges": [{ "from": "top", "to": "B" }, { "from": "top", "to": "C" }, { "from": "A", "to": "C" }],
       "lines": [
         2,
         6
@@ -2681,6 +2683,7 @@ int main() {
     },
     {
       "note": "T2 pops A. `top` now points to B.",
+      "hiddenEdges": [{ "from": "top", "to": "A" }, { "from": "top", "to": "C" }, { "from": "A", "to": "B" }, { "from": "A", "to": "C" }],
       "lines": [
         7,
         8
@@ -2726,6 +2729,7 @@ int main() {
     },
     {
       "note": "T2 pops B and **deletes** it. Its memory goes back to the allocator.",
+      "hiddenEdges": [{ "from": "top", "to": "A" }, { "from": "top", "to": "B" }, { "from": "A", "to": "B" }, { "from": "B", "to": "C" }, { "from": "A", "to": "C" }],
       "lines": [
         7,
         8
@@ -2774,6 +2778,7 @@ int main() {
     },
     {
       "note": "T2 pushes A back (or allocates a new node that lands at A's old address). Stack: A → C. `top` holds the **same value** it had when T1 read it.",
+      "hiddenEdges": [{ "from": "top", "to": "B" }, { "from": "top", "to": "C" }, { "from": "A", "to": "B" }, { "from": "B", "to": "C" }],
       "lines": [],
       "edgeColors": [
         {
@@ -2816,6 +2821,7 @@ int main() {
     },
     {
       "note": "T1 resumes. Its CAS compares `top` with `old`: both are A, so it **succeeds** and stores `nxt`, the stale B.",
+      "hiddenEdges": [{ "from": "top", "to": "A" }, { "from": "top", "to": "C" }, { "from": "A", "to": "B" }, { "from": "B", "to": "C" }],
       "lines": [
         7,
         8
@@ -2869,6 +2875,7 @@ int main() {
     },
     {
       "note": "`top` now points at freed memory and C has vanished from the stack. The CAS checked that the **value** was unchanged, not that nothing had happened: the ABA problem.",
+      "hiddenEdges": [{ "from": "top", "to": "A" }, { "from": "top", "to": "C" }, { "from": "A", "to": "B" }, { "from": "B", "to": "C" }, { "from": "A", "to": "C" }],
       "lines": [
         9
       ],

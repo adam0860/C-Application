@@ -86,7 +86,7 @@ export const glossary: GlossaryEntry[] = [
     course: 'os',
     category: 'Concurrency',
     short: 'While a thread holds a lock that a higher-priority thread is waiting for, it temporarily runs at the waiter\'s priority, so medium-priority threads cannot preempt it. Bounds priority inversion to the length of the critical section.',
-    long: 'POSIX enables it per mutex with `pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT)`; the alternative **priority ceiling** protocol (`PTHREAD_PRIO_PROTECT`) runs any holder at the highest priority of all the lock\'s users. Real-time operating systems such as VxWorks support both. Windows does not use inheritance for its locks; it relies on periodically boosting starved threads.',
+    long: 'POSIX enables it per mutex with `pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT)`; the alternative **priority ceiling** protocol (`PTHREAD_PRIO_PROTECT`) runs any holder at the highest priority of all the lock\'s users. Real-time operating systems such as VxWorks support both. Windows user-mode locks do not use inheritance; Windows relies instead on periodically boosting threads that have been starved of CPU time.',
     see: ['priority-inversion', 'real-time-system'],
   },
   {
