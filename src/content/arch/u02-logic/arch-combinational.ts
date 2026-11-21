@@ -186,7 +186,7 @@ export const lesson: Lesson = {
             { from: 'FA2', to: 'FA3', directed: true },
             { from: 'FA3', to: 'cout', directed: true },
           ],
-          caption: 'A 4-bit ripple-carry adder computing 7 + 1. Top: input bit pairs aᵢbᵢ. Bottom: sum bits. Purple arrows carry a 1. Red sums are not yet valid.',
+          caption: 'A 4-bit ripple-carry adder computing 7 + 1. Top: input bit pairs aᵢbᵢ. Bottom: sum bits. Purple arrows carry a 1. Red sums are not yet valid; green sums are final.',
           interval: 1500,
           frames: [
             {
@@ -219,7 +219,7 @@ export const lesson: Lesson = {
                 { id: 'FA0', color: 'orange' },
                 { id: 'FA1', color: 'orange' },
                 { id: 'FA2', color: 'orange' },
-                { id: 's0', color: 'red' },
+                { id: 's0', color: 'green' },
                 { id: 's1', color: 'red' },
                 { id: 's2', color: 'red' },
                 { id: 's3', color: 'red' },
@@ -238,8 +238,8 @@ export const lesson: Lesson = {
               ],
               nodeColors: [
                 { id: 'FA1', color: 'orange' },
-                { id: 's0', color: 'red' },
-                { id: 's1', color: 'red' },
+                { id: 's0', color: 'green' },
+                { id: 's1', color: 'green' },
                 { id: 's2', color: 'red' },
                 { id: 's3', color: 'red' },
               ],
@@ -257,9 +257,9 @@ export const lesson: Lesson = {
               ],
               nodeColors: [
                 { id: 'FA2', color: 'orange' },
-                { id: 's0', color: 'red' },
-                { id: 's1', color: 'red' },
-                { id: 's2', color: 'red' },
+                { id: 's0', color: 'green' },
+                { id: 's1', color: 'green' },
+                { id: 's2', color: 'green' },
                 { id: 's3', color: 'red' },
               ],
               edgeColors: [
@@ -374,8 +374,7 @@ int main() {
             { lines: '7-12', text: 'The gate equations from the previous card, one C++ operator per gate.' },
             { lines: 22, text: 'Each iteration is one full adder. The loop runs in order because bit i really does need the carry from bit i − 1: that dependency **is** the ripple.' },
             { lines: 24, text: 'Count how many consecutive adders produced a carry. A long chain means the carry had to travel far before the sum was valid.' },
-            { lines: 35, text: '100 + 27 = 0b1100100 + 0b0011011: no column has two 1s, so no carry is ever generated and every sum bit is ready after one delay.' },
-            { lines: 36, text: '0xFFFF + 1 is the worst case: a carry generated in bit 0 must ripple through all 16 adders and out the top.' },
+            { lines: 34, text: '100 + 27 = 0b1100100 + 0b0011011: no column has two 1s, so no carry is ever generated and every sum bit is ready after one delay. 0xFFFF + 1 is the worst case: a carry generated in bit 0 must ripple through all 16 adders and out the top.' },
           ],
         },
         {
@@ -788,8 +787,7 @@ ADD 200, 100 ->  44 (  44)  Z=0 N=0 C=1 V=0`,
             { lines: '16-18', text: 'The output multiplexer. In hardware all three results are computed every time; the mux just picks one.' },
             { lines: 19, text: 'Zero flag: one big NOR over all result bits.' },
             { lines: 22, text: 'ARM sets C = 1 after a subtraction that did **not** borrow, which is the raw carry out of a + ~b + 1. x86 stores the inverse (CF = 1 means a borrow happened). Same adder, different convention.' },
-            { lines: 33, text: '7 − 7: the result is 0, so Z = 1. A `cmp` instruction is exactly this subtraction with the result thrown away, which is how `if (a == b)` becomes a flag test.' },
-            { lines: 34, text: '5 − 7 = −2 (`1111 1110`): N = 1, and C = 0 because a borrow was needed (5 < 7 unsigned).' },
+            { lines: 31, text: '7 − 7: the result is 0, so Z = 1. A `cmp` instruction is exactly this subtraction with the result thrown away, which is how `if (a == b)` becomes a flag test. 5 − 7 = −2 (`1111 1110`): N = 1, and C = 0 because a borrow was needed (5 < 7 unsigned).' },
           ],
         },
         {

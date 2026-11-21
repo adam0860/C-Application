@@ -307,7 +307,7 @@ int main() {
           annotations: [
             { lines: 6, text: 'Converting a signed value to the unsigned type of the same width keeps the bit pattern; numerically it adds 2⁸ to negative values (−5 becomes 251).' },
             { lines: 7, text: 'Unary `+` promotes the 8-bit value to `int` so it prints as a number instead of a character.' },
-            { lines: 15, text: '−1 is all ones in every width. That is why `~0` is a handy "all bits set" mask.' },
+            { lines: 14, text: '−1 is all ones in every width. That is why `~0` is a handy "all bits set" mask.' },
             { lines: 16, text: '−128 is `1000 0000`. Negating it gives `0111 1111 + 1 = 1000 0000` again: −128 is its own negation in 8 bits, the one asymmetry of two\'s complement.' },
           ],
         },
@@ -730,8 +730,8 @@ int main() {
           annotations: [
             { lines: 11, text: 'Adding in a wider type keeps the 9th bit, so the carry is simply "did the sum exceed 255?".' },
             { lines: 15, text: '`a ^ sum` has its top bit set when `a` and `sum` differ in sign; same for `b`. Both differing means the operands agreed in sign and the result does not: signed overflow.' },
-            { lines: '29-30', text: 'The flags are independent: the first case is fine as unsigned but wrong as signed; the second is the reverse.' },
-            { lines: 32, text: 'Adding −1 + 1 produces a carry out, yet the signed answer 0 is perfectly correct. A carry is not an error for signed numbers.' },
+            { lines: '28-29', text: 'The flags are independent: the first case is fine as unsigned but wrong as signed; the second is the reverse.' },
+            { lines: 31, text: 'Adding −1 + 1 produces a carry out, yet the signed answer 0 is perfectly correct. A carry is not an error for signed numbers.' },
           ],
         },
         {
@@ -1190,7 +1190,7 @@ int main() {
           annotations: [
             { lines: 7, text: 'Compute in a wider type where the true sum fits, then clamp. Compilers turn the comparison into a branchless `cmov`.' },
             { lines: 12, text: 'Two `int16_t` values always sum to something that fits in a 32-bit `int`, so no undefined behavior is possible.' },
-            { lines: 26, text: '`_mm_adds_epu8` (SSE2 instruction `paddusb`) adds 16 unsigned bytes with saturation in one instruction. Pixels at 192 and above stop at 255 instead of wrapping.' },
+            { lines: 26, text: '`_mm_adds_epu8` (SSE2 instruction `paddusb`) adds 16 unsigned bytes with saturation in one instruction. Pixels at 160 and above stop at 255 instead of wrapping.' },
           ],
         },
         {

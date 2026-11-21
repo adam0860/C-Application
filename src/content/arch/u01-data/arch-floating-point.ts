@@ -207,7 +207,7 @@ int main() {
               array: ['·', '·', '·', '·', '·', '·', '·', '·', '·', '·', '·', '·', '·', '·', '…'],
               pointers: [
                 { index: 0, label: 's', color: 'purple' },
-                { index: 1, label: 'exponent', color: 'blue' },
+                { index: 4, label: 'exponent', color: 'blue' },
                 { index: 9, label: 'fraction', color: 'green' },
               ],
               vars: [['value', '−6.25']],

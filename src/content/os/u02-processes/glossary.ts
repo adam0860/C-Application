@@ -1,4 +1,131 @@
 import type { GlossaryEntry } from '../../types';
 
 // Glossary terms introduced by this unit that are NOT in scripts/glossary-master.ts.
-export const glossary: GlossaryEntry[] = [];
+export const glossary: GlossaryEntry[] = [
+  {
+    id: 'process',
+    term: 'Process',
+    aliases: ['task'],
+    course: 'os',
+    category: 'Processes',
+    short: "A running instance of a program: a private address space, one or more threads, and the kernel resources it holds (open files, sockets, credentials), described by a process control block.",
+    long: "A program is a passive file; each time it starts, the OS creates a new process for it. Processes are the OS's unit of isolation and resource ownership: memory protection is drawn around them, and when one exits the kernel frees everything it held. Threads inside a process share its memory and descriptors.\n\nOn Linux each thread is a task (`task_struct`) and a process is a group of tasks sharing memory and files; on Windows a process (`EPROCESS`) is a container in which threads (`ETHREAD`) run.",
+    see: ['process-control-block', 'process-state', 'thread', 'fork-syscall'],
+    reading: [
+      { title: 'OSTEP chapter 4: The Process', url: 'https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-intro.pdf', source: 'book', note: 'The abstraction, its states and its data structures.' },
+    ],
+  },
+  {
+    id: 'process-control-block',
+    term: 'Process control block',
+    aliases: ['PCB', 'task_struct', 'EPROCESS'],
+    course: 'os',
+    category: 'Processes',
+    short: "The kernel's record for a process (or thread): identity, state, saved CPU context, memory description, open files, scheduling and accounting data.",
+    long: "The PCB is what lets the kernel stop a process and resume it later, enforce its permissions, and clean up after it. Much of it is pointers to other structures: the page tables, the descriptor table, the kernel stack holding saved registers. Linux's is `task_struct` (one per thread); Windows splits it into `EPROCESS`/`KPROCESS` and `ETHREAD`/`KTHREAD`.",
+    see: ['process', 'process-state', 'context-switch', 'kernel-stack'],
+    reading: [
+      { title: 'Process control block', url: 'https://en.wikipedia.org/wiki/Process_control_block', source: 'article', note: 'Typical fields across operating systems.' },
+    ],
+  },
+  {
+    id: 'process-state',
+    term: 'Process state',
+    aliases: ['ready', 'running', 'blocked', 'runnable'],
+    course: 'os',
+    category: 'Processes',
+    short: "Where a process or thread is in its life: new, ready (waiting for a CPU), running, blocked (waiting for an event such as I/O), or finished (a zombie until reaped).",
+    long: "Transitions: ready → running when dispatched; running → ready when preempted; running → blocked when it waits; blocked → ready when the event happens (never straight to running); running → zombie on exit. Linux's `ps` shows R (running or runnable), S (interruptible sleep), D (uninterruptible sleep, usually disk I/O), T (stopped) and Z (zombie).",
+    see: ['process', 'zombie-process', 'preemption'],
+  },
+  {
+    id: 'fork-syscall',
+    term: 'fork()',
+    aliases: ['fork'],
+    course: 'os',
+    category: 'Processes',
+    short: "The POSIX call that creates a new process as a copy of the caller. It returns twice: the child's PID in the parent, 0 in the child, or −1 on failure.",
+    long: "The child gets a copy-on-write copy of the address space, a copy of the descriptor table (sharing the open files and their offsets) and only the calling thread. Because other threads' locks are copied in whatever state they were, a child of a multithreaded program may only call async-signal-safe functions until it calls `exec`. `posix_spawn` combines fork and exec safely and cheaply.",
+    example: `pid_t pid = fork();
+if (pid == 0) { /* child */ _exit(0); }
+waitpid(pid, nullptr, 0);   // parent`,
+    see: ['exec-syscall', 'zombie-process', 'process'],
+    reading: [
+      { title: 'fork(2)', url: 'https://man7.org/linux/man-pages/man2/fork.2.html', source: 'other', note: 'What is and is not inherited.' },
+    ],
+  },
+  {
+    id: 'exec-syscall',
+    term: 'exec()',
+    aliases: ['execve', 'execvp', 'exec family'],
+    course: 'os',
+    category: 'Processes',
+    short: "The POSIX family of calls that replace the program running in the current process with a new one, keeping the PID and open descriptors. On success it never returns.",
+    long: "`execve` is the system call; `execl`, `execlp`, `execv` and `execvp` are library wrappers that differ in how arguments are passed (list or array) and whether `PATH` is searched. Descriptors survive unless opened with `O_CLOEXEC`. The gap between `fork` and `exec` is where shells set up redirection with `dup2`.",
+    see: ['fork-syscall', 'file-descriptor'],
+    reading: [
+      { title: 'execve(2)', url: 'https://man7.org/linux/man-pages/man2/execve.2.html', source: 'other', note: 'What exec preserves and what it resets.' },
+    ],
+  },
+  {
+    id: 'zombie-process',
+    term: 'Zombie process',
+    aliases: ['zombie', 'defunct process'],
+    course: 'os',
+    category: 'Processes',
+    short: "A process that has exited but whose parent has not yet collected its exit status with `wait`/`waitpid`. Its memory is freed, but its PID and process record remain (state `Z`, `<defunct>`).",
+    long: "Zombies are harmless in small numbers but each holds a PID, so a program that launches many children and never reaps them eventually cannot create processes (`fork` fails with `EAGAIN`). Reap children with `waitpid` (polling with `WNOHANG` if needed) or in a `SIGCHLD` handler. On Windows the analogue is an exited process kept alive by open handles.",
+    see: ['orphan-process', 'fork-syscall', 'process-state'],
+    reading: [
+      { title: 'Zombie process', url: 'https://en.wikipedia.org/wiki/Zombie_process', source: 'article', note: 'Why zombies exist and how they are reaped.' },
+    ],
+  },
+  {
+    id: 'orphan-process',
+    term: 'Orphan process',
+    aliases: ['orphan', 'subreaper'],
+    course: 'os',
+    category: 'Processes',
+    short: "A process whose parent exited first. Linux re-parents it to PID 1 or to the nearest ancestor marked as a subreaper, which then reaps it when it exits.",
+    long: "Orphans keep running normally; they are only a problem if nobody ever reaps them, which init and subreapers guarantee. A process becomes a subreaper with `prctl(PR_SET_CHILD_SUBREAPER, 1)` (Linux 3.4+); service managers and container runtimes use this to collect their descendants.",
+    see: ['zombie-process', 'process'],
+  },
+  {
+    id: 'limited-direct-execution',
+    term: 'Limited direct execution',
+    aliases: ['LDE'],
+    course: 'os',
+    category: 'Processes',
+    short: "OSTEP's name for how OSes run programs: directly on the CPU at full speed, but in user mode, with traps for privileged requests and a timer interrupt so the kernel can always regain control.",
+    long: "Direct execution avoids the huge cost of interpreting every instruction. The \"limited\" part comes from hardware: privileged instructions fault in user mode, the trap table restricts where the kernel can be entered, and the timer interrupt (which user code cannot disable) enables preemption and context switches.",
+    see: ['context-switch', 'preemption', 'trap-table', 'user-mode'],
+    reading: [
+      { title: 'OSTEP chapter 6', url: 'https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf', source: 'book', note: 'The full protocol with timelines.' },
+    ],
+  },
+  {
+    id: 'preemption',
+    term: 'Preemption',
+    aliases: ['preemptive multitasking', 'preempt'],
+    course: 'os',
+    category: 'Scheduling',
+    short: "The kernel taking the CPU away from a running thread without its cooperation, usually from a timer interrupt when its time slice is used up or a higher-priority thread becomes ready.",
+    long: "Preemptive multitasking guarantees that no program can monopolise a CPU, unlike cooperative multitasking (Windows 3.x, classic Mac OS), where programs had to yield voluntarily. Preemption is also why code must be written as if a thread could be stopped between any two instructions, the root of every data race.",
+    see: ['context-switch', 'limited-direct-execution', 'time-slice'],
+    reading: [
+      { title: 'Preemption (computing)', url: 'https://en.wikipedia.org/wiki/Preemption_(computing)', source: 'article', note: 'Preemptive versus cooperative multitasking.' },
+    ],
+  },
+  {
+    id: 'context-switch',
+    term: 'Context switch',
+    course: 'os',
+    category: 'Processes',
+    short: "Stopping one thread on a CPU and resuming another: save the old thread's registers, switch kernel stacks (and page tables if the process changes), and restore the new thread's registers.",
+    long: "User registers are saved on the kernel stack when the interrupt or system call enters the kernel; the switch routine then saves the old thread's kernel stack pointer and callee-saved registers in its PCB and loads the new thread's. The direct cost is around a microsecond on modern hardware; the indirect cost of refilling caches, TLB and branch predictors can be larger. Switching between threads of the same process is cheaper because the address space stays the same.",
+    see: ['limited-direct-execution', 'preemption', 'kernel-stack', 'process-control-block'],
+    reading: [
+      { title: 'Context switch', url: 'https://en.wikipedia.org/wiki/Context_switch', source: 'article', note: 'Mechanism and costs.' },
+    ],
+  },
+];

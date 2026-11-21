@@ -701,7 +701,7 @@ std::memcpy(&v, &f, sizeof v);`,
           blocks: [
             {
               type: 'p',
-              text: 'The famous `Q_rsqrt` from Quake III Arena (1999) computes 1/√x by reinterpreting a float\'s bits as an integer, subtracting it from the magic constant `0x5f3759df`, and reinterpreting back, followed by one Newton–Raphson step. The original wrote `i = *(long*)&y;`, which is a strict-aliasing violation today (and assumes a 32-bit `long`). A modern version is `std::bit_cast<std::uint32_t>(y)`. It is also no longer a speed trick: SSE\'s `rsqrtss` instruction has done the same job in hardware since 1999.',
+              text: 'The famous `Q_rsqrt` from Quake III Arena (1999) computes 1/√x by reinterpreting a float\'s bits as an integer, subtracting half of it (`i >> 1`) from the magic constant `0x5f3759df`, and reinterpreting back, followed by one Newton–Raphson step. The original wrote `i = *(long*)&y;`, which is a strict-aliasing violation today (and assumes a 32-bit `long`). A modern version is `std::bit_cast<std::uint32_t>(y)`. It is also no longer a speed trick: SSE\'s `rsqrtss` instruction has done the same job in hardware since 1999.',
             },
           ],
         },

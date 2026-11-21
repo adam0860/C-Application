@@ -303,13 +303,13 @@ ret`,
     {
       "id": "drv",
       "x": 420,
-      "y": 240,
+      "y": 235,
       "label": "tty"
     },
     {
       "id": "ret",
-      "x": 200,
-      "y": 240,
+      "x": 80,
+      "y": 235,
       "label": "exit"
     }
   ],
@@ -352,7 +352,7 @@ ret`,
       "directed": true
     }
   ],
-  "code": "write(1, msg, 15);          // your C++\nmov  eax, 1                 ; glibc: syscall number\nsyscall                     ; trap into the kernel\n; entry_SYSCALL_64: swapgs, switch to kernel stack,\n;   push user registers (pt_regs)\ndispatch on rax             ; -> ksys_write()\n; vfs_write() -> terminal driver copies 15 bytes\n; restore user registers, sysret\ncmp  rax, -4096 ; error? set errno, return -1\nret                         ; back in your code: 15",
+  "code": "write(1, msg, 15);   // your C++\nmov eax, 1           ; number: write\nsyscall              ; enter kernel\n; entry: kernel stack,\n;   save user registers\ndispatch on rax      ; ksys_write\n; vfs_write -> tty driver\n; restore regs, sysret\ncmp rax, -4096       ; error?\nret                  ; returns 15",
   "lang": "text",
   "interval": 1800,
   "frames": [

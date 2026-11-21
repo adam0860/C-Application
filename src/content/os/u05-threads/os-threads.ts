@@ -64,7 +64,7 @@ export const lesson: Lesson = {
           type: 'table',
           headers: ['Shared by all threads of a process', 'Private to each thread'],
           rows: [
-            ['The address space: code, globals, the heap, memory-mapped files', 'Registers, including the program counter and stack pointer'],
+            ['The address space: code, globals and the heap', 'Registers, including the program counter and stack pointer'],
             ['Open file descriptors (or Windows handles)', 'Its stack (and so its local variables)'],
             ['Process ID, user and group IDs, current working directory', 'Thread ID'],
             ['Signal **handlers** (what each signal does)', 'Signal **mask** (which signals it blocks)'],
