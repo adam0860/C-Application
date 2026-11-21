@@ -106,7 +106,7 @@ for (std::size_t i = 0; i < 32; ++i) {
     course: 'arch',
     category: 'Memory',
     short: 'The average time a memory access takes: hit time + miss rate × miss penalty, applied level by level through the hierarchy.',
-    long: 'For a three-level cache with local miss rates m1, m2, m3: AMAT = t1 + m1 × (t2 + m2 × (t3 + m3 × t_DRAM)). Because the miss penalty is so much larger than the hit time, small changes in miss rate cause large changes in AMAT: with a 4-cycle L1 and a typical hierarchy behind it, going from 1% to 20% L1 misses can quadruple the average.',
+    long: 'For a three-level cache with local miss rates m1, m2, m3: AMAT = t1 + m1 × (t2 + m2 × (t3 + m3 × t_DRAM)). Because the miss penalty is so much larger than the hit time, small changes in miss rate cause large changes in AMAT: with a 4-cycle L1 and a typical hierarchy behind it, going from 1% to 20% L1 misses can more than triple the average.',
     example: `// 4-cycle L1 hit, 5% L1 misses, 60 cycles on average after a miss
 double amat = 4 + 0.05 * 60;   // 7 cycles`,
     see: ['cpu-cache', 'memory-hierarchy'],

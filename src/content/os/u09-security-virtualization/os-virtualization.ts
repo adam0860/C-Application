@@ -223,7 +223,6 @@ export const lesson: Lesson = {
     {
       "from": "exit",
       "to": "kvm",
-      "label": "host state",
       "directed": true
     },
     {

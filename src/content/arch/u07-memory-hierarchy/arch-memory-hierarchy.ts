@@ -653,7 +653,7 @@ int main() {
             ['L2 cache hit', '~3–5 ns'],
             ['L3 cache hit', '~10–20 ns'],
             ['Uncontended mutex lock + unlock', '~10–25 ns'],
-            ['Cache line transfer between two cores', '~40–100+ ns'],
+            ['Cache line transfer between two cores', '~20–40 ns in one cluster; 70–100+ ns across clusters or sockets'],
             ['DRAM access', '~60–100+ ns'],
             ['Random 4 KB read from an NVMe SSD', '~20–100 µs'],
             ['Sequential 1 MB read from an NVMe SSD', '~150–500 µs'],

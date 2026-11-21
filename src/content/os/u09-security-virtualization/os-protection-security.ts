@@ -258,7 +258,7 @@ int main() {
         {
   "type": "algo",
   "view": "array",
-  "code": "void greet(const char* pkt, std::size_t len) {\n    char name[16];\n    // prologue: frame[rsp+24] = fs:0x28 (canary)\n    std::memcpy(name, pkt, len);   // len comes from the packet!\n    std::printf(\"hello, %.16s\\n\", name);\n    // epilogue: if (frame[rsp+24] != fs:0x28)\n    //               __stack_chk_fail();   // abort\n}   // ret: pop the return address, jump there",
+  "code": "void greet(const char* pkt, size_t len) {\n    char name[16];\n    // prologue: copy canary to rsp+24\n    std::memcpy(name, pkt, len);  // len!\n    std::printf(\"hello, %.16s\\n\", name);\n    // epilogue: canary changed?\n    //   then __stack_chk_fail()\n}   // ret: jump to return address",
   "lang": "cpp",
   "interval": 1800,
   "frames": [
@@ -268,7 +268,7 @@ int main() {
         "?",
         "?",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [],
       "lines": [
@@ -304,7 +304,7 @@ int main() {
         "AAAA",
         "?",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -344,7 +344,7 @@ int main() {
         "AAAA",
         "AAAA",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -388,7 +388,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -436,7 +436,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→evil"
+        "evil"
       ],
       "marks": [
         {
@@ -488,7 +488,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→evil"
+        "evil"
       ],
       "marks": [
         {
@@ -534,7 +534,7 @@ int main() {
         "?",
         "c4f1",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -581,7 +581,7 @@ int main() {
         "?",
         "c4f1",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -632,7 +632,7 @@ int main() {
         "AAAA",
         "c4f1",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -687,7 +687,7 @@ int main() {
         "AAAA",
         "AAAA",
         "rbx",
-        "→main"
+        "main"
       ],
       "marks": [
         {
@@ -746,7 +746,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→evil"
+        "evil"
       ],
       "marks": [
         {
@@ -813,7 +813,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→evil"
+        "evil"
       ],
       "marks": [
         {
@@ -865,7 +865,7 @@ int main() {
         "AAAA",
         "AAAA",
         "AAAA",
-        "→evil"
+        "evil"
       ],
       "marks": [
         {

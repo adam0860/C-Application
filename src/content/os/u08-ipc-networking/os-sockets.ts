@@ -260,90 +260,90 @@ recv(conn, buf, sizeof buf, 0);`,
   "type": "algo",
   "view": "graph",
   "width": 440,
-  "height": 470,
+  "height": 596,
   "nodes": [
     {
       "id": "C",
       "x": 100,
-      "y": 26,
+      "y": 42,
       "label": "client"
     },
     {
       "id": "S",
       "x": 340,
-      "y": 26,
+      "y": 42,
       "label": "server"
     },
     {
       "id": "C1",
       "x": 100,
-      "y": 66,
+      "y": 112,
       "label": "·"
     },
     {
       "id": "C3",
       "x": 100,
-      "y": 144,
+      "y": 212,
       "label": "·"
     },
     {
       "id": "C4",
       "x": 100,
-      "y": 183,
+      "y": 262,
       "label": "·"
     },
     {
       "id": "C6",
       "x": 100,
-      "y": 261,
+      "y": 362,
       "label": "·"
     },
     {
       "id": "C8",
       "x": 100,
-      "y": 339,
+      "y": 462,
       "label": "·"
     },
     {
       "id": "C9",
       "x": 100,
-      "y": 378,
+      "y": 512,
       "label": "·"
     },
     {
       "id": "S2",
       "x": 340,
-      "y": 105,
+      "y": 162,
       "label": "·"
     },
     {
       "id": "S4",
       "x": 340,
-      "y": 183,
+      "y": 262,
       "label": "·"
     },
     {
       "id": "S5",
       "x": 340,
-      "y": 222,
+      "y": 312,
       "label": "·"
     },
     {
       "id": "S7",
       "x": 340,
-      "y": 300,
+      "y": 412,
       "label": "·"
     },
     {
       "id": "S8",
       "x": 340,
-      "y": 339,
+      "y": 462,
       "label": "·"
     },
     {
       "id": "S10",
       "x": 340,
-      "y": 417,
+      "y": 562,
       "label": "·"
     }
   ],
@@ -451,8 +451,8 @@ recv(conn, buf, sizeof buf, 0);`,
       "directed": true
     }
   ],
-  "code": "socket(); bind(); listen(lfd, 8);  // server\nconn = accept(lfd, ...);            // server waits\nconnect(fd, &addr, len);            // client\nsend(fd, \"JOIN ana\", 8);            // client\nrecv(conn, ...); send(conn, ...);   // server echoes\nclose(fd);                          // client\nrecv(conn, ...) == 0; close(conn);  // server",
-  "lang": "cpp",
+  "code": "server: listen(lfd, 8);\nserver: conn = accept(lfd, ...);\nclient: connect(fd, &addr, len);\nclient: send(fd, \"JOIN ana\", 8);\nserver: recv(conn, ...); send(conn, ...);\nclient: close(fd);\nserver: recv() == 0; close(conn);",
+  "lang": "text",
   "interval": 2200,
   "frames": [
     {
