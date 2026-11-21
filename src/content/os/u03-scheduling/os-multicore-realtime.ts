@@ -469,7 +469,7 @@ int main() {
         {
   "type": "algo",
   "view": "array",
-  "code": "at each tick:\n    release jobs whose period starts now\n    run the ready job with the earliest deadline",
+  "code": "at each tick:\n  release jobs due now\n  run earliest-deadline job",
   "lang": "text",
   "interval": 1400,
   "frames": [

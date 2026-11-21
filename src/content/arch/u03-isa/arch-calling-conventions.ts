@@ -2546,6 +2546,7 @@ int main() {
     {
       kind: 'numeric',
       prompt: 'Just before a `call` instruction executes, `rsp` = `0x7FFF_E040`. What is `rsp` at the first instruction of the called function? Answer in hex.',
+      inputBase: 16,
       answer: '0x7FFFE038',
       alsoAccept: [2147475512],
       answerText: '0x7FFF_E038',

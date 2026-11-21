@@ -4,7 +4,7 @@
  * binary (0b1011) and octal (0o17), with optional _ or ' digit separators and spaces.
  */
 
-export function parseNumber(input: string | number): number {
+export function parseNumber(input: string | number, base?: 2 | 16): number {
   if (typeof input === 'number') return input;
   let s = input.trim().replace(/[_'\s]/g, '').replace(/−/g, '-');
   // Thousands separators: "16,777,217" is one number.
@@ -15,6 +15,9 @@ export function parseNumber(input: string | number): number {
     if (s[0] === '-') sign = -1;
     s = s.slice(1);
   }
+  // When the question asks for hex or binary, bare digits ("7fffe038", "1011") are read in that base.
+  if (base === 16 && /^[0-9a-f]+$/i.test(s)) return sign * parseInt(s, 16);
+  if (base === 2 && /^[01]+$/.test(s)) return sign * parseInt(s, 2);
   let m: RegExpMatchArray | null;
   if ((m = /^0x([0-9a-f]+)$/i.exec(s))) return sign * parseInt(m[1], 16);
   if ((m = /^0b([01]+)$/i.exec(s))) return sign * parseInt(m[1], 2);
@@ -28,13 +31,14 @@ export function parseNumber(input: string | number): number {
 }
 
 /** True when `typed` equals any accepted value within the tolerance. */
-export function numberMatches(typed: string, accepted: (number | string)[], tolerance = 0): boolean {
-  const v = parseNumber(typed);
+export function numberMatches(typed: string, accepted: (number | string)[], tolerance = 0, base?: 2 | 16): boolean {
+  const v = parseNumber(typed, base);
   if (!Number.isFinite(v)) return false;
   return accepted.some((a) => {
     const t = parseNumber(a);
     if (!Number.isFinite(t)) return false;
-    const tol = Math.max(tolerance, 1e-9 * Math.max(1, Math.abs(t)));
+    // Integers must match exactly (unless a tolerance is given); non-integers allow float noise.
+    const tol = tolerance > 0 ? tolerance : Number.isInteger(t) ? 0 : 1e-9 * Math.max(1, Math.abs(t));
     return Math.abs(v - t) <= tol;
   });
 }

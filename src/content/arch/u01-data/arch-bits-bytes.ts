@@ -547,6 +547,7 @@ this machine is little-endian`,
     {
       kind: 'numeric',
       prompt: 'A memory viewer on an x86-64 PC shows these four bytes at increasing addresses: `EF BE AD DE`. They hold one `std::uint32_t`. What is its value? (Type it in hex, for example `0x1234ABCD`.)',
+      inputBase: 16,
       answer: '0xDEADBEEF',
       alsoAccept: [3735928559],
       label: 'Value =',

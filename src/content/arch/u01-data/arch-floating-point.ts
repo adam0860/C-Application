@@ -332,6 +332,7 @@ int main() {
     {
       kind: 'numeric',
       prompt: 'What is the 32-bit pattern of `-2.0f`? Type it in hex (for example `0x3F800000`).',
+      inputBase: 16,
       answer: '0xC0000000',
       alsoAccept: [3221225472],
       label: 'Bits =',

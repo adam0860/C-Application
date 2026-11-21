@@ -269,6 +269,7 @@ spawn.o:
     {
       kind: 'numeric',
       prompt: 'A `call` instruction (`e8` plus a 4-byte displacement) starts at address `0x2000`, so its displacement field is at P = `0x2001`. The target function ends up at `0x2400`. With addend A = −4, what displacement does the linker write? Answer in hex.',
+      inputBase: 16,
       answer: '0x3FB',
       alsoAccept: [1019],
       label: 'displacement =',

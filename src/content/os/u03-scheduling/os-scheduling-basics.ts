@@ -22,7 +22,7 @@ export const lesson: Lesson = {
       blocks: [
         {
           type: 'p',
-          text: 'In the Processes unit you saw the *mechanism* that lets one CPU run many programs: a timer interrupt hands control to the kernel, which saves the running thread\'s registers and restores another\'s. That answers **how** to switch. This unit answers the other question: **which** ready [[thread]] should run next, and for how long? That decision is the **scheduling policy**, and the part of the kernel that makes it is the **scheduler**.',
+          text: 'In the Processes unit you saw the *mechanism* that lets one CPU run many programs: a timer interrupt hands control to the kernel, which saves the running thread\'s registers and restores another\'s: a [[context-switch]]. That answers **how** to switch. This unit answers the other question: **which** ready [[thread]] should run next, and for how long? That decision is the **scheduling policy**, and the part of the kernel that makes it is the **scheduler**.',
         },
         {
           type: 'p',
@@ -161,7 +161,7 @@ export const lesson: Lesson = {
         },
         {
           type: 'p',
-          text: 'Dropping assumption 3 lets the scheduler **preempt**: stop a running job and switch to another, which the timer interrupt makes possible. **Shortest Time-to-Completion First (STCF)**, also called *shortest remaining time first*, checks whenever a job arrives: if the newcomer needs less time than the running job has left, it takes the CPU. In the example, A runs 0 to 10, B and C run 10 to 30, and A finishes at 120. Average turnaround: (120 + (20 − 10) + (30 − 10)) / 3 = **50 ms** instead of 103.3 ms. With arbitrary arrivals, STCF is optimal for average turnaround.',
+          text: 'Dropping assumption 3 lets the scheduler **[[preemption|preempt]]**: stop a running job and switch to another, which the timer interrupt makes possible. **Shortest Time-to-Completion First (STCF)**, also called *shortest remaining time first*, checks whenever a job arrives: if the newcomer needs less time than the running job has left, it takes the CPU. In the example, A runs 0 to 10, B and C run 10 to 30, and A finishes at 120. Average turnaround: (120 + (20 − 10) + (30 − 10)) / 3 = **50 ms** instead of 103.3 ms. With arbitrary arrivals, STCF is optimal for average turnaround.',
         },
         {
           type: 'callout',
@@ -204,7 +204,7 @@ export const lesson: Lesson = {
         {
   "type": "algo",
   "view": "array",
-  "code": "each time unit t:\n    enqueue jobs that arrive at t\n    if running job used its slice: re-queue it\n    if CPU is free: take the front job\n    run that job for one unit\n    if it has no work left: record finish time",
+  "code": "each time unit t:\n  add jobs arriving at t\n  if slice used up: re-queue job\n  if CPU free: take front job\n  run it for one unit\n  if done: record finish time",
   "lang": "text",
   "interval": 1400,
   "caption": "Round robin with a 2-unit slice on the workload from the simulator. When an arrival and an expired slice happen at the same tick, the arrival joins the queue first.",

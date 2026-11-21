@@ -131,6 +131,7 @@ ret`,
     {
       kind: 'numeric',
       prompt: '`rax` holds `0x1122334455667788`. The CPU executes `mov eax, -1`. What does `rax` hold now? Answer in hex.',
+      inputBase: 16,
       answer: '0x00000000FFFFFFFF',
       alsoAccept: [4294967295],
       answerText: '0x00000000_FFFFFFFF',
@@ -276,6 +277,7 @@ _Z4healPili:
     {
       kind: 'numeric',
       prompt: 'An instruction reads `QWORD PTR 16[rdi+rsi*8]`. If `rdi` = `0x1000` and `rsi` = 3, what address does it read from? Answer in hex.',
+      inputBase: 16,
       answer: '0x1028',
       alsoAccept: [4136],
       label: 'address =',

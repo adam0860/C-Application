@@ -308,6 +308,8 @@ export interface NumericQuestion extends QuestionBase {
   label?: string;
   /** Shown after the input, e.g. "cycles", "%", "KiB". */
   unit?: string;
+  /** Read bare digits in this base ("7fffe038" as hex) when the prompt asks for hex or binary. */
+  inputBase?: 2 | 16;
 }
 
 export type QuestionStep =

@@ -1405,7 +1405,7 @@ int main() {
   "type": "algo",
   "view": "array",
   "bars": true,
-  "code": "pick task with the smallest vruntime\nrun it for a slice of delta ms\nvruntime += delta * 1024 / weight\nput it back in the red-black tree",
+  "code": "pick smallest vruntime\nrun it for delta ms\nvruntime += delta*1024/weight\nreinsert into the tree",
   "lang": "text",
   "interval": 1300,
   "frames": [
@@ -1922,7 +1922,7 @@ int main() {
         {
   "type": "algo",
   "view": "array",
-  "code": "eligible = tasks whose vruntime <= V (lag >= 0)\ndeadline = vruntime + slice / weight\nrun the eligible task with the earliest deadline",
+  "code": "eligible: vruntime <= V\ndeadline = vruntime + slice/w\nrun eligible, earliest deadline",
   "lang": "text",
   "interval": 1800,
   "frames": [

@@ -491,7 +491,7 @@ function Bug({ q, revealed, onReady, ref }: QProps<BugQuestion>) {
 function Numeric({ q, revealed, onReady, ref }: QProps<NumericQuestion>) {
   const [value, setValue] = useState('');
   useEffect(() => onReady(value.trim() !== ''), [value, onReady]);
-  const check = () => numberMatches(value, [q.answer, ...(q.alsoAccept ?? [])], q.tolerance ?? 0);
+  const check = () => numberMatches(value, [q.answer, ...(q.alsoAccept ?? [])], q.tolerance ?? 0, q.inputBase);
   useImperativeHandle(ref, () => ({ evaluate: check }));
   const right = revealed && check();
   const state = revealed ? (right ? 'correct' : 'wrong') : '';
