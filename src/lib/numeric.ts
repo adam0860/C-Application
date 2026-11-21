@@ -32,13 +32,14 @@ export function parseNumber(input: string | number, base?: 2 | 16): number {
 
 /** True when `typed` equals any accepted value within the tolerance. */
 export function numberMatches(typed: string, accepted: (number | string)[], tolerance = 0, base?: 2 | 16): boolean {
-  const v = parseNumber(typed, base);
-  if (!Number.isFinite(v)) return false;
+  // With a base, bare digits may be meant in that base or in decimal: accept either reading.
+  const readings = [parseNumber(typed, base), parseNumber(typed)].filter(Number.isFinite);
+  if (readings.length === 0) return false;
   return accepted.some((a) => {
     const t = parseNumber(a);
     if (!Number.isFinite(t)) return false;
     // Integers must match exactly (unless a tolerance is given); non-integers allow float noise.
     const tol = tolerance > 0 ? tolerance : Number.isInteger(t) ? 0 : 1e-9 * Math.max(1, Math.abs(t));
-    return Math.abs(v - t) <= tol;
+    return readings.some((v) => Math.abs(v - t) <= tol);
   });
 }

@@ -190,7 +190,7 @@ Every question has a `prompt`, an `explanation` (shown after answering — it mu
   negative, fractions (`3/8`), `1.5e9`, hex (`0x1F`), binary (`0b1011`) and octal (`0o17`),
   with `_` or `'` separators. Use `tolerance` for rounded decimals (say in the prompt how
   to round), `alsoAccept` for equivalent values, `unit` and `label` around the input, and
-  `answerText` to show the answer in a nicer form (e.g. `"0x7FFF_F000"`). Set `inputBase: 16` (or `2`) when the prompt says "answer in hex" so bare digits like `7fffe038` count. Integer answers must match exactly unless you set a `tolerance`.
+  `answerText` to show the answer in a nicer form (e.g. `"0x7FFF_F000"`). Set `inputBase: 16` (or `2`) when the prompt says "answer in hex" so bare digits like `7fffe038` count (typed digits are then accepted if either their hex or their decimal reading matches). Integer answers must match exactly unless you set a `tolerance`.
 
 Questions must be answerable from what the lesson (and earlier lessons) taught.
 

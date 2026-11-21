@@ -362,7 +362,7 @@ ffffffffff600000-ffffffffff601000 --xp [vsyscall]`,
       kind: 'numeric',
       prompt: 'A process runs with base = `0x8000` and bounds = `0x4000`. It loads from virtual address `0x1A00`. What physical address is accessed? Answer in hex.',
       answer: '0x9A00',
-      alsoAccept: [39424],
+      inputBase: 16,
       label: 'physical address =',
       explanation:
         '`0x1A00` is below the bounds `0x4000`, so the access is legal, and physical = `0x1A00 + 0x8000` = **`0x9A00`**. A load from `0x4200` would fail the bounds check and raise an exception before any memory was touched; the kernel would then typically kill the process with a segmentation fault.',

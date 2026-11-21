@@ -1038,7 +1038,7 @@ int main() {
       kind: 'numeric',
       prompt: 'In a buddy allocator, a free block of size `0x2000` starts at offset `0x6000`. At what offset does its buddy start? Answer in hex.',
       answer: '0x4000',
-      alsoAccept: [16384],
+      inputBase: 16,
       label: 'buddy offset =',
       explanation:
         '`0x6000 XOR 0x2000` = **`0x4000`**. The two blocks are the halves of the `0x4000`-sized parent starting at `0x4000`: one covers `0x4000` to `0x5FFF`, the other `0x6000` to `0x7FFF`. If both are free they merge into that parent, whose own buddy is at `0x4000 XOR 0x4000` = `0x0000`.',

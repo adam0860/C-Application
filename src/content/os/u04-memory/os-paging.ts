@@ -54,10 +54,10 @@ export const lesson: Lesson = {
       kind: 'numeric',
       prompt: 'With 4 KiB pages, what is the **virtual page number** of address `0x0003A7F4`? Answer in hex.',
       answer: '0x3A',
-      alsoAccept: [58],
+      inputBase: 16,
       label: 'VPN =',
       explanation:
-        'Shift right by 12 bits, which in hex means dropping the last three digits: `0x0003A7F4 >> 12` = **`0x3A`** (58), and the offset is `0x7F4`. Each hex digit is 4 bits, which is why 4 KiB pages (12 bits) line up so neatly with hex notation.',
+        'Shift right by 12 bits, which in hex means dropping the last three digits: `0x0003A7F4 >> 12` = **`0x3A`** (58 in decimal), and the offset is `0x7F4`. Each hex digit is 4 bits, which is why 4 KiB pages (12 bits) line up so neatly with hex notation.',
     },
     // ------------------------------------------------------------------ 3
     {
